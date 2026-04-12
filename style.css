@@ -1,129 +1,124 @@
-/* ПЕРЕМЕННЫЕ ЦВЕТОВ */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap');
+
 :root {
-    --bg-color: #f0ede5; 
-    --neu-light: #ffffff;
-    --neu-dark: #d1cdc1;
-    --accent: #4caf50; 
-    --text: #5d574a;
+    --glass-bg: rgba(255, 255, 255, 0.15);
+    --glass-border: rgba(255, 255, 255, 0.3);
+    --accent-green: #4caf50;
+    --text-dark: #2d3436;
 }
 
-/* ОБЩИЕ НАСТРОЙКИ */
 body {
-    background-color: var(--bg-color);
+    background: linear-gradient(135deg, #f0ede5 0%, #d7d2cc 100%);
+    font-family: 'Montserrat', sans-serif;
+    color: var(--text-dark);
     margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
     padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: var(--text);
+    overflow-x: hidden;
 }
 
-/* СТЕКЛЯННЫЙ КОНТЕЙНЕР */
+/* ГЛАССМОРФИЗМ КОНТЕЙНЕР */
 .glass-container {
-    width: 100%;
-    max-width: 480px;
-    background: rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border-radius: 40px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 35px;
     padding: 25px;
-    box-sizing: border-box;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.1);
 }
 
-/* БЛОК ОБНОВЛЕНИЙ */
+/* ИНТЕГРАЦИЯ ИИ (Стиль карточки обновлений) */
 .updates-box {
-    background: var(--bg-color);
-    margin-bottom: 25px;
-    padding: 15px;
-    border-radius: 25px;
-    box-shadow: 5px 5px 15px var(--neu-dark), -5px -5px 15px var(--neu-light);
-    border: 1px solid var(--neu-light);
-}
-
-.updates-title {
-    font-weight: 800;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.update-item {
-    font-size: 0.85rem;
-    margin: 5px 0;
-    padding-left: 10px;
-    border-left: 2px solid var(--accent);
-}
-
-/* ТАЙМЕР ДО ЛЕТА */
-#timer {
-    font-size: 0.85rem;
-    font-weight: 800;
-    margin-bottom: 25px;
-    padding: 12px;
+    background: rgba(255, 255, 255, 0.4);
     border-radius: 20px;
-    background: rgba(240, 237, 229, 0.6);
-    box-shadow: inset 4px 4px 8px var(--neu-dark), inset -4px -4px 8px var(--neu-light);
-    color: var(--accent);
+    padding: 15px;
+    margin-bottom: 20px;
+    border-left: 5px solid var(--accent-green);
+    font-size: 0.85rem;
+    position: relative;
+    overflow: hidden;
+}
+
+/* ТАЙМЕР С АНИМАЦИЕЙ ПУЛЬСАЦИИ */
+#timer {
+    background: rgba(0, 0, 0, 0.05);
+    padding: 15px;
+    border-radius: 18px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--accent-green);
     text-align: center;
-}
-
-/* КНОПКИ ДНЕЙ НЕДЕЛИ */
-.day-selector {
-    display: flex;
-    gap: 8px;
     margin-bottom: 25px;
-    justify-content: space-between;
+    animation: timerPulse 2s infinite ease-in-out;
 }
 
+@keyframes timerPulse {
+    0% { transform: scale(1); opacity: 0.9; }
+    50% { transform: scale(1.02); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.9; }
+}
+
+/* КНОПКИ С ЭФФЕКТОМ БАБОЧЕК (Через Scale и Shadow) */
 .day-btn {
     flex: 1;
     border: none;
-    padding: 12px 0;
-    border-radius: 14px;
-    background: var(--bg-color);
+    padding: 12px 5px;
+    margin: 0 4px;
+    border-radius: 12px;
+    background: white;
     cursor: pointer;
-    font-weight: bold;
-    font-size: 0.75rem;
-    box-shadow: 4px 4px 8px var(--neu-dark), -4px -4px 8px var(--neu-light);
-    transition: 0.3s ease;
-    color: var(--text);
+    font-weight: 700;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.day-btn:active {
+    transform: scale(0.8) rotate(-5deg); /* Эффект взмаха крыла при нажатии */
 }
 
 .day-btn.active {
-    box-shadow: inset 3px 3px 6px var(--neu-dark), inset -3px -3px 6px var(--neu-light);
-    color: var(--accent);
+    background: var(--accent-green);
+    color: white;
+    box-shadow: 0 10px 20px rgba(76, 175, 80, 0.3);
 }
 
-/* КАРТОЧКИ УРОКОВ */
+/* КАРТОЧКИ УРОКОВ И СМАЙЛЫ */
 .lesson-card {
-    background: var(--bg-color);
+    background: rgba(255, 255, 255, 0.6);
+    margin-bottom: 12px;
     padding: 18px;
-    border-radius: 22px;
+    border-radius: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 6px 6px 12px var(--neu-dark), -6px -6px 12px var(--neu-light);
-    margin-bottom: 15px;
     transition: 0.3s;
+    border: 1px solid rgba(255,255,255,0.2);
 }
 
-.lesson-card:active {
-    box-shadow: inset 4px 4px 8px var(--neu-dark), inset -4px -4px 8px var(--neu-light);
-    transform: scale(0.98);
+.emoji {
+    font-size: 1.5rem;
+    display: inline-block;
+    animation: floatingEmoji 3s infinite ease-in-out;
 }
 
-.lesson-time {
-    font-size: 0.75rem;
-    padding: 6px 10px;
-    border-radius: 10px;
-    background: var(--bg-color);
-    box-shadow: inset 2px 2px 5px var(--neu-dark), inset -2px -2px 5px var(--neu-light);
+@keyframes floatingEmoji {
+    0%, 100% { transform: translateY(0) rotate(0); }
+    50% { transform: translateY(-5px) rotate(10deg); }
+}
+
+/* СКРЕЙТЧИНГ (Эффект появления) */
+#schedule-list div {
+    animation: slideIn 0.5s ease forwards;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; filter: blur(10px); transform: translateX(-20px); }
+    to { opacity: 1; filter: blur(0); transform: translateX(0); }
     }
     
