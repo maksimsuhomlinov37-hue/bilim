@@ -1,124 +1,120 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap');
 
 :root {
-    --glass-bg: rgba(255, 255, 255, 0.15);
-    --glass-border: rgba(255, 255, 255, 0.3);
-    --accent-green: #4caf50;
-    --text-dark: #2d3436;
+    --bg-color: #f0ede5; 
+    --glass: rgba(255, 255, 255, 0.3);
+    --accent: #4caf50; 
+    --text: #5d574a;
 }
 
 body {
-    background: linear-gradient(135deg, #f0ede5 0%, #d7d2cc 100%);
-    font-family: 'Montserrat', sans-serif;
-    color: var(--text-dark);
+    background-color: var(--bg-color);
     margin: 0;
-    min-height: 100vh;
+    padding: 15px;
+    font-family: 'Montserrat', sans-serif;
+    color: var(--text);
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 20px;
-    overflow-x: hidden;
+    flex-direction: column;
+    align-items: center;
 }
 
-/* ГЛАССМОРФИЗМ КОНТЕЙНЕР */
 .glass-container {
-    background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--glass-border);
-    border-radius: 35px;
-    padding: 25px;
     width: 100%;
     max-width: 450px;
-    box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 35px;
+    padding: 20px;
+    box-sizing: border-box;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.05);
 }
 
-/* ИНТЕГРАЦИЯ ИИ (Стиль карточки обновлений) */
-.updates-box {
-    background: rgba(255, 255, 255, 0.4);
-    border-radius: 20px;
-    padding: 15px;
-    margin-bottom: 20px;
-    border-left: 5px solid var(--accent-green);
-    font-size: 0.85rem;
-    position: relative;
-    overflow: hidden;
-}
-
-/* ТАЙМЕР С АНИМАЦИЕЙ ПУЛЬСАЦИИ */
+/* ТАЙМЕР С ПУЛЬСАЦИЕЙ */
 #timer {
-    background: rgba(0, 0, 0, 0.05);
+    font-size: 0.85rem;
+    font-weight: 800;
+    margin-bottom: 20px;
     padding: 15px;
-    border-radius: 18px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    color: var(--accent-green);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.4);
+    box-shadow: inset 4px 4px 8px #d1cdc1, inset -4px -4px 8px #ffffff;
+    color: var(--accent);
     text-align: center;
-    margin-bottom: 25px;
-    animation: timerPulse 2s infinite ease-in-out;
+    animation: pulse 2s infinite ease-in-out;
 }
 
-@keyframes timerPulse {
-    0% { transform: scale(1); opacity: 0.9; }
-    50% { transform: scale(1.02); opacity: 1; }
-    100% { transform: scale(1); opacity: 0.9; }
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
 }
 
-/* КНОПКИ С ЭФФЕКТОМ БАБОЧЕК (Через Scale и Shadow) */
+/* КНОПКИ-БАБОЧКИ */
+.day-selector {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    justify-content: space-between;
+}
+
 .day-btn {
     flex: 1;
     border: none;
-    padding: 12px 5px;
-    margin: 0 4px;
-    border-radius: 12px;
-    background: white;
+    padding: 12px 0;
+    border-radius: 14px;
+    background: #f0ede5;
     cursor: pointer;
-    font-weight: 700;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    font-weight: bold;
+    font-size: 0.75rem;
+    box-shadow: 4px 4px 8px #d1cdc1, -4px -4px 8px #ffffff;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .day-btn:active {
-    transform: scale(0.8) rotate(-5deg); /* Эффект взмаха крыла при нажатии */
+    transform: scale(0.8) rotate(-15deg); /* Тот самый взмах бабочки */
 }
 
 .day-btn.active {
-    background: var(--accent-green);
-    color: white;
-    box-shadow: 0 10px 20px rgba(76, 175, 80, 0.3);
+    box-shadow: inset 3px 3px 6px #d1cdc1, inset -3px -3px 6px #ffffff;
+    color: var(--accent);
+    background: #fff;
 }
 
-/* КАРТОЧКИ УРОКОВ И СМАЙЛЫ */
+/* КАРТОЧКИ С АНИМАЦИЕЙ СМАЙЛОВ */
 .lesson-card {
-    background: rgba(255, 255, 255, 0.6);
-    margin-bottom: 12px;
+    background: rgba(255, 255, 255, 0.5);
     padding: 18px;
-    border-radius: 20px;
+    border-radius: 22px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: 0.3s;
-    border: 1px solid rgba(255,255,255,0.2);
-}
-
-.emoji {
-    font-size: 1.5rem;
-    display: inline-block;
-    animation: floatingEmoji 3s infinite ease-in-out;
-}
-
-@keyframes floatingEmoji {
-    0%, 100% { transform: translateY(0) rotate(0); }
-    50% { transform: translateY(-5px) rotate(10deg); }
-}
-
-/* СКРЕЙТЧИНГ (Эффект появления) */
-#schedule-list div {
-    animation: slideIn 0.5s ease forwards;
+    margin-bottom: 12px;
+    border: 1px solid rgba(255,255,255,0.3);
+    animation: slideIn 0.5s ease-out forwards;
 }
 
 @keyframes slideIn {
-    from { opacity: 0; filter: blur(10px); transform: translateX(-20px); }
-    to { opacity: 1; filter: blur(0); transform: translateX(0); }
+    from { opacity: 0; transform: translateX(-20px); filter: blur(5px); }
+    to { opacity: 1; transform: translateX(0); filter: blur(0); }
+}
+
+.emoji {
+    font-size: 1.4rem;
+    display: inline-block;
+    animation: float 3s infinite ease-in-out;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px) rotate(10deg); }
+}
+
+.lesson-time {
+    font-size: 0.75rem;
+    padding: 6px 10px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.6);
+    box-shadow: inset 2px 2px 5px #d1cdc1;
     }
     
