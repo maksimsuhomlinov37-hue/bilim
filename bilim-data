@@ -1,7 +1,11 @@
-{
-  "maksimsuhomlinov37@gmail.com": {
-    "pass": "suxmaks12",
-    "url": "https://sites.google.com/view/bilimclass/home"
-  }
+body {
+  background: linear-gradient(135deg, #e0e5ec, #ffffff);
+  font-family: 'Montserrat', sans-serif;
 }
-
+.login-card {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
