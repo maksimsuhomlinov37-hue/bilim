@@ -1,3 +1,4 @@
+/* ПЕРЕМЕННЫЕ ЦВЕТОВ */
 :root {
     --bg-color: #f0ede5; 
     --neu-light: #ffffff;
@@ -6,6 +7,7 @@
     --text: #5d574a;
 }
 
+/* ОБЩИЕ НАСТРОЙКИ */
 body {
     background-color: var(--bg-color);
     margin: 0;
@@ -13,10 +15,11 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: var(--text);
 }
 
+/* СТЕКЛЯННЫЙ КОНТЕЙНЕР */
 .glass-container {
     width: 100%;
     max-width: 480px;
@@ -30,6 +33,7 @@ body {
     box-shadow: 0 20px 40px rgba(0,0,0,0.05);
 }
 
+/* БЛОК ОБНОВЛЕНИЙ */
 .updates-box {
     background: var(--bg-color);
     margin-bottom: 25px;
@@ -57,6 +61,7 @@ body {
     border-left: 2px solid var(--accent);
 }
 
+/* ТАЙМЕР ДО ЛЕТА */
 #timer {
     font-size: 0.85rem;
     font-weight: 800;
@@ -69,6 +74,7 @@ body {
     text-align: center;
 }
 
+/* КНОПКИ ДНЕЙ НЕДЕЛИ */
 .day-selector {
     display: flex;
     gap: 8px;
@@ -86,7 +92,8 @@ body {
     font-weight: bold;
     font-size: 0.75rem;
     box-shadow: 4px 4px 8px var(--neu-dark), -4px -4px 8px var(--neu-light);
-    transition: 0.3s;
+    transition: 0.3s ease;
+    color: var(--text);
 }
 
 .day-btn.active {
@@ -94,6 +101,7 @@ body {
     color: var(--accent);
 }
 
+/* КАРТОЧКИ УРОКОВ */
 .lesson-card {
     background: var(--bg-color);
     padding: 18px;
@@ -103,6 +111,12 @@ body {
     align-items: center;
     box-shadow: 6px 6px 12px var(--neu-dark), -6px -6px 12px var(--neu-light);
     margin-bottom: 15px;
+    transition: 0.3s;
+}
+
+.lesson-card:active {
+    box-shadow: inset 4px 4px 8px var(--neu-dark), inset -4px -4px 8px var(--neu-light);
+    transform: scale(0.98);
 }
 
 .lesson-time {
