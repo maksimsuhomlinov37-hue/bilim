@@ -1,1 +1,231 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --bg-color: #f0ede5; 
+            --neu-light: #ffffff;
+            --neu-dark: #d1cdc1;
+            --accent: #4caf50; 
+            --text: #5d574a;
+        }
 
+        body {
+            background-color: transparent;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: 'Segoe UI', sans-serif;
+            color: var(--text);
+        }
+
+        .glass-container {
+            width: 100%;
+            max-width: 480px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 40px;
+            padding: 25px;
+            box-sizing: border-box;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+        }
+
+        /* ОКНО ОБНОВЛЕНИЙ */
+        .updates-box {
+            background: var(--bg-color);
+            margin-bottom: 25px;
+            padding: 15px;
+            border-radius: 25px;
+            box-shadow: 5px 5px 15px var(--neu-dark), -5px -5px 15px var(--neu-light);
+            border: 1px solid var(--neu-light);
+        }
+
+        .updates-title {
+            font-weight: 800;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .update-item {
+            font-size: 0.85rem;
+            margin: 5px 0;
+            padding-left: 10px;
+            border-left: 2px solid var(--accent);
+        }
+
+        /* ТАЙМЕР */
+        #timer {
+            font-size: 0.85rem;
+            font-weight: 800;
+            margin-bottom: 25px;
+            padding: 12px;
+            border-radius: 20px;
+            background: rgba(240, 237, 229, 0.6);
+            box-shadow: inset 4px 4px 8px var(--neu-dark), inset -4px -4px 8px var(--neu-light);
+            color: var(--accent);
+            text-align: center;
+        }
+
+        .day-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 25px;
+            justify-content: space-between;
+        }
+
+        .day-btn {
+            flex: 1;
+            border: none;
+            padding: 12px 0;
+            border-radius: 14px;
+            background: var(--bg-color);
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.75rem;
+            box-shadow: 4px 4px 8px var(--neu-dark), -4px -4px 8px var(--neu-light);
+            transition: 0.3s;
+        }
+
+        .day-btn.active {
+            box-shadow: inset 3px 3px 6px var(--neu-dark), inset -3px -3px 6px var(--neu-light);
+            color: var(--accent);
+        }
+
+        #schedule-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .lesson-card {
+            background: var(--bg-color);
+            padding: 18px;
+            border-radius: 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 6px 6px 12px var(--neu-dark), -6px -6px 12px var(--neu-light);
+            transition: 0.3s ease;
+            animation: appear 0.4s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes appear {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .lesson-card.pressed {
+            box-shadow: inset 6px 6px 12px var(--neu-dark), inset -6px -6px 12px var(--neu-light);
+            transform: scale(0.97);
+        }
+
+        .emoji {
+            font-size: 1.4rem;
+            animation: pulse 2s infinite ease-in-out;
+            display: inline-block;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        .lesson-time {
+            font-size: 0.75rem;
+            padding: 6px 10px;
+            border-radius: 10px;
+            background: var(--bg-color);
+            box-shadow: inset 2px 2px 5px var(--neu-dark), inset -2px -2px 5px var(--neu-light);
+        }
+
+        .lesson-card.pressed .lesson-time {
+            box-shadow: 3px 3px 6px var(--neu-dark), -3px -3px 6px var(--neu-light);
+            background: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="glass-container">
+    <div class="updates-box">
+        <div class="updates-title">🚀 Что нового:</div>
+        <div class="update-item">Добавлен 3D бежевый интерфейс</div>
+        <div class="update-item">Автоматический выбор дня недели</div>
+        <div class="update-item">Улучшено вдавливание кнопок</div>
+    </div>
+
+    <div id="timer">Загрузка...</div>
+
+    <div class="day-selector">
+        <button id="btn-Пн" class="day-btn" onclick="loadDay('Пн')">Пн</button>
+        <button id="btn-Вт" class="day-btn" onclick="loadDay('Вт')">Вт</button>
+        <button id="btn-Ср" class="day-btn" onclick="loadDay('Ср')">Ср</button>
+        <button id="btn-Чт" class="day-btn" onclick="loadDay('Чт')">Чт</button>
+        <button id="btn-Пт" class="day-btn" onclick="loadDay('Пт')">Пт</button>
+    </div>
+
+    <div id="schedule-list"></div>
+</div>
+
+<script>
+    const emojiMap = {
+        'Математика': '🔢', 'Русский язык': '🇷🇺', 'Физическая культура': '⚽',
+        'Музыка': '🎶', 'ИЗО': '🎨', 'Классный час': '🤝', 'Английский язык': '🇬🇧',
+        'Лит. чтение': '📖', 'Казахский язык': '🇰🇿', 'Цифровая грамотность': '💻',
+        'Познание мира': '🌍', 'Естествознание': '🧪', 'Трудовое обучение': '🛠️'
+    };
+
+    const schedule = {
+        'Пн': [{n:'Математика', t:'12:55-13:35'}, {n:'Русский язык', t:'13:40-14:20'}, {n:'Физическая культура', t:'14:30-15:10'}, {n:'Музыка', t:'15:25-16:05'}, {n:'ИЗО', t:'16:15-16:55'}, {n:'Классный час', t:'17:00-17:40'}],
+        'Вт': [{n:'Математика', t:'12:55-13:55'}, {n:'Английский язык', t:'13:40-14:20'}, {n:'Лит. чтение', t:'14:30-15:10'}, {n:'Казахский язык', t:'15:25-16:05'}, {n:'Физическая культура', t:'16:15-16:55'}],
+        'Ср': [{n:'Русский язык', t:'12:10-12:50'}, {n:'Цифровая грамотность', t:'12:55-13:35'}, {n:'Математика', t:'13:40-14:20'}, {n:'Казахский язык', t:'14:30-15:10'}, {n:'Лит. чтение', t:'15:25-16:05'}, {n:'Познание мира', t:'16:15-16:55'}],
+        'Чт': [{n:'Русский язык', t:'12:55-13:35'}, {n:'Математика', t:'13:40-14:20'}, {n:'Английский язык', t:'14:30-15:10'}, {n:'Лит. чтение', t:'15:25-16:05'}, {n:'Естествознание', t:'16:15-16:55'}, {n:'Казахский язык', t:'17:00-17:40'}],
+        'Пт': [{n:'Русский язык', t:'12:10-12:50'}, {n:'Математика', t:'12:55-13:35'}, {n:'Казахский язык', t:'13:40-14:20'}, {n:'Физическая культура', t:'14:30-15:10'}, {n:'Трудовое обучение', t:'15:25-16:05'}]
+    };
+
+    function loadDay(day) {
+        document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('btn-' + day).classList.add('active');
+        const list = document.getElementById('schedule-list');
+        list.innerHTML = '';
+        schedule[day].forEach((item, i) => {
+            const card = document.createElement('div');
+            card.className = 'lesson-card';
+            card.style.animationDelay = (i * 0.1) + 's';
+            card.onclick = function() { this.classList.toggle('pressed'); };
+            const emo = emojiMap[item.n] || '📚';
+            card.innerHTML = `<div style="display:flex;align-items:center;gap:12px">
+                <span class="emoji">${emo}</span>
+                <span style="font-weight:700">${item.n}</span>
+            </div><div class="lesson-time">${item.t}</div>`;
+            list.appendChild(card);
+        });
+    }
+
+    function init() {
+        const days = ['Пн', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Пн'];
+        loadDay(days[new Date().getDay()]);
+        setInterval(() => {
+            const diff = new Date(2026, 4, 22) - new Date();
+            const d = Math.floor(diff/86400000), h = Math.floor((diff/3600000)%24), m = Math.floor((diff/60000)%60), s = Math.floor((diff/1000)%60);
+            document.getElementById('timer').innerText = `ЛЕТО ЧЕРЕЗ: ${d}д ${h}ч ${m}м ${s}с`;
+        }, 1000);
+    }
+    init();
+</script>
+</body>
+</html>
+              
