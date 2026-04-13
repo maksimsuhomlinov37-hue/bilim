@@ -1,157 +1,82 @@
-// Вся магия дизайна и данных теперь здесь
-const style = `
-<style>
-    :root {
-        --bg: #f0ede9; /* Бежевый фон */
-        --dark: #d1cdc7;
-        --white: #ffffff;
-        --accent: #8b7e74;
-    }
-    .bc-container {
-        background: var(--bg);
-        padding: 20px;
-        font-family: 'Segoe UI', Roboto, sans-serif;
-        border-radius: 25px;
-        max-width: 450px;
-        margin: auto;
-    }
-    .bc-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; color: var(--accent); }
-    .bc-clip { transform: rotate(-45deg); font-size: 24px; }
-    
-    /* Таймер */
-    .timer-box {
-        font-size: 12px;
-        font-weight: bold;
-        padding: 8px;
-        border-radius: 10px;
-        box-shadow: inset 3px 3px 6px var(--dark), inset -3px -3px 6px var(--white);
-    }
-
-    .bc-days { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 25px; }
-    .bc-btn {
-        flex: 1; height: 50px; border: none; border-radius: 12px;
-        background: var(--bg); color: var(--accent); font-weight: bold;
-        box-shadow: 6px 6px 12px var(--dark), -6px -6px 12px var(--white);
-        cursor: pointer; transition: 0.2s;
-    }
-    .bc-btn:active, .bc-btn.active {
-        box-shadow: inset 4px 4px 8px var(--dark), inset -4px -4px 8px var(--white);
-        transform: scale(0.95);
-    }
-
-    /* Анимация появления карточек */
-    .bc-lesson {
-        background: var(--bg); padding: 15px; margin-bottom: 15px; border-radius: 18px;
-        box-shadow: 6px 6px 12px var(--dark), -6px -6px 12px var(--white);
-        display: flex; align-items: center;
-        opacity: 0;
-        transform: translateY(20px);
-        animation: slideUp 0.5s ease forwards;
-    }
-    @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
-
-    .bc-emoji { font-size: 24px; margin-right: 15px; }
-    .bc-name { font-weight: 600; color: #444; }
-    .bc-time { 
-        margin-left: auto; font-size: 11px; padding: 5px 10px; border-radius: 10px;
-        box-shadow: inset 3px 3px 6px var(--dark), inset -3px -3px 6px var(--white);
-        color: #777; font-weight: bold;
-    }
-</style>
-`;
-
-const html = `
-<div class="bc-container">
-    <div class="bc-header">
-        <div><span class="bc-clip">📎</span> <span style="font-size:12px;letter-spacing:1px">ОБНОВЛЕНИЯ САЙТОВ</span></div>
-        <div class="timer-box" id="holiday-timer">Считаю дни...</div>
-    </div>
-    <div class="bc-days">
-        <button class="bc-btn" onclick="bcRender('pn', this)">ПН</button>
-        <button class="bc-btn" onclick="bcRender('vt', this)">ВТ</button>
-        <button class="bc-btn" onclick="bcRender('sr', this)">СР</button>
-        <button class="bc-btn" onclick="bcRender('ct', this)">ЧТ</button>
-        <button class="bc-btn" onclick="bcRender('pt', this)">ПТ</button>
-    </div>
-    <div id="bc-content"></div>
-</div>
-`;
-
-const lessons = {
-    pn: [
-        {n: "Математика", t: "12:55-13:55", i: "📐"},
-        {n: "Английский язык", t: "13:40-14:20", i: "🔤"},
-        {n: "Физкультура", t: "14:30-15:10", i: "⚽"},
-        {n: "Музыка", t: "15:25-16:05", i: "🎵"},
-        {n: "ИЗО", t: "16:15-16:55", i: "🎨"},
-        {n: "Классный час", t: "17:00-17:40", i: "👥"}
-    ],
-    vt: [
-        {n: "Русский язык", t: "12:10-12:50", i: "✍️"},
-        {n: "Цифр. грамотность", t: "12:55-13:35", i: "💻"},
-        {n: "Лит. чтение", t: "14:30-15:10", i: "📖"},
-        {n: "Казахский язык", t: "15:25-16:05", i: "🇰🇿"},
-        {n: "Физкультура", t: "16:15-16:55", i: "👟"}
-    ],
-    sr: [
-        {n: "Русский язык", t: "12:55-13:35", i: "📔"},
-        {n: "Математика", t: "13:40-14:20", i: "➕"},
-        {n: "Казахский язык", t: "14:30-15:10", i: "🗣️"},
-        {n: "Лит. чтение", t: "15:25-16:05", i: "📚"},
-        {n: "Познание мира", t: "16:15-16:55", i: "🌍"}
-    ],
-    ct: [
-        {n: "Русский язык", t: "12:10-12:50", i: "✒️"},
-        {n: "Математика", t: "12:55-13:35", i: "🔢"},
-        {n: "Английский язык", t: "14:30-15:10", i: "🇬🇧"},
-        {n: "Лит. чтение", t: "15:25-16:05", i: "📜"},
-        {n: "Естествознание", t: "16:15-16:55", i: "🌿"},
-        {n: "Казахский язык", t: "17:00-17:40", i: "💬"}
-    ],
-    pt: [
-        {n: "Казахский язык", t: "13:40-14:20", i: "🇰🇿"},
-        {n: "Физкультура", t: "14:30-15:10", i: "🏆"},
-        {n: "Трудовое обучение", t: "15:25-16:05", i: "🛠️"}
-    ]
-};
-
-// Вставляем всё в Google Сайт
-document.getElementById('bilimclass-root').innerHTML = style + html;
-
-// Функция таймера
-function updateTimer() {
-    const holiday = new Date('May 22, 2026 00:00:00').getTime();
-    const now = new Date().getTime();
-    const diff = holiday - now;
-    
-    if (diff < 0) {
-        document.getElementById('holiday-timer').innerText = "УРА! КАНИКУЛЫ!";
-        return;
-    }
-    
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    document.getElementById('holiday-timer').innerText = "До каникул: " + days + "дн";
+:root {
+    --bg: #f0ede9;
+    --dark-shadow: #d1cdc7;
+    --light-shadow: #ffffff;
+    --green: #2e7d32;
+    --text-dark: #333;
 }
-updateTimer();
 
-// Функция отрисовки уроков
-window.bcRender = function(day, btn) {
-    const display = document.getElementById('bc-content');
-    display.innerHTML = '';
-    
-    document.querySelectorAll('.bc-btn').forEach(b => b.classList.remove('active'));
-    if(btn) btn.classList.add('active');
+.bc-main-card {
+    background: var(--bg);
+    padding: 20px;
+    border-radius: 30px;
+    box-shadow: 10px 10px 20px var(--dark-shadow), -10px -10px 20px var(--light-shadow);
+    font-family: 'Segoe UI', sans-serif;
+}
 
-    lessons[day].forEach((item, idx) => {
-        setTimeout(() => {
-            const div = document.createElement('div');
-            div.className = 'bc-lesson';
-            div.innerHTML = `
-                <span class="bc-emoji">${item.i}</span> 
-                <span class="bc-name">${item.n}</span> 
-                <span class="bc-time">${item.t}</span>
-            `;
-            display.appendChild(div);
-        }, idx * 100);
-    });
-};
+/* Секция ЧТО НОВОГО */
+.what-is-new {
+    background: var(--bg);
+    border-radius: 18px;
+    padding: 15px;
+    box-shadow: inset 4px 4px 8px var(--dark-shadow), inset -4px -4px 8px var(--light-shadow);
+    margin-bottom: 25px;
+}
+
+.what-title { color: var(--green); font-weight: 900; font-size: 11px; margin-bottom: 10px; }
+
+.what-list { list-style: none; padding: 0; margin: 0; font-size: 11px; }
+
+.what-list li { margin-bottom: 5px; display: flex; align-items: center; }
+
+.what-list li::before {
+    content: "|"; color: var(--green); font-weight: bold; margin-right: 8px;
+}
+
+/* Таймер */
+.timer-bar {
+    background: var(--bg);
+    height: 35px;
+    border-radius: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--green);
+    font-weight: bold;
+    font-size: 11px;
+    margin-bottom: 20px;
+    box-shadow: inset 3px 3px 6px var(--dark-shadow), inset -3px -3px 6px var(--light-shadow);
+}
+
+/* Кнопки */
+.days-grid { display: flex; justify-content: space-between; gap: 6px; margin-bottom: 25px; }
+
+.day-btn {
+    flex: 1; height: 40px; border: none; border-radius: 12px; background: var(--bg);
+    font-weight: bold; box-shadow: 4px 4px 8px var(--dark-shadow), -4px -4px 8px var(--light-shadow);
+    cursor: pointer;
+}
+
+.day-btn.active {
+    box-shadow: inset 3px 3px 6px var(--dark-shadow), inset -3px -3px 6px var(--light-shadow);
+    color: var(--green);
+}
+
+/* Карточки уроков */
+.lesson-card {
+    background: var(--bg);
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 18px;
+    box-shadow: 6px 6px 12px var(--dark-shadow), -6px -6px 12px var(--light-shadow);
+    display: flex;
+    align-items: center;
+}
+
+.lesson-name { font-weight: 600; font-size: 13px; color: var(--text-dark); }
+
+.lesson-time {
+    margin-left: auto; padding: 4px 8px; font-size: 11px; font-weight: bold;
+    box-shadow: inset 3px 3px 6px var(--dark-shadow), inset -3px -3px 6px var(--light-shadow);
+    border-radius: 8px; color: #666;
+}
