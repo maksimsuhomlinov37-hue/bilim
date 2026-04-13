@@ -1,139 +1,116 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
+const style = `
+<style>
+    :root {
+        --bg: #e8f5e9;
+        --dark: #c8d6c1;
+        --white: #ffffff;
+        --green: #2e7d32;
+    }
+    .bc-container {
+        background: var(--bg);
+        padding: 20px;
+        font-family: 'Segoe UI', sans-serif;
+        border-radius: 20px;
+        color: #333;
+    }
+    .bc-header { display: flex; align-items: center; margin-bottom: 20px; font-weight: bold; font-size: 14px; }
+    .bc-clip { transform: rotate(-45deg); margin-right: 10px; font-size: 20px; }
+    
+    .bc-days { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 25px; }
+    .bc-btn {
+        flex: 1; height: 45px; border: none; border-radius: 12px;
+        background: var(--bg); color: var(--green); font-weight: bold;
+        box-shadow: 5px 5px 10px var(--dark), -5px -5px 10px var(--white);
+        cursor: pointer; transition: 0.2s;
+    }
+    .bc-btn:active, .bc-btn.active {
+        box-shadow: inset 4px 4px 8px var(--dark), inset -4px -4px 8px var(--white);
+        transform: scale(0.95);
+    }
 
-:root {
-    --bg-beige: #f5f2eb;      /* Бежевый для элементов */
-    --window-white: #ffffff;  /* Белый для фоновых окон */
-    --accent-green: #4caf50;
-    --text-main: #4a453c;
-    --glass-effect: rgba(255, 255, 255, 0.4);
-}
+    .bc-lesson {
+        background: var(--bg); padding: 15px; margin-bottom: 12px; border-radius: 15px;
+        box-shadow: 5px 5px 10px var(--dark), -5px -5px 10px var(--white);
+        display: flex; align-items: center; animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn { from {opacity:0; transform: translateY(10px);} to {opacity:1; transform: translateY(0);} }
 
-body {
-    background: transparent !important;
-    margin: 0;
-    padding: 20px;
-    font-family: 'Montserrat', sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+    .bc-emoji { font-size: 22px; margin-right: 12px; }
+    .bc-time { 
+        margin-left: auto; font-size: 11px; padding: 4px 8px; border-radius: 8px;
+        box-shadow: inset 2px 2px 5px var(--dark), inset -2px -2px 5px var(--white);
+    }
+</style>
+`;
 
-/* ОБЩАЯ БЕЖЕВАЯ ПОДЛОЖКА (ЧЕТВЕРТОЕ ОКОШКО) */
-.main-wrapper {
-    background: var(--bg-beige);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-radius: 45px;
-    padding: 25px;
-    width: 100%;
-    max-width: 500px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.05);
-    border: 1px solid rgba(255,255,255,0.3); /* Эффект жидкого стекла */
-}
+const html = `
+<div class="bc-container">
+    <div class="bc-header"><span class="bc-clip">📎</span> ОБНОВЛЕНИЯ САЙТОВ</div>
+    <div class="bc-days">
+        <button class="bc-btn" onclick="bcRender('pn', this)">ПН</button>
+        <button class="bc-btn" onclick="bcRender('vt', this)">ВТ</button>
+        <button class="bc-btn" onclick="bcRender('sr', this)">СР</button>
+        <button class="bc-btn" onclick="bcRender('ct', this)">ЧТ</button>
+        <button class="bc-btn" onclick="bcRender('pt', this)">ПТ</button>
+    </div>
+    <div id="bc-content"></div>
+</div>
+`;
 
-/* БЕЛОЕ ОКОШКО ДЛЯ ОБНОВЛЕНИЙ */
-.update-window {
-    background: var(--window-white);
-    border-radius: 30px;
-    padding: 20px;
-    margin-bottom: 25px;
-    position: relative;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.03);
-}
+const lessons = {
+    pn: [
+        {n: "Математика", t: "12:55-13:55", i: "📐"},
+        {n: "Английский", t: "13:40-14:20", i: "🔤"},
+        {n: "Физкультура", t: "14:30-15:10", i: "⚽"},
+        {n: "Музыка", t: "15:25-16:05", i: "🎵"},
+        {n: "ИЗО", t: "16:15-16:55", i: "🎨"},
+        {n: "Классный час", t: "17:00-17:40", i: "👥"}
+    ],
+    vt: [
+        {n: "Русский язык", t: "12:10-12:50", i: "✍️"},
+        {n: "Цифр. грам.", t: "12:55-13:35", i: "💻"},
+        {n: "Лит. чтение", t: "14:30-15:10", i: "📖"},
+        {n: "Казахский", t: "15:25-16:05", i: "🇰🇿"},
+        {n: "Физкультура", t: "16:15-16:55", i: "👟"}
+    ],
+    sr: [
+        {n: "Русский язык", t: "12:55-13:35", i: "📔"},
+        {n: "Математика", t: "13:40-14:20", i: "➕"},
+        {n: "Казахский", t: "14:30-15:10", i: "🗣️"},
+        {n: "Лит. чтение", t: "15:25-16:05", i: "📚"},
+        {n: "Познание мира", t: "16:15-16:55", i: "🌍"}
+    ],
+    ct: [
+        {n: "Русский язык", t: "12:10-12:50", i: "✒️"},
+        {n: "Математика", t: "12:55-13:35", i: "🔢"},
+        {n: "Английский", t: "14:30-15:10", i: "🇬🇧"},
+        {n: "Лит. чтение", t: "15:25-16:05", i: "📜"},
+        {n: "Естествознание", t: "16:15-16:55", i: "🌿"},
+        {n: "Казахский", t: "17:00-17:40", i: "💬"}
+    ],
+    pt: [
+        {n: "Казахский", t: "13:40-14:20", i: "🇰🇿"},
+        {n: "Физкультура", t: "14:30-15:10", i: "🏆"},
+        {n: "Труд", t: "15:25-16:05", i: "🛠️"}
+    ]
+};
 
-/* ОДНА СКРЕПКА СЛЕВА */
-.update-window::before {
-    content: "📎";
-    position: absolute;
-    top: -15px;
-    left: 20px;
-    font-size: 28px;
-    transform: rotate(-15deg);
-}
+// Инициализация
+document.getElementById('bilimclass-root').innerHTML = style + html;
 
-/* БЕЖЕВЫЙ БЛОК ОБНОВЛЕНИЙ В ЖИДКОМ СТЕКЛЕ */
-.update-content {
-    background: var(--bg-beige);
-    border: 1px solid var(--glass-effect);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 15px;
-    text-align: center;
-    font-size: 0.85rem;
-    color: var(--text-main);
-    transition: 0.3s;
-}
+window.bcRender = function(day, btn) {
+    const display = document.getElementById('bc-content');
+    display.innerHTML = '';
+    
+    document.querySelectorAll('.bc-btn').forEach(b => b.classList.remove('active'));
+    if(btn) btn.classList.add('active');
 
-/* БЕЛОЕ ОКОШКО ДЛЯ УРОКОВ */
-.lessons-window {
-    background: var(--window-white);
-    border-radius: 35px;
-    padding: 20px;
-    min-height: 200px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.03);
-}
-
-/* КНОПКИ ДНЕЙ (БЕЖЕВЫЕ В СТЕКЛЕ) */
-.day-selector {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 20px;
-}
-
-.day-btn {
-    flex: 1;
-    border: none;
-    padding: 12px 0;
-    border-radius: 50px;
-    background: var(--bg-beige);
-    border: 1px solid var(--glass-effect);
-    font-weight: 800;
-    cursor: pointer;
-    transition: 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-/* КАРТОЧКА УРОКА (БЕЖЕВАЯ В ЖИДКОМ СТЕКЛЕ) */
-.lesson-card {
-    background: var(--bg-beige);
-    border: 1px solid var(--glass-effect);
-    backdrop-filter: blur(8px);
-    border-radius: 50px;
-    padding: 18px 25px;
-    margin-bottom: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    transition: 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    opacity: 0;
-    transform: scale(0.8);
-}
-
-.lesson-card.show {
-    opacity: 1;
-    transform: scale(1);
-}
-
-/* ЭФФЕКТ ПРИ НАЖАТИИ: ВДАВЛИВАНИЕ + ПОВОРОТ 20 ГРАДУСОВ */
-.lesson-card:active, .day-btn:active, .update-content:active {
-    transform: scale(0.9) rotate(-20deg) !important; /* Поворот влево на 20 градусов */
-    box-shadow: inset 6px 6px 12px rgba(0,0,0,0.1);
-}
-
-/* ВРЕМЯ - ВЫДАВЛИВАНИЕ (НЕОМОРФИЗМ) */
-.lesson-time {
-    font-size: 0.75rem;
-    font-weight: 900;
-    padding: 6px 15px;
-    border-radius: 20px;
-    background: var(--bg-beige);
-    color: var(--accent-green);
-    box-shadow: 3px 3px 6px #d1cdc1, -3px -3px 6px #ffffff; /* Эффект выдавливания */
-}
-
-.day-btn.active {
-    background: var(--accent-green);
-    color: white;
-    box-shadow: inset 4px 4px 8px rgba(0,0,0,0.2);
-}
-
+    lessons[day].forEach((item, idx) => {
+        setTimeout(() => {
+            const div = document.createElement('div');
+            div.className = 'bc-lesson';
+            div.innerHTML = `<span class="bc-emoji">${item.i}</span> <b>${item.n}</b> <span class="bc-time">${item.t}</span>`;
+            display.appendChild(div);
+        }, idx * 100);
+    });
+};
