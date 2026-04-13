@@ -1,0 +1,63 @@
+(function() {
+    const root = document.getElementById('memory-root');
+    if (!root) return;
+
+    const style = document.createElement('style');
+    style.textContent = `
+        :root { --glass: rgba(255, 255, 255, 0.2); --text: #333; }
+        .mem-container { 
+            font-family: 'Segoe UI', sans-serif; 
+            max-width: 800px; margin: auto; padding: 20px;
+        }
+        .mem-title { text-align: center; color: #2e7d32; font-weight: 900; margin-bottom: 30px; }
+        
+        .mem-grid { 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 20px; 
+        }
+        
+        .mem-card { 
+            background: var(--glass); 
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 25px; 
+            padding: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
+        .mem-card:hover { transform: translateY(-5px); }
+        
+        .video-wrapper {
+            position: relative; padding-bottom: 56.25%; height: 0; 
+            overflow: hidden; border-radius: 15px; background: #000;
+        }
+        .video-wrapper iframe {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;
+        }
+        .mem-desc { margin-top: 15px; font-size: 14px; font-weight: 600; color: var(--text); text-align: center; }
+    `;
+    document.head.appendChild(style);
+
+    // --- СЮДА ДОБАВЛЯЙ ССЫЛКИ НА ВИДЕО ---
+    // Важно: бери код видео из ссылки (после v= или из кнопки "Поделиться")
+    const myVideos = [
+        { id: "dQw4w9WgXcQ", title: "Наш выпускной 4 класс!" },
+        { id: "J---aiyznGQ", title: "Веселая перемена" },
+        { id: "z97u7U3K8Y8", title: "Урок физкультуры" }
+    ];
+
+    let html = `<div class="mem-container"><h2 class="mem-title">📸 НАШИ ВОСПОМИНАНИЯ</h2><div class="mem-grid">`;
+
+    myVideos.forEach(vid => {
+        html += `
+            <div class="mem-card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/${vid.id}" allowfullscreen></iframe>
+                </div>
+                <div class="mem-desc">${vid.title}</div>
+            </div>`;
+    });
+
+    html += `</div></div>`;
+    root.innerHTML = html;
+})();
