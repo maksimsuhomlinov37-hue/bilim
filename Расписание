@@ -1,82 +1,137 @@
-:root {
-    --bg: #f0ede9;
-    --dark-shadow: #d1cdc7;
-    --light-shadow: #ffffff;
-    --green: #2e7d32;
-    --text-dark: #333;
-}
+(function() {
+    const style = `
+    <style>
+        :root {
+            --bg: #f0ede9;
+            --dark-s: #d1cdc7;
+            --light-s: #ffffff;
+            --green: #2e7d32;
+        }
+        .bc-card {
+            background: var(--bg);
+            padding: 20px;
+            border-radius: 30px;
+            box-shadow: 10px 10px 20px var(--dark-s), -10px -10px 20px var(--light-s);
+            font-family: 'Segoe UI', sans-serif;
+            max-width: 400px;
+            margin: auto;
+        }
+        .bc-news {
+            background: var(--bg);
+            border-radius: 20px;
+            padding: 15px;
+            box-shadow: inset 4px 4px 8px var(--dark-s), inset -4px -4px 8px var(--light-s);
+            margin-bottom: 20px;
+        }
+        .bc-news-title { color: var(--green); font-weight: 900; font-size: 11px; margin-bottom: 10px; letter-spacing: 1px; }
+        .bc-news-list { list-style: none; padding: 0; margin: 0; font-size: 11px; color: #444; }
+        .bc-news-list li { margin-bottom: 4px; display: flex; align-items: center; }
+        .bc-news-list li::before { content: "|"; color: var(--green); margin-right: 8px; font-weight: bold; }
 
-.bc-main-card {
-    background: var(--bg);
-    padding: 20px;
-    border-radius: 30px;
-    box-shadow: 10px 10px 20px var(--dark-shadow), -10px -10px 20px var(--light-shadow);
-    font-family: 'Segoe UI', sans-serif;
-}
+        .bc-timer {
+            background: var(--bg);
+            height: 35px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--green);
+            font-weight: bold;
+            font-size: 11px;
+            margin-bottom: 20px;
+            box-shadow: inset 3px 3px 6px var(--dark-s), inset -3px -3px 6px var(--light-s);
+        }
 
-/* Секция ЧТО НОВОГО */
-.what-is-new {
-    background: var(--bg);
-    border-radius: 18px;
-    padding: 15px;
-    box-shadow: inset 4px 4px 8px var(--dark-shadow), inset -4px -4px 8px var(--light-shadow);
-    margin-bottom: 25px;
-}
+        .bc-days { display: flex; justify-content: space-between; gap: 6px; margin-bottom: 25px; }
+        .bc-btn {
+            flex: 1; height: 40px; border: none; border-radius: 12px;
+            background: var(--bg); font-weight: bold; font-size: 12px;
+            box-shadow: 4px 4px 8px var(--dark-s), -4px -4px 8px var(--light-s);
+            cursor: pointer; transition: 0.2s;
+        }
+        .bc-btn.active {
+            box-shadow: inset 3px 3px 6px var(--dark-s), inset -3px -3px 6px var(--light-s);
+            color: var(--green);
+        }
 
-.what-title { color: var(--green); font-weight: 900; font-size: 11px; margin-bottom: 10px; }
+        .bc-lesson {
+            background: var(--bg); padding: 15px; margin-bottom: 15px; border-radius: 18px;
+            box-shadow: 6px 6px 12px var(--dark-s), -6px -6px 12px var(--light-s);
+            display: flex; align-items: center; opacity: 0; transform: translateY(10px);
+            animation: bcIn 0.4s forwards;
+        }
+        @keyframes bcIn { to { opacity: 1; transform: translateY(0); } }
+        .bc-name { font-weight: 600; font-size: 13px; color: #333; }
+        .bc-time { 
+            margin-left: auto; padding: 4px 8px; font-size: 10px; font-weight: bold;
+            box-shadow: inset 2px 2px 5px var(--dark-s), inset -2px -2px 5px var(--light-s);
+            border-radius: 8px; color: #666;
+        }
+    </style>`;
 
-.what-list { list-style: none; padding: 0; margin: 0; font-size: 11px; }
+    const html = `
+    <div class="bc-card">
+        <div class="bc-news">
+            <div class="bc-news-title">🚀 ЧТО НОВОГО:</div>
+            <ul class="bc-news-list">
+                <li>Добавлен 3D бежевый интерфейс</li>
+                <li>Автоматический выбор дня недели</li>
+                <li>Улучшено вдавливание кнопок</li>
+            </ul>
+        </div>
+        <div class="bc-timer" id="bc-timer">Загрузка...</div>
+        <div class="bc-days">
+            <button class="bc-btn" onclick="bcShow('pn', this)">Пн</button>
+            <button class="bc-btn" onclick="bcShow('vt', this)">Вт</button>
+            <button class="bc-btn" onclick="bcShow('sr', this)">Ср</button>
+            <button class="bc-btn" onclick="bcShow('ct', this)">Чт</button>
+            <button class="bc-btn" onclick="bcShow('pt', this)">Пт</button>
+        </div>
+        <div id="bc-list"></div>
+    </div>`;
 
-.what-list li { margin-bottom: 5px; display: flex; align-items: center; }
+    const lessons = {
+        pn: [{n:"Математика",t:"12:55-13:35",i:"🔢"},{n:"Русский язык",t:"13:40-14:20",i:"🇷🇺"},{n:"Физкультура",t:"14:30-15:10",i:"⚽"},{n:"Музыка",t:"15:25-16:05",i:"🎵"},{n:"ИЗО",t:"16:15-16:55",i:"🎨"},{n:"Классный час",t:"17:00-17:40",i:"🤝"}],
+        vt: [{n:"Лит. чтение",t:"14:30-15:10",i:"📖"},{n:"Казахский язык",t:"15:25-16:05",i:"🇰🇿"},{n:"Физкультура",t:"16:15-16:55",i:"👟"},{n:"Русский язык",t:"12:10-12:50",i:"✍️"},{n:"Цифр. грамотность",t:"12:55-13:35",i:"💻"}],
+        sr: [{n:"Математика",t:"13:40-14:20",i:"📐"},{n:"Казахский язык",t:"14:30-15:10",i:"🇰🇿"},{n:"Лит. чтение",t:"15:25-16:05",i:"📚"},{n:"Познание мира",t:"16:15-16:55",i:"🌍"},{n:"Русский язык",t:"12:55-13:35",i:"📔"}],
+        ct: [{n:"Английский язык",t:"14:30-15:10",i:"🇬🇧"},{n:"Лит. чтение",t:"15:25-16:05",i:"📜"},{n:"Естествознание",t:"16:15-16:55",i:"🌿"},{n:"Казахский язык",t:"17:00-17:40",i:"🇰🇿"},{n:"Русский язык",t:"12:10-12:50",i:"✍️"}],
+        pt: [{n:"Казахский язык",t:"13:40-14:20",i:"🇰🇿"},{n:"Физкультура",t:"14:30-15:10",i:"🏆"},{n:"Трудовое обучение",t:"15:25-16:05",i:"🛠️"}]
+    };
 
-.what-list li::before {
-    content: "|"; color: var(--green); font-weight: bold; margin-right: 8px;
-}
+    document.getElementById('bilimclass-root').innerHTML = style + html;
 
-/* Таймер */
-.timer-bar {
-    background: var(--bg);
-    height: 35px;
-    border-radius: 17px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--green);
-    font-weight: bold;
-    font-size: 11px;
-    margin-bottom: 20px;
-    box-shadow: inset 3px 3px 6px var(--dark-shadow), inset -3px -3px 6px var(--light-shadow);
-}
+    window.bcShow = function(day, btn) {
+        const list = document.getElementById('bc-list');
+        list.innerHTML = '';
+        document.querySelectorAll('.bc-btn').forEach(b => b.classList.remove('active'));
+        if(btn) btn.classList.add('active');
+        lessons[day].forEach((l, i) => {
+            setTimeout(() => {
+                const item = document.createElement('div');
+                item.className = 'bc-lesson';
+                item.innerHTML = `<span style="margin-right:15px; font-size:20px;">${l.i}</span><span class="bc-name">${l.n}</span><span class="bc-time">${l.t}</span>`;
+                list.appendChild(item);
+            }, i * 80);
+        });
+    };
 
-/* Кнопки */
-.days-grid { display: flex; justify-content: space-between; gap: 6px; margin-bottom: 25px; }
+    function startTimer() {
+        const target = new Date('May 22, 2026 00:00:00').getTime();
+        setInterval(() => {
+            const now = new Date().getTime();
+            const d = target - now;
+            const days = Math.floor(d / (1000*60*60*24));
+            const hours = Math.floor((d % (1000*60*60*24)) / (1000*60*60));
+            const mins = Math.floor((d % (1000*60*60)) / (1000*60));
+            const secs = Math.floor((d % (1000*60)) / 1000);
+            document.getElementById('bc-timer').innerHTML = `ЛЕТО ЧЕРЕЗ: ${days}д ${hours}ч ${mins}м ${secs}с`;
+        }, 1000);
+    }
+    startTimer();
+    
+    // Автовыбор текущего дня
+    const dayMap = ['pt','pn','vt','sr','ct','pt','pt'];
+    const today = dayMap[new Date().getDay()];
+    bcShow(today, document.querySelectorAll('.bc-btn')[['pn','vt','sr','ct','pt'].indexOf(today)]);
 
-.day-btn {
-    flex: 1; height: 40px; border: none; border-radius: 12px; background: var(--bg);
-    font-weight: bold; box-shadow: 4px 4px 8px var(--dark-shadow), -4px -4px 8px var(--light-shadow);
-    cursor: pointer;
-}
-
-.day-btn.active {
-    box-shadow: inset 3px 3px 6px var(--dark-shadow), inset -3px -3px 6px var(--light-shadow);
-    color: var(--green);
-}
-
-/* Карточки уроков */
-.lesson-card {
-    background: var(--bg);
-    padding: 15px;
-    margin-bottom: 15px;
-    border-radius: 18px;
-    box-shadow: 6px 6px 12px var(--dark-shadow), -6px -6px 12px var(--light-shadow);
-    display: flex;
-    align-items: center;
-}
-
-.lesson-name { font-weight: 600; font-size: 13px; color: var(--text-dark); }
-
-.lesson-time {
-    margin-left: auto; padding: 4px 8px; font-size: 11px; font-weight: bold;
-    box-shadow: inset 3px 3px 6px var(--dark-shadow), inset -3px -3px 6px var(--light-shadow);
-    border-radius: 8px; color: #666;
-}
+})();
