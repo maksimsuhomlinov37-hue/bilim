@@ -1,31 +1,38 @@
 (function() {
-    // 1. Создаем стили (дизайн как на фото)
+    // 1. СТИЛИ (Дизайн 3D Бежевый)
     const style = document.createElement('style');
     style.textContent = `
         :root { --bg: #f0ede9; --ds: #d1cdc7; --ls: #ffffff; --gn: #2e7d32; }
-        .bc-card { background: var(--bg); padding: 20px; border-radius: 30px; box-shadow: 10px 10px 20px var(--ds), -10px -10px 20px var(--ls); font-family: sans-serif; max-width: 400px; margin: auto; }
+        .bc-card { background: var(--bg); padding: 20px; border-radius: 30px; box-shadow: 10px 10px 20px var(--ds), -10px -10px 20px var(--ls); font-family: sans-serif; max-width: 420px; margin: auto; }
         .bc-news { background: var(--bg); border-radius: 20px; padding: 15px; box-shadow: inset 4px 4px 8px var(--ds), inset -4px -4px 8px var(--ls); margin-bottom: 20px; }
-        .bc-news-title { color: var(--gn); font-weight: 900; font-size: 11px; margin-bottom: 8px; }
+        .bc-news-title { color: var(--gn); font-weight: 900; font-size: 11px; margin-bottom: 8px; letter-spacing: 1px; }
         .bc-news-list { list-style: none; padding: 0; margin: 0; font-size: 11px; color: #444; }
         .bc-news-list li::before { content: "|"; color: var(--gn); margin-right: 8px; font-weight: bold; }
-        .bc-timer { background: var(--bg); height: 35px; border-radius: 20px; display: flex; align-items: center; justify-content: center; color: var(--gn); font-weight: bold; font-size: 11px; margin-bottom: 20px; box-shadow: inset 3px 3px 6px var(--ds), inset -3px -3px 6px var(--ls); }
+        .bc-timer { background: var(--bg); height: 40px; border-radius: 20px; display: flex; align-items: center; justify-content: center; color: var(--gn); font-weight: bold; font-size: 11px; margin-bottom: 20px; box-shadow: inset 3px 3px 6px var(--ds), inset -3px -3px 6px var(--ls); }
         .bc-days { display: flex; justify-content: space-between; gap: 5px; margin-bottom: 20px; }
-        .bc-btn { flex: 1; height: 40px; border: none; border-radius: 10px; background: var(--bg); font-weight: bold; box-shadow: 4px 4px 8px var(--ds), -4px -4px 8px var(--ls); cursor: pointer; }
-        .bc-btn.active { box-shadow: inset 3px 3px 6px var(--ds), inset -3px -3px 6px var(--ls); color: var(--gn); }
-        .bc-lesson { background: var(--bg); padding: 15px; margin-bottom: 12px; border-radius: 18px; box-shadow: 6px 6px 12px var(--ds), -6px -6px 12px var(--ls); display: flex; align-items: center; }
-        .bc-time { margin-left: auto; padding: 4px 8px; font-size: 10px; font-weight: bold; box-shadow: inset 2px 2px 5px var(--ds), inset -2px -2px 5px var(--ls); border-radius: 8px; color: #666; }
+        .bc-btn { flex: 1; height: 45px; border: none; border-radius: 12px; background: var(--bg); font-weight: bold; box-shadow: 4px 4px 8px var(--ds), -4px -4px 8px var(--ls); cursor: pointer; transition: 0.2s; font-size: 12px; }
+        .bc-btn.active { box-shadow: inset 3px 3px 6px var(--ds), inset -3px -3px 6px var(--ls); color: var(--gn); transform: scale(0.96); }
+        .bc-lesson { background: var(--bg); padding: 15px; margin-bottom: 12px; border-radius: 18px; box-shadow: 6px 6px 12px var(--ds), -6px -6px 12px var(--ls); display: flex; align-items: center; opacity: 0; transform: translateY(10px); animation: bcIn 0.4s forwards; }
+        @keyframes bcIn { to { opacity: 1; transform: translateY(0); } }
+        .bc-emoji { font-size: 20px; margin-right: 15px; }
+        .bc-name { font-weight: 600; font-size: 13px; color: #333; }
+        .bc-time { margin-left: auto; padding: 4px 10px; font-size: 10px; font-weight: bold; box-shadow: inset 2px 2px 5px var(--ds), inset -2px -2px 5px var(--ls); border-radius: 10px; color: #666; }
     `;
     document.head.appendChild(style);
 
-    // 2. Создаем структуру
+    // 2. СТРУКТУРА
     const root = document.getElementById('bilimclass-root');
     root.innerHTML = `
         <div class="bc-card">
             <div class="bc-news">
                 <div class="bc-news-title">🚀 ЧТО НОВОГО:</div>
-                <ul class="bc-news-list"><li>Добавлен 3D бежевый интерфейс</li><li>Авто-выбор дня</li><li>Таймер до лета</li></ul>
+                <ul class="bc-news-list">
+                    <li>Полное расписание на неделю</li>
+                    <li>3D Неоморфизм интерфейс</li>
+                    <li>Таймер до 22 мая</li>
+                </ul>
             </div>
-            <div class="bc-timer" id="bc-timer-val">Загрузка...</div>
+            <div class="bc-timer" id="bc-timer-display">Загрузка таймера...</div>
             <div class="bc-days">
                 <button class="bc-btn" onclick="bcShow('pn', this)">Пн</button>
                 <button class="bc-btn" onclick="bcShow('vt', this)">Вт</button>
@@ -37,35 +44,84 @@
         </div>
     `;
 
-    // 3. Данные и функции
+    // 3. ДАННЫЕ УРОКОВ
     const lessons = {
-        pn: [{n:"Математика",t:"12:55",i:"🔢"},{n:"Русский язык",t:"13:40",i:"🇷🇺"},{n:"Физкультура",t:"14:30",i:"⚽"}],
-        vt: [{n:"Лит. чтение",t:"14:30",i:"📖"},{n:"Казахский",t:"15:25",i:"🇰🇿"}],
-        sr: [{n:"Математика",t:"13:40",i:"📐"},{n:"Казахский",t:"14:30",i:"🇰🇿"}],
-        ct: [{n:"Английский",t:"14:30",i:"🇬🇧"},{n:"Естествознание",t:"16:15",i:"🌿"}],
-        pt: [{n:"Казахский",t:"13:40",i:"🇰🇿"},{n:"Физкультура",t:"14:30",i:"🏆"}]
+        pn: [
+            {n:"Математика",t:"12:55-13:55",i:"🔢"},
+            {n:"Английский язык",t:"13:40-14:20",i:"🔤"},
+            {n:"Физкультура",t:"14:30-15:10",i:"⚽"},
+            {n:"Музыка",t:"15:25-16:05",i:"🎵"},
+            {n:"ИЗО",t:"16:15-16:55",i:"🎨"},
+            {n:"Классный час",t:"17:00-17:40",i:"🤝"}
+        ],
+        vt: [
+            {n:"Русский язык",t:"12:10-12:50",i:"🇷🇺"},
+            {n:"Цифр. грамотность",t:"12:55-13:35",i:"💻"},
+            {n:"Лит. чтение",t:"14:30-15:10",i:"📖"},
+            {n:"Казахский язык",t:"15:25-16:05",i:"🇰🇿"},
+            {n:"Физкультура",t:"16:15-16:55",i:"👟"}
+        ],
+        sr: [
+            {n:"Русский язык",t:"12:55-13:35",i:"📔"},
+            {n:"Математика",t:"13:40-14:20",i:"➕"},
+            {n:"Казахский язык",t:"14:30-15:10",i:"🇰🇿"},
+            {n:"Лит. чтение",t:"15:25-16:05",i:"📚"},
+            {n:"Познание мира",t:"16:15-16:55",i:"🌍"}
+        ],
+        ct: [
+            {n:"Русский язык",t:"12:10-12:50",i:"✍️"},
+            {n:"Математика",t:"12:55-13:35",i:"🔢"},
+            {n:"Английский язык",t:"14:30-15:10",i:"🇬🇧"},
+            {n:"Лит. чтение",t:"15:25-16:05",i:"📜"},
+            {n:"Естествознание",t:"16:15-16:55",i:"🌿"},
+            {n:"Казахский язык",t:"17:00-17:40",i:"🇰🇿"}
+        ],
+        pt: [
+            {n:"Казахский язык",t:"13:40-14:20",i:"🇰🇿"},
+            {n:"Физкультура",t:"14:30-15:10",i:"🏆"},
+            {n:"Труд",t:"15:25-16:05",i:"🛠️"}
+        ]
     };
 
+    // 4. ЛОГИКА
     window.bcShow = function(day, btn) {
         const list = document.getElementById('bc-list');
         list.innerHTML = '';
         document.querySelectorAll('.bc-btn').forEach(b => b.classList.remove('active'));
         if(btn) btn.classList.add('active');
-        (lessons[day] || []).forEach(l => {
-            const item = document.createElement('div');
-            item.className = 'bc-lesson';
-            item.innerHTML = `<span>${l.i} ${l.n}</span><span class="bc-time">${l.t}</span>`;
-            list.appendChild(item);
+        
+        (lessons[day] || []).forEach((l, i) => {
+            setTimeout(() => {
+                const item = document.createElement('div');
+                item.className = 'bc-lesson';
+                item.innerHTML = `
+                    <span class="bc-emoji">${l.i}</span>
+                    <span class="bc-name">${l.n}</span>
+                    <span class="bc-time">${l.t}</span>
+                `;
+                list.appendChild(item);
+            }, i * 80);
         });
     };
 
-    // Таймер
-    setInterval(() => {
-        const d = new Date('May 22, 2026').getTime() - new Date().getTime();
-        const days = Math.floor(d / (1000*60*60*24));
-        const hrs = Math.floor((d % (1000*60*60*24)) / (1000*60*60));
-        const mins = Math.floor((d % (1000*60*60)) / (1000*60));
-        const secs = Math.floor((d % (1000*60)) / 1000);
-        document.getElementById('bc-timer-val').innerHTML = `ЛЕТО ЧЕРЕЗ: ${days}д ${hrs}ч ${mins}м ${secs}с`;
-    }, 1000);
+    // Таймер обратного отсчета
+    function timer() {
+        const target = new Date('May 22, 2026 00:00:00').getTime();
+        setInterval(() => {
+            const diff = target - new Date().getTime();
+            const d = Math.floor(diff / (1000*60*60*24));
+            const h = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+            const m = Math.floor((diff % (1000*60*60)) / (1000*60));
+            const s = Math.floor((diff % (1000*60)) / 1000);
+            document.getElementById('bc-timer-display').innerHTML = `ЛЕТО ЧЕРЕЗ: ${d}д ${h}ч ${m}м ${s}с`;
+        }, 1000);
+    }
+    timer();
+
+    // Автовыбор текущего дня
+    const daysArr = ['pt','pn','vt','sr','ct','pt','pt'];
+    const today = daysArr[new Date().getDay()];
+    const btnIdx = ['pn','vt','sr','ct','pt'].indexOf(today);
+    bcShow(today, document.querySelectorAll('.bc-btn')[btnIdx !== -1 ? btnIdx : 0]);
+
 })();
