@@ -8,13 +8,15 @@
         body { background: #f0f3f5; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; padding: 20px; margin: 0; }
         .container { background: #f0f3f5; border-radius: 35px; box-shadow: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff; width: 100%; max-width: 420px; padding: 25px; }
         .header-timer { background: linear-gradient(145deg, #4caf50, #45a049); color: white; padding: 25px; border-radius: 25px; text-align: center; margin-bottom: 25px; box-shadow: 0 10px 25px rgba(76, 175, 80, 0.4); }
-        #time-left { font-size: 40px; font-weight: 800; margin-top: 5px; }
+        #time-left { font-size: 40px; font-weight: 800; margin-top: 5px; font-variant-numeric: tabular-nums; }
         .days-nav { display: flex; justify-content: space-between; margin-bottom: 25px; gap: 8px; }
         .day-tab { flex: 1; text-align: center; cursor: pointer; padding: 12px 0; border-radius: 15px; background: #f0f3f5; box-shadow: 5px 5px 10px #bebebe, -5px -5px 10px #ffffff; font-weight: bold; color: #666; transition: 0.2s; font-size: 14px; border: none; outline: none; }
-        .day-tab:active { transform: scale(0.9); box-shadow: inset 5px 5px 10px #bebebe, inset -5px -5px 10px #ffffff; }
+        .day-tab:active { transform: scale(0.9); }
         .day-tab.active { background: #4CAF50; color: white; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.2); }
         .lesson-card { background: #f0f3f5; margin-bottom: 12px; padding: 15px; border-radius: 20px; display: flex; align-items: center; box-shadow: inset 6px 6px 12px #e2e2e2, inset -6px -6px 12px #ffffff; }
-        .lesson-icon { width: 45px; height: 45px; min-width: 45px; border-radius: 50%; background: #f0f3f5; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-right: 15px; box-shadow: inset 4px 4px 8px #bebebe, inset -4px -4px 8px #ffffff; }
+        .lesson-card.current { border: 2px solid #4CAF50; box-shadow: 0 0 15px rgba(76, 175, 80, 0.2); }
+        .lesson-icon { width: 45px; height: 45px; min-width: 45px; border-radius: 50%; background: #f0f3f5; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-right: 15px; box-shadow: 4px 4px 8px #bebebe, -4px -4px 8px #ffffff; }
+        .lesson-content { flex-grow: 1; }
         .lesson-title { display: block; font-weight: 700; color: #333; font-size: 15px; }
         .lesson-period { color: #4CAF50; font-size: 12px; font-weight: 700; }
     </style>
@@ -24,7 +26,7 @@
 <div class="container">
     <div class="header-timer">
         <div id="timer-label">Загрузка...</div>
-        <div id="time-left">00:00</div>
+        <div id="time-left">00:00:00</div>
     </div>
     <div class="days-nav">
         <button class="day-tab" onclick="changeDay(1)">Пн</button>
@@ -37,31 +39,30 @@
 </div>
 
 <script>
-    // ТУТ ВПИСЫВАЙ СВОИ УРОКИ
     const schedule = {
-        1: [ // Понедельник - 6 уроков
-            { title: "Мстематика", start: "12:55", end: "13:35" },
-            { title: "Урок 1", start: "13:40", end: "14:20" },
+        1: [
+            { title: "Математика", start: "12:55", end: "13:35" },
+            { title: "Урок 2", start: "13:40", end: "14:20" },
             { title: "Урок 3", start: "14:30", end: "15:10" },
             { title: "Урок 4", start: "15:25", end: "16:05" },
             { title: "Урок 5", start: "16:15", end: "16:55" },
             { title: "Урок 6", start: "17:00", end: "17:40" }
         ],
-        2: [ // Вторник - 5 уроков
+        2: [
             { title: "Урок 1", start: "12:10", end: "12:50" },
             { title: "Урок 2", start: "12:55", end: "13:35" },
             { title: "Урок 3", start: "14:30", end: "15:10" },
             { title: "Урок 4", start: "15:25", end: "16:05" },
             { title: "Урок 5", start: "16:15", end: "16:55" }
         ],
-        3: [ // Среда - 5 уроков
+        3: [
             { title: "Урок 1", start: "12:55", end: "13:35" },
             { title: "Урок 2", start: "13:40", end: "14:20" },
             { title: "Урок 3", start: "14:30", end: "15:10" },
             { title: "Урок 4", start: "15:25", end: "16:05" },
             { title: "Урок 5", start: "16:15", end: "16:55" }
         ],
-        4: [ // Четверг - 6 уроков
+        4: [
             { title: "Урок 1", start: "12:10", end: "12:50" },
             { title: "Урок 2", start: "12:55", end: "13:35" },
             { title: "Урок 3", start: "14:30", end: "15:10" },
@@ -69,7 +70,7 @@
             { title: "Урок 5", start: "16:15", end: "16:55" },
             { title: "Урок 6", start: "17:00", end: "17:40" }
         ],
-        5: [ // Пятница - 5 уроков
+        5: [
             { title: "Урок 1", start: "12:55", end: "13:35" },
             { title: "Урок 2", start: "13:40", end: "14:20" },
             { title: "Урок 3", start: "14:30", end: "15:10" },
@@ -81,34 +82,90 @@
     let activeDay = new Date().getDay();
     if (activeDay === 0 || activeDay === 6) activeDay = 1;
 
-    function changeDay(d) { activeDay = d; updateUI(); }
+    function changeDay(d) { 
+        activeDay = d; 
+        renderLessons();
+        updateTimer(); 
+    }
 
-    function updateUI() {
-        const now = new Date();
-        const nowM = now.getHours() * 60 + now.getMinutes();
-        const todayReal = now.getDay();
+    function toSeconds(timeStr) {
+        const [h, m] = timeStr.split(':').map(Number);
+        return h * 3600 + m * 60;
+    }
+
+    function formatTime(sec) {
+        const m = Math.floor(sec / 60);
+        const s = sec % 60;
+        return `${m}:${s.toString().padStart(2, '0')}`;
+    }
+
+    function renderLessons() {
         document.querySelectorAll('.day-tab').forEach((t, i) => t.classList.toggle('active', i + 1 === activeDay));
         const list = document.getElementById('lessons-container');
         list.innerHTML = '';
-        let timerSet = false, st = "Уроки окончены", cd = "--:--";
+        
+        const now = new Date();
+        const currentTotalSec = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+        const isToday = now.getDay() === activeDay;
 
         (schedule[activeDay] || []).forEach(lesson => {
-            const [hS, mS] = lesson.start.split(':').map(Number);
-            const [hE, mE] = lesson.end.split(':').map(Number);
-            const startM = hS * 60 + mS, endM = hE * 60 + mE;
-
-            if (todayReal === activeDay && !timerSet) {
-                if (nowM >= startM && nowM < endM) { st = `Идет: ${lesson.title}`; cd = `${endM - nowM} мин`; timerSet = true; }
-                else if (nowM < startM) { st = `До начала:`; cd = `${startM - nowM} мин`; timerSet = true; }
-            }
-
-            list.innerHTML += `<div class="lesson-card"><div class="lesson-icon">📚</div><div class="lesson-content"><span class="lesson-title">${lesson.title}</span><span class="lesson-period">${lesson.start} - ${lesson.end}</span></div></div>`;
+            const startSec = toSeconds(lesson.start);
+            const endSec = toSeconds(lesson.end);
+            const isCurrent = isToday && currentTotalSec >= startSec && currentTotalSec < endSec;
+            
+            list.innerHTML += `
+                <div class="lesson-card ${isCurrent ? 'current' : ''}">
+                    <div class="lesson-icon">📚</div>
+                    <div class="lesson-content">
+                        <span class="lesson-title">${lesson.title}</span>
+                        <span class="lesson-period">${lesson.start} - ${lesson.end}</span>
+                    </div>
+                </div>`;
         });
-        document.getElementById('timer-label').innerText = st;
-        document.getElementById('time-left').innerText = cd;
     }
-    setInterval(updateUI, 1000);
-    updateUI();
+
+    function updateTimer() {
+        const now = new Date();
+        const todayReal = now.getDay();
+        const currentTotalSec = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+        
+        let label = "Занятий нет";
+        let countdown = "--:--";
+
+        if (schedule[todayReal]) {
+            const todayLessons = schedule[todayReal];
+            let found = false;
+
+            for (let i = 0; i < todayLessons.length; i++) {
+                const s = toSeconds(todayLessons[i].start);
+                const e = toSeconds(todayLessons[i].end);
+
+                if (currentTotalSec < s) {
+                    label = `До начала: ${todayLessons[i].title}`;
+                    countdown = formatTime(s - currentTotalSec);
+                    found = true;
+                    break;
+                } else if (currentTotalSec >= s && currentTotalSec < e) {
+                    label = `Идет: ${todayLessons[i].title}`;
+                    countdown = formatTime(e - currentTotalSec);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) label = "Уроки окончены";
+        }
+
+        document.getElementById('timer-label').innerText = label;
+        document.getElementById('time-left').innerText = countdown;
+
+        // Если сменился день в реальности, обновляем и карточки
+        if (activeDay === todayReal) renderLessons();
+    }
+
+    // Инициализация
+    renderLessons();
+    setInterval(updateTimer, 1000);
+    updateTimer();
 </script>
 </body>
 </html>
