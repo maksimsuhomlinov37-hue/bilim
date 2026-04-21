@@ -3,304 +3,393 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BilimClass Pro — Dashboard</title>
+    <title>BilimClass | Dashboard</title>
     <style>
+        /* ОСНОВНЫЕ ПЕРЕМЕННЫЕ */
         :root {
-            --primary: #4CAF50;
-            --primary-dark: #388E3C;
-            --bg: #e0e5ec;
-            --glass: rgba(255, 255, 255, 0.4);
-            --text: #2d3436;
+            --bg-color: #080a08; /* Очень темный зеленый оттенок */
+            --card-bg: rgba(20, 25, 20, 0.6);
+            --accent-green: #2ecc71;
+            --accent-yellow: #f1c40f;
+            --accent-orange: #e67e22;
+            --text-main: #ffffff;
+            --text-dim: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(46, 204, 113, 0.2);
+            --shadow: 0 15px 35px rgba(0,0,0,0.5);
+            --grad: linear-gradient(135deg, var(--accent-yellow), var(--accent-orange));
         }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            background-color: var(--bg);
-            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(46, 204, 113, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(46, 204, 113, 0.05) 0%, transparent 40%);
+            color: var(--text-main);
             margin: 0;
-            display: flex;
-            justify-content: center;
-            color: var(--text);
-        }
-
-        .app-container {
-            width: 100%;
-            max-width: 480px;
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             min-height: 100vh;
         }
 
-        /* Glassmorphism Header */
-        .main-card {
-            background: var(--glass);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+        /* ТАЙМЕР И ШАПКА */
+        .header-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            padding: 30px;
             border-radius: 30px;
-            padding: 25px;
-            box-shadow: 20px 20px 60px #bec3c9, -20px -20px 60px #ffffff;
-            margin-bottom: 30px;
             text-align: center;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 6px 14px;
-            background: rgba(76, 175, 80, 0.15);
-            color: var(--primary-dark);
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-
-        #time-left {
-            font-size: 48px;
-            font-weight: 800;
-            margin: 10px 0;
-            letter-spacing: -1px;
-            color: #1b1f23;
-        }
-
-        /* Progress Bar */
-        .progress-container {
             width: 100%;
-            height: 8px;
-            background: rgba(0,0,0,0.05);
-            border-radius: 10px;
-            overflow: hidden;
-            margin-top: 15px;
-        }
-        #progress-fill {
-            height: 100%;
-            background: var(--primary);
-            width: 0%;
-            transition: width 1s linear;
+            max-width: 700px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* Navigation */
-        .days-row {
+        .header-card:hover { transform: scale(1.02); }
+
+        .school-title {
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 15px;
+            color: var(--accent-green);
+            transition: 0.5s;
+        }
+
+        /* ГРАДИЕНТ ДЛЯ ПЕРЕМЕНЫ */
+        .no-lesson-now .school-title {
+            background: var(--grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 5px rgba(241, 196, 15, 0.2)); }
+            to { filter: drop-shadow(0 0 15px rgba(241, 196, 15, 0.6)); }
+        }
+
+        .countdown-timer {
+            font-size: 2.5rem;
+            font-weight: 900;
+            font-variant-numeric: tabular-nums;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        /* СЕТКА РАСПИСАНИЯ */
+        .schedule-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 25px;
+            width: 100%;
+            max-width: 1400px;
+        }
+
+        .day-block {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+            animation: slideIn 0.8s ease-out backwards;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .day-name {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: var(--accent-green);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .day-name::after {
+            content: '';
+            height: 2px;
+            flex-grow: 1;
+            background: var(--glass-border);
+            margin-left: 15px;
+        }
+
+        /* УРОКИ */
+        .lesson-item {
             display: flex;
             justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 25px;
-        }
-        .day-btn {
-            flex: 1;
-            border: none;
-            padding: 12px 0;
-            border-radius: 15px;
-            background: var(--bg);
-            box-shadow: 6px 6px 12px #bec3c9, -6px -6px 12px #ffffff;
+            align-items: center;
+            padding: 18px 22px;
+            margin: 12px 0;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            border: 1px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
+        }
+
+        /* ЭФФЕКТ ВДАВЛИВАНИЯ */
+        .lesson-item:active {
+            transform: scale(0.92) translateY(3px);
+            background: rgba(255, 255, 255, 0.07);
+            box-shadow: inset 0 4px 12px rgba(0,0,0,0.4);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .lesson-name {
             font-weight: 600;
-            transition: all 0.3s ease;
-            color: #7f8c8d;
-        }
-        .day-btn.active {
-            box-shadow: inset 4px 4px 8px #bec3c9, inset -4px -4px 8px #ffffff;
-            color: var(--primary);
-            transform: scale(0.95);
+            font-size: 1.05rem;
+            max-width: 65%;
         }
 
-        /* Lessons List */
-        .lesson-item {
-            background: var(--glass);
-            border-radius: 20px;
-            padding: 18px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            transition: 0.3s;
+        .lesson-time {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            background: rgba(0,0,0,0.2);
+            padding: 5px 10px;
+            border-radius: 10px;
+            white-space: nowrap;
         }
-        .lesson-item.active {
-            border-left: 5px solid var(--primary);
-            background: rgba(255, 255, 255, 0.7);
-        }
-        .icon-box {
-            width: 50px;
-            height: 50px;
-            border-radius: 15px;
-            background: var(--bg);
-            box-shadow: 4px 4px 8px #bec3c9, -4px -4px 8px #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            margin-right: 15px;
-        }
-        .lesson-info { flex-grow: 1; }
-        .lesson-name { display: block; font-weight: 700; font-size: 16px; margin-bottom: 4px; }
-        .lesson-time { font-size: 13px; color: #7f8c8d; font-weight: 500; }
 
-        /* Log Section */
-        .log-section {
-            margin-top: 30px;
-            padding: 20px;
-            background: rgba(0,0,0,0.02);
-            border-radius: 20px;
-            border: 1px dashed #bec3c9;
+        /* ПОДСВЕТКА ТЕКУЩЕГО УРОКА */
+        .lesson-item.active-now {
+            background: var(--accent-yellow) !important;
+            color: #000;
+            box-shadow: 0 0 30px rgba(241, 196, 15, 0.4);
+            transform: scale(1.03);
+            border-color: #fff;
         }
-        .log-title { font-size: 14px; font-weight: 700; color: #95a5a6; margin-bottom: 10px; text-transform: uppercase; }
-        .log-item { font-size: 13px; color: #7f8c8d; margin-bottom: 5px; display: flex; align-items: center; }
-        .log-item::before { content: "•"; color: var(--primary); font-weight: bold; margin-right: 8px; }
+
+        .active-now .lesson-time {
+            background: rgba(0,0,0,0.15);
+            color: #000;
+            font-weight: bold;
+        }
+
+        .day-sep {
+            height: 1px;
+            background: var(--glass-border);
+            margin: 20px 0;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 600px) {
+            .countdown-timer { font-size: 1.8rem; }
+            body { padding: 10px; }
+        }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <div class="main-card">
-        <div class="status-badge" id="status-text">Инициализация...</div>
-        <div id="time-left">00:00</div>
-        <div id="advice-text" style="font-size: 13px; color: #7f8c8d;">Загружаем расписание...</div>
-        <div class="progress-container">
-            <div id="progress-fill"></div>
+    <div class="header-card" id="statusCard">
+        <div class="school-title" id="mainLabel">Школа заканчивается 25 мая</div>
+        <div class="countdown-timer" id="timer">Загрузка...</div>
+    </div>
+
+    <div class="schedule-container">
+        
+        <div class="day-block" style="animation-delay: 0.1s">
+            <div class="day-name">Пн</div>
+            <div class="lesson-item" data-start="12:55" data-end="13:55">
+                <span class="lesson-name">Математика</span>
+                <span class="lesson-time">12:55 - 13:55</span>
+            </div>
+            <div class="lesson-item" data-start="13:40" data-end="14:20">
+                <span class="lesson-name">Английский язык</span>
+                <span class="lesson-time">13:40 - 14:20</span>
+            </div>
+            <div class="day-sep"></div>
+            <div class="lesson-item" data-start="14:30" data-end="15:10">
+                <span class="lesson-name">Физкультура</span>
+                <span class="lesson-time">14:30 - 15:10</span>
+            </div>
+            <div class="lesson-item" data-start="15:25" data-end="16:05">
+                <span class="lesson-name">Музыка</span>
+                <span class="lesson-time">15:25 - 16:05</span>
+            </div>
+            <div class="lesson-item" data-start="16:15" data-end="16:55">
+                <span class="lesson-name">ИЗО</span>
+                <span class="lesson-time">16:15 - 16:55</span>
+            </div>
+            <div class="lesson-item" data-start="17:00" data-end="17:40">
+                <span class="lesson-name">Классный час</span>
+                <span class="lesson-time">17:00 - 17:40</span>
+            </div>
         </div>
+
+        <div class="day-block" style="animation-delay: 0.2s">
+            <div class="day-name">Вт</div>
+            <div class="lesson-item" data-start="12:10" data-end="12:50">
+                <span class="lesson-name">Русский язык</span>
+                <span class="lesson-time">12:10 - 12:50</span>
+            </div>
+            <div class="lesson-item" data-start="12:55" data-end="13:35">
+                <span class="lesson-name">Цифровая грамотность</span>
+                <span class="lesson-time">12:55 - 13:35</span>
+            </div>
+            <div class="day-sep"></div>
+            <div class="lesson-item" data-start="14:30" data-end="15:10">
+                <span class="lesson-name">Лит. чтение</span>
+                <span class="lesson-time">14:30 - 15:10</span>
+            </div>
+            <div class="lesson-item" data-start="15:25" data-end="16:05">
+                <span class="lesson-name">Казахский язык</span>
+                <span class="lesson-time">15:25 - 16:05</span>
+            </div>
+            <div class="lesson-item" data-start="16:15" data-end="16:55">
+                <span class="lesson-name">Физкультура</span>
+                <span class="lesson-time">16:15 - 16:55</span>
+            </div>
+        </div>
+
+        <div class="day-block" style="animation-delay: 0.3s">
+            <div class="day-name">Ср</div>
+            <div class="lesson-item" data-start="12:55" data-end="13:35">
+                <span class="lesson-name">Русский язык</span>
+                <span class="lesson-time">12:55 - 13:35</span>
+            </div>
+            <div class="lesson-item" data-start="13:40" data-end="14:20">
+                <span class="lesson-name">Математика</span>
+                <span class="lesson-time">13:40 - 14:20</span>
+            </div>
+            <div class="day-sep"></div>
+            <div class="lesson-item" data-start="14:30" data-end="15:10">
+                <span class="lesson-name">Казахский язык</span>
+                <span class="lesson-time">14:30 - 15:10</span>
+            </div>
+            <div class="lesson-item" data-start="15:25" data-end="16:05">
+                <span class="lesson-name">Лит. чтение</span>
+                <span class="lesson-time">15:25 - 16:05</span>
+            </div>
+            <div class="lesson-item" data-start="16:15" data-end="16:55">
+                <span class="lesson-name">Познание мира</span>
+                <span class="lesson-time">16:15 - 16:55</span>
+            </div>
+        </div>
+
+        <div class="day-block" style="animation-delay: 0.4s">
+            <div class="day-name">Чт</div>
+            <div class="lesson-item" data-start="12:10" data-end="12:50">
+                <span class="lesson-name">Русский язык</span>
+                <span class="lesson-time">12:10 - 12:50</span>
+            </div>
+            <div class="lesson-item" data-start="12:55" data-end="13:35">
+                <span class="lesson-name">Математика</span>
+                <span class="lesson-time">12:55 - 13:35</span>
+            </div>
+            <div class="day-sep"></div>
+            <div class="lesson-item" data-start="14:30" data-end="15:10">
+                <span class="lesson-name">Английский язык</span>
+                <span class="lesson-time">14:30 - 15:10</span>
+            </div>
+            <div class="lesson-item" data-start="15:25" data-end="16:05">
+                <span class="lesson-name">Лит. чтение</span>
+                <span class="lesson-time">15:25 - 16:05</span>
+            </div>
+            <div class="lesson-item" data-start="16:15" data-end="16:55">
+                <span class="lesson-name">Естествознание</span>
+                <span class="lesson-time">16:15 - 16:55</span>
+            </div>
+            <div class="lesson-item" data-start="17:00" data-end="17:40">
+                <span class="lesson-name">Казахский язык</span>
+                <span class="lesson-time">17:00 - 17:40</span>
+            </div>
+        </div>
+
+        <div class="day-block" style="animation-delay: 0.5s">
+            <div class="day-name">Пт</div>
+            <div class="lesson-item" data-start="13:40" data-end="14:20">
+                <span class="lesson-name">Казахский язык</span>
+                <span class="lesson-time">13:40 - 14:20</span>
+            </div>
+            <div class="lesson-item" data-start="14:30" data-end="15:10">
+                <span class="lesson-name">Физкультура</span>
+                <span class="lesson-time">14:30 - 15:10</span>
+            </div>
+            <div class="lesson-item" data-start="15:25" data-end="16:05">
+                <span class="lesson-name">Трудовое обучение</span>
+                <span class="lesson-time">15:25 - 16:05</span>
+            </div>
+        </div>
+
     </div>
 
-    <div class="days-row">
-        <button class="day-btn" onclick="setDay(1)">ПН</button>
-        <button class="day-btn" onclick="setDay(2)">ВТ</button>
-        <button class="day-btn" onclick="setDay(3)">СР</button>
-        <button class="day-btn" onclick="setDay(4)">ЧТ</button>
-        <button class="day-btn" onclick="setDay(5)">ПТ</button>
-    </div>
+    <script>
+        // Функция обратного отсчета
+        function updateTimer() {
+            const finishDate = new Date('May 25, 2026 00:00:00').getTime();
+            const now = new Date().getTime();
+            const diff = finishDate - now;
 
-    <div id="schedule-list"></div>
-
-    <div class="log-section">
-        <div class="log-title">BilimClass Log v2.0</div>
-        <div class="log-item">Добавлен Glassmorphism дизайн</div>
-        <div class="log-item">Оптимизирован движок таймера</div>
-        <div class="log-item">Подготовка к GitHub Pages</div>
-    </div>
-</div>
-
-<script>
-    const CONFIG = {
-        lessons: {
-            1: [
-                { name: "Математика", start: "12:55", end: "13:35", icon: "📐" },
-                { name: "Русский язык", start: "13:40", end: "14:20", icon: "📚" },
-                { name: "Физика", start: "14:30", end: "15:10", icon: "⚛️" },
-                { name: "История", start: "15:25", end: "16:05", icon: "📜" },
-                { name: "Физкультура", start: "16:15", end: "16:55", icon: "⚽" },
-                { name: "Информатика", start: "17:00", end: "17:40", icon: "💻" }
-            ],
-            2: [
-                { name: "Английский", start: "12:10", end: "12:50", icon: "🇬🇧" },
-                { name: "География", start: "12:55", end: "13:35", icon: "🌍" },
-                { name: "Алгебра", start: "14:30", end: "15:10", icon: "📝" },
-                { name: "Биология", start: "15:25", end: "16:05", icon: "🌿" },
-                { name: "Химия", start: "16:15", end: "16:55", icon: "🧪" }
-            ],
-            // Среда, Четверг, Пятница заполняются аналогично...
-        }
-    };
-
-    let selectedDay = new Date().getDay();
-    if (selectedDay === 0 || selectedDay === 6) selectedDay = 1;
-
-    function toSeconds(t) {
-        const [h, m] = t.split(':').map(Number);
-        return h * 3600 + m * 60;
-    }
-
-    function setDay(day) {
-        selectedDay = day;
-        render();
-    }
-
-    function render() {
-        // Обновляем кнопки
-        document.querySelectorAll('.day-btn').forEach((btn, idx) => {
-            btn.classList.toggle('active', idx + 1 === selectedDay);
-        });
-
-        // Отрисовка списка
-        const list = document.getElementById('schedule-list');
-        list.innerHTML = '';
-        
-        const now = new Date();
-        const curSec = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
-        const isToday = now.getDay() === selectedDay;
-
-        const dayLessons = CONFIG.lessons[selectedDay] || CONFIG.lessons[1];
-
-        dayLessons.forEach(lesson => {
-            const s = toSeconds(lesson.start);
-            const e = toSeconds(lesson.end);
-            const isActive = isToday && curSec >= s && curSec < e;
-
-            list.innerHTML += `
-                <div class="lesson-item ${isActive ? 'active' : ''}">
-                    <div class="icon-box">${lesson.icon}</div>
-                    <div class="lesson-info">
-                        <span class="lesson-name">${lesson.name}</span>
-                        <span class="lesson-time">${lesson.start} — ${lesson.end}</span>
-                    </div>
-                </div>
-            `;
-        });
-    }
-
-    function updateTick() {
-        const now = new Date();
-        const day = now.getDay();
-        const curSec = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
-        
-        let status = "Отдых";
-        let timeStr = "--:--";
-        let advice = "На сегодня уроков нет";
-        let progress = 0;
-
-        if (CONFIG.lessons[day]) {
-            const today = CONFIG.lessons[day];
-            let found = false;
-
-            for (let i = 0; i < today.length; i++) {
-                const s = toSeconds(today[i].start);
-                const e = toSeconds(today[i].end);
-
-                if (curSec < s) {
-                    status = "Ожидание";
-                    timeStr = formatDiff(s - curSec);
-                    advice = `Следующий: ${today[i].name}`;
-                    found = true;
-                    break;
-                } else if (curSec >= s && curSec < e) {
-                    status = "Идет урок";
-                    timeStr = formatDiff(e - curSec);
-                    advice = `Сейчас: ${today[i].name}`;
-                    progress = ((curSec - s) / (e - s)) * 100;
-                    found = true;
-                    break;
-                }
+            if (diff < 0) {
+                document.getElementById('timer').innerText = "УРА! ЛЕТО!";
+                return;
             }
-            if (!found && curSec > toSeconds(today[today.length-1].end)) {
-                status = "Свобода!";
-                advice = "Все уроки на сегодня завершены";
-            }
+
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('timer').innerText = 
+                `${d}д ${h.toString().padStart(2,'0')}ч ${m.toString().padStart(2,'0')}м ${s.toString().padStart(2,'0')}с`;
         }
 
-        document.getElementById('status-text').innerText = status;
-        document.getElementById('time-left').innerText = timeStr;
-        document.getElementById('advice-text').innerText = advice;
-        document.getElementById('progress-fill').style.width = progress + "%";
-        
-        if (day === selectedDay) render(); // Перерисовываем список только если смотрим текущий день
-    }
+        // Функция проверки текущего урока
+        function checkLessons() {
+            const now = new Date();
+            const dayNames = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+            const currentDay = dayNames[now.getDay()];
+            const currentTime = now.getHours() * 60 + now.getMinutes();
+            
+            let anyActive = false;
+            
+            const blocks = document.querySelectorAll('.day-block');
+            blocks.forEach(block => {
+                const dayTitle = block.querySelector('.day-name').innerText;
+                const lessons = block.querySelectorAll('.lesson-item');
+                
+                lessons.forEach(lesson => {
+                    const [sH, sM] = lesson.dataset.start.split(':').map(Number);
+                    const [eH, eM] = lesson.dataset.end.split(':').map(Number);
+                    const start = sH * 60 + sM;
+                    const end = eH * 60 + eM;
 
-    function formatDiff(sec) {
-        const m = Math.floor(sec / 60);
-        const s = sec % 60;
-        return `${m}:${s < 10 ? '0' : ''}${s}`;
-    }
+                    // Подсвечиваем только если сегодня этот день недели
+                    if (currentDay === dayTitle && currentTime >= start && currentTime < end) {
+                        lesson.classList.add('active-now');
+                        anyActive = true;
+                    } else {
+                        lesson.classList.remove('active-now');
+                    }
+                });
+            });
 
-    setInterval(updateTick, 1000);
-    setDay(selectedDay);
-    updateTick();
-</script>
+            // Если уроков нет — включаем градиент в шапке
+            const card = document.getElementById('statusCard');
+            if (!anyActive) {
+                card.classList.add('no-lesson-now');
+            } else {
+                card.classList.remove('no-lesson-now');
+            }
+        }
 
+        setInterval(updateTimer, 1000);
+        setInterval(checkLessons, 10000); // Раз в 10 сек проверяем урок
+        updateTimer();
+        checkLessons();
+    </script>
 </body>
 </html>
