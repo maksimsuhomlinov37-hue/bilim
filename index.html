@@ -9,6 +9,7 @@
         /* ===== ПЕРЕМЕННЫЕ НЕЙРОМОРФИЗМА ===== */
         :root {
             --bg: #dfe6ed;
+            --bg-tex: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
             --shadow-light: #ffffff;
             --shadow-dark: #b8c2cc;
             --shadow-dark2: #a0aab5;
@@ -23,15 +24,20 @@
             --radius-xs: 6px;
             --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
-
-            /* Цвета блоков */
-            --block-coral: #E8634A;
-            --block-teal: #26A69A;
-            --block-amber: #F0A030;
-            --block-rose: #D4608A;
-            --block-sky: #4DA6C9;
-            --block-lime: #7CB342;
-            --block-violet: #9575CD;
+        }
+        /* Тёмная тема */
+        [data-theme="dark"] {
+            --bg: #1a2030;
+            --bg-tex: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+            --shadow-light: #242e40;
+            --shadow-dark: #0e1420;
+            --shadow-dark2: #0a0e18;
+            --accent: #34d058;
+            --accent-glow: rgba(52, 208, 88, 0.3);
+            --accent-hover: #2eba4c;
+            --text: #dce4f0;
+            --text-muted: #7b8da6;
+            --danger: #f04848;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -39,6 +45,7 @@
         body {
             font-family: 'Exo 2', sans-serif;
             background: var(--bg);
+            background-image: var(--bg-tex);
             color: var(--text);
             overflow: hidden;
             height: 100vh;
@@ -46,6 +53,22 @@
             -webkit-user-select: none;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
+            transition: background 2s ease, background-image 2s ease;
+        }
+
+        /* ===== БЛЮР ПЕРЕХОД ТЕМЫ ===== */
+        .theme-blur-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            backdrop-filter: blur(0px);
+            -webkit-backdrop-filter: blur(0px);
+            pointer-events: none;
+            transition: backdrop-filter 2s ease-in-out, -webkit-backdrop-filter 2s ease-in-out;
+        }
+        .theme-blur-overlay.active {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
         }
 
         /* ===== ЭКРАНЫ ===== */
@@ -59,7 +82,7 @@
             opacity: 0;
             transform: translateY(-30px);
             pointer-events: none;
-            transition: opacity 0.6s ease, transform 0.6s ease;
+            transition: opacity 0.6s ease, transform 0.6s ease, background 2s ease;
             z-index: 10;
         }
         .screen.active {
@@ -75,11 +98,13 @@
             inset: 0;
             z-index: 100;
             background: var(--bg);
+            transition: background 2s ease;
         }
 
         /* ===== НЕЙРОМОРФНЫЕ КАРТОЧКИ ===== */
         .neu-card {
             background: var(--bg);
+            background-image: var(--bg-tex);
             border-radius: var(--radius);
             box-shadow:
                 8px 8px 20px var(--shadow-dark),
@@ -87,14 +112,17 @@
             padding: 40px;
             max-width: 420px;
             width: 90vw;
+            transition: background 2s ease, box-shadow 2s ease, background-image 2s ease;
         }
         .neu-card-sm {
             background: var(--bg);
+            background-image: var(--bg-tex);
             border-radius: var(--radius-sm);
             box-shadow:
                 5px 5px 12px var(--shadow-dark),
                 -5px -5px 12px var(--shadow-light);
             padding: 24px;
+            transition: background 2s ease, box-shadow 2s ease, background-image 2s ease;
         }
 
         /* ===== КНОПКИ ===== */
@@ -142,6 +170,7 @@
             box-shadow:
                 5px 5px 12px var(--shadow-dark),
                 -5px -5px 12px var(--shadow-light);
+            transition: var(--transition), background 2s ease, box-shadow 2s ease, color 2s ease;
         }
         .neu-btn.neutral:active,
         .neu-btn.neutral.pressed {
@@ -162,6 +191,12 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            transition: background 2s ease;
+        }
+        [data-theme="dark"] .game-title {
+            background: linear-gradient(135deg, #e0e8f4 0%, #6ea8d4 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
         }
         .game-subtitle {
             text-align: center;
@@ -171,6 +206,7 @@
             margin-bottom: 36px;
             letter-spacing: 4px;
             text-transform: uppercase;
+            transition: color 2s ease;
         }
 
         .menu-buttons {
@@ -187,24 +223,36 @@
             margin-bottom: 28px;
             letter-spacing: 1px;
         }
+        .settings-section {
+            margin-bottom: 24px;
+        }
+        .settings-section-label {
+            font-size: 12px;
+            font-weight: 300;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 14px;
+            transition: color 2s ease;
+        }
         .difficulty-options {
             display: flex;
             flex-direction: column;
-            gap: 14px;
-            margin-bottom: 28px;
+            gap: 12px;
         }
         .diff-option {
             display: flex;
             align-items: center;
             gap: 16px;
-            padding: 16px 20px;
+            padding: 14px 18px;
             border-radius: var(--radius-sm);
             background: var(--bg);
+            background-image: var(--bg-tex);
             box-shadow:
                 4px 4px 10px var(--shadow-dark),
                 -4px -4px 10px var(--shadow-light);
             cursor: pointer;
-            transition: var(--transition);
+            transition: var(--transition), background 2s ease, box-shadow 2s ease, border-color 0.3s ease;
             border: 2px solid transparent;
         }
         .diff-option.selected {
@@ -228,12 +276,7 @@
                 inset -2px -2px 5px var(--shadow-light);
             position: relative;
             flex-shrink: 0;
-            transition: var(--transition);
-        }
-        .diff-option.selected .diff-radio {
-            box-shadow:
-                inset 2px 2px 5px var(--shadow-dark2),
-                inset -2px -2px 5px var(--shadow-light);
+            transition: var(--transition), background 2s ease, box-shadow 2s ease;
         }
         .diff-option.selected .diff-radio::after {
             content: '';
@@ -246,14 +289,79 @@
         .diff-info { flex: 1; }
         .diff-name {
             font-weight: 700;
-            font-size: 16px;
+            font-size: 15px;
             margin-bottom: 2px;
         }
         .diff-desc {
             font-size: 12px;
             color: var(--text-muted);
             font-weight: 300;
+            transition: color 2s ease;
         }
+
+        /* ===== ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ ===== */
+        .theme-toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 18px;
+            border-radius: var(--radius-sm);
+            background: var(--bg);
+            background-image: var(--bg-tex);
+            box-shadow:
+                4px 4px 10px var(--shadow-dark),
+                -4px -4px 10px var(--shadow-light);
+            transition: background 2s ease, box-shadow 2s ease, background-image 2s ease;
+        }
+        .theme-toggle-label {
+            font-weight: 600;
+            font-size: 15px;
+        }
+        .theme-switch {
+            width: 56px; height: 30px;
+            border-radius: 15px;
+            background: var(--bg);
+            box-shadow:
+                inset 3px 3px 6px var(--shadow-dark2),
+                inset -3px -3px 6px var(--shadow-light);
+            position: relative;
+            cursor: pointer;
+            transition: background 2s ease, box-shadow 2s ease;
+            flex-shrink: 0;
+        }
+        .theme-switch-knob {
+            position: absolute;
+            top: 3px; left: 3px;
+            width: 24px; height: 24px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow:
+                2px 2px 5px var(--shadow-dark),
+                -1px -1px 3px var(--shadow-light),
+                0 0 8px var(--accent-glow);
+            transition: transform 0.4s var(--ease-bounce), background 2s ease, box-shadow 2s ease;
+        }
+        [data-theme="dark"] .theme-switch-knob {
+            transform: translateX(26px);
+        }
+        .theme-icons {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 8px;
+            font-size: 13px;
+            pointer-events: none;
+        }
+        .theme-icons span {
+            opacity: 0.4;
+            transition: opacity 0.3s ease;
+        }
+        [data-theme="light"] .theme-icons .icon-moon { opacity: 0.4; }
+        [data-theme="light"] .theme-icons .icon-sun { opacity: 0.8; }
+        [data-theme="dark"] .theme-icons .icon-moon { opacity: 0.8; }
+        [data-theme="dark"] .theme-icons .icon-sun { opacity: 0.4; }
 
         .settings-back {
             margin-top: 8px;
@@ -287,12 +395,13 @@
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 2px;
+            transition: color 2s ease;
         }
         .game-score-value {
             font-size: 32px;
             font-weight: 900;
             line-height: 1.1;
-            transition: var(--transition);
+            transition: var(--transition), color 2s ease;
         }
         .game-score-value.bump {
             transform: scale(1.15);
@@ -303,6 +412,7 @@
             border: none;
             border-radius: var(--radius-sm);
             background: var(--bg);
+            background-image: var(--bg-tex);
             box-shadow:
                 4px 4px 10px var(--shadow-dark),
                 -4px -4px 10px var(--shadow-light);
@@ -310,7 +420,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: var(--transition);
+            transition: var(--transition), background 2s ease, box-shadow 2s ease, color 2s ease;
             font-size: 20px;
             color: var(--text-muted);
         }
@@ -328,6 +438,7 @@
             box-shadow:
                 inset 6px 6px 16px var(--shadow-dark2),
                 inset -6px -6px 16px var(--shadow-light);
+            transition: box-shadow 2s ease;
         }
         .game-board {
             display: grid;
@@ -341,8 +452,22 @@
             box-shadow:
                 inset 2px 2px 4px var(--shadow-dark2),
                 inset -2px -2px 4px var(--shadow-light);
-            transition: background 0.15s ease, box-shadow 0.15s ease;
+            transition: background 0.15s ease, box-shadow 0.15s ease, background-color 2s ease, box-shadow 2s ease;
             aspect-ratio: 1;
+            position: relative;
+            overflow: hidden;
+        }
+        /* Текстура ячейки */
+        .board-cell::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='8' height='8' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='0.4' fill='%23000' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            border-radius: inherit;
+        }
+        [data-theme="dark"] .board-cell::after {
+            background-image: url("data:image/svg+xml,%3Csvg width='8' height='8' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='0.4' fill='%23fff' opacity='0.025'/%3E%3C/svg%3E");
         }
         .board-cell.preview {
             background: rgba(45, 186, 78, 0.18);
@@ -364,6 +489,10 @@
                 -2px -2px 5px var(--shadow-light),
                 inset 0 2px 3px rgba(255,255,255,0.35),
                 inset 0 -1px 2px rgba(0,0,0,0.1);
+        }
+        .board-cell.filled::after {
+            /* Текстура на заполненных ячейках — микроблики */
+            background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='1' y='1' width='3' height='2' rx='1' fill='%23fff' opacity='0.18'/%3E%3Crect x='7' y='8' width='2' height='2' rx='0.5' fill='%23fff' opacity='0.1'/%3E%3C/svg%3E");
         }
         .board-cell.clearing {
             animation: cellClear 0.45s ease forwards;
@@ -390,6 +519,7 @@
             justify-content: center;
             min-width: 70px;
             min-height: 70px;
+            transition: opacity 0.2s ease;
         }
         .piece-slot.empty {
             opacity: 0.15;
@@ -399,12 +529,17 @@
         .piece-grid {
             display: grid;
             gap: 2px;
+            cursor: grab;
+            touch-action: none;
         }
+        .piece-grid:active { cursor: grabbing; }
         .piece-cell {
             width: var(--pc-size, 18px);
             height: var(--pc-size, 18px);
             border-radius: calc(var(--pc-size, 18px) * 0.28);
             transition: transform 0.2s var(--ease-bounce);
+            position: relative;
+            overflow: hidden;
         }
         .piece-cell.empty-cell {
             background: transparent;
@@ -417,6 +552,15 @@
                 inset 0 1px 2px rgba(255,255,255,0.35),
                 inset 0 -1px 1px rgba(0,0,0,0.08);
         }
+        /* Текстура кубика */
+        .piece-cell.filled-cell::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='1' y='1' width='3' height='2' rx='1' fill='%23fff' opacity='0.2'/%3E%3Crect x='7' y='8' width='2' height='2' rx='0.5' fill='%23fff' opacity='0.12'/%3E%3C/svg%3E");
+            pointer-events: none;
+            border-radius: inherit;
+        }
 
         /* ===== ПЕРЕТАСКИВАЕМЫЙ БЛОК ===== */
         .drag-piece {
@@ -424,9 +568,9 @@
             pointer-events: none;
             z-index: 1000;
             display: grid;
-            gap: 2px;
+            gap: 3px;
             transition: none;
-            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.2));
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.25));
         }
         .drag-piece .piece-cell {
             transition: none;
@@ -435,21 +579,25 @@
             background: transparent !important;
             box-shadow: none !important;
         }
+        .drag-piece .empty-cell::after { display: none; }
 
         /* ===== GAME OVER ОВЕРЛЕЙ ===== */
         .game-over-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(223, 230, 237, 0.85);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            background: rgba(223, 230, 237, 0.8);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 500;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.5s ease, background 2s ease;
+        }
+        [data-theme="dark"] .game-over-overlay {
+            background: rgba(26, 32, 48, 0.8);
         }
         .game-over-overlay.show {
             opacity: 1;
@@ -467,7 +615,6 @@
             font-size: 28px;
             font-weight: 900;
             margin-bottom: 8px;
-            color: var(--text);
         }
         .game-over-score {
             font-size: 48px;
@@ -480,6 +627,7 @@
             color: var(--text-muted);
             margin-bottom: 28px;
             font-weight: 300;
+            transition: color 2s ease;
         }
         .game-over-buttons {
             display: flex;
@@ -500,7 +648,6 @@
             opacity: 0;
             pointer-events: none;
             z-index: 600;
-            transition: none;
         }
         .combo-toast.show {
             animation: comboAnim 0.9s ease forwards;
@@ -530,17 +677,16 @@
 
         /* ===== АДАПТИВНОСТЬ ===== */
         @media (max-width: 480px) {
-            .neu-card { padding: 28px 24px; }
+            .neu-card { padding: 28px 20px; }
             .game-title { letter-spacing: 1px; }
             .pieces-area { gap: 10px; padding: 14px 6px; min-height: 80px; }
             .game-header { padding: 0; }
             .game-score-value { font-size: 26px; }
         }
-        @media (max-height: 650px) {
+        @media (max-height: 680px) {
             #gameScreen { padding-top: 10px; gap: 8px; }
             .pieces-area { padding: 10px 6px; min-height: 70px; }
         }
-
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
                 animation-duration: 0.01ms !important;
@@ -550,100 +696,128 @@
     </style>
 </head>
 <body>
+    <!-- Оверлей блюра для переключения темы -->
+    <div class="theme-blur-overlay" id="themeBlur"></div>
 
-<!-- ===== INTRO CANVAS ===== -->
-<canvas id="introCanvas"></canvas>
+    <!-- INTRO CANVAS -->
+    <canvas id="introCanvas"></canvas>
 
-<!-- ===== ГЛАВНОЕ МЕНЮ ===== -->
-<div id="menuScreen" class="screen">
-    <div class="neu-card">
-        <div class="game-title">BLOCK BLAST</div>
-        <div class="game-subtitle">Нейроморфная головоломка</div>
-        <div class="menu-buttons">
-            <button class="neu-btn accent" id="btnPlay">Играть</button>
-            <button class="neu-btn neutral" id="btnSettings">Настройки</button>
-        </div>
-    </div>
-</div>
-
-<!-- ===== НАСТРОЙКИ ===== -->
-<div id="settingsScreen" class="screen">
-    <div class="neu-card">
-        <div class="settings-title">Настройки игры</div>
-        <div class="difficulty-options">
-            <div class="diff-option selected" data-diff="easy">
-                <div class="diff-radio"></div>
-                <div class="diff-info">
-                    <div class="diff-name">Лёгкий режим</div>
-                    <div class="diff-desc">Поле 8x8, простые компактные блоки</div>
-                </div>
-            </div>
-            <div class="diff-option" data-diff="hard">
-                <div class="diff-radio"></div>
-                <div class="diff-info">
-                    <div class="diff-name">Сложный режим</div>
-                    <div class="diff-desc">Поле 10x10, разнообразные сложные фигуры</div>
-                </div>
+    <!-- ГЛАВНОЕ МЕНЮ -->
+    <div id="menuScreen" class="screen">
+        <div class="neu-card">
+            <div class="game-title">BLOCK BLAST</div>
+            <div class="game-subtitle">Нейроморфная головоломка</div>
+            <div class="menu-buttons">
+                <button class="neu-btn accent" id="btnPlay">Играть</button>
+                <button class="neu-btn neutral" id="btnSettings">Настройки</button>
             </div>
         </div>
-        <button class="neu-btn neutral settings-back" id="btnBackFromSettings">Назад</button>
     </div>
-</div>
 
-<!-- ===== ИГРОВОЙ ЭКРАН ===== -->
-<div id="gameScreen" class="screen">
-    <div class="game-header">
-        <button class="game-header-btn" id="btnBackToMenu" aria-label="Назад в меню">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-        </button>
-        <div class="game-score-box">
-            <div class="game-score-label">Очки</div>
-            <div class="game-score-value" id="scoreDisplay">0</div>
-        </div>
-        <div class="game-score-box">
-            <div class="game-score-label">Рекорд</div>
-            <div class="game-score-value" id="bestDisplay" style="font-size:22px; color: var(--text-muted);">0</div>
-        </div>
-    </div>
-    <div class="game-board-wrap" id="boardWrap">
-        <div class="game-board" id="gameBoard"></div>
-    </div>
-    <div class="pieces-area" id="piecesArea"></div>
-</div>
+    <!-- НАСТРОЙКИ -->
+    <div id="settingsScreen" class="screen">
+        <div class="neu-card">
+            <div class="settings-title">Настройки</div>
 
-<!-- ===== GAME OVER ===== -->
-<div class="game-over-overlay" id="gameOverOverlay">
-    <div class="game-over-card neu-card">
-        <div class="game-over-title">Игра окончена</div>
-        <div class="game-over-score" id="finalScore">0</div>
-        <div class="game-over-best" id="finalBest">Лучший результат: 0</div>
-        <div class="game-over-buttons">
-            <button class="neu-btn accent" id="btnRestart">Играть снова</button>
-            <button class="neu-btn neutral" id="btnBackFromGameOver">В меню</button>
+            <!-- Сложность -->
+            <div class="settings-section">
+                <div class="settings-section-label">Сложность</div>
+                <div class="difficulty-options">
+                    <div class="diff-option selected" data-diff="easy">
+                        <div class="diff-radio"></div>
+                        <div class="diff-info">
+                            <div class="diff-name">Лёгкий режим</div>
+                            <div class="diff-desc">Поле 8x8, простые компактные блоки</div>
+                        </div>
+                    </div>
+                    <div class="diff-option" data-diff="hard">
+                        <div class="diff-radio"></div>
+                        <div class="diff-info">
+                            <div class="diff-name">Сложный режим</div>
+                            <div class="diff-desc">Поле 10x10, разнообразные сложные фигуры</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Тема -->
+            <div class="settings-section">
+                <div class="settings-section-label">Оформление</div>
+                <div class="theme-toggle-row">
+                    <div class="theme-toggle-label">Тёмная тема</div>
+                    <div class="theme-switch" id="themeSwitch" role="switch" aria-label="Переключить тему" tabindex="0">
+                        <div class="theme-icons">
+                            <span class="icon-sun">&#9728;</span>
+                            <span class="icon-moon">&#9790;</span>
+                        </div>
+                        <div class="theme-switch-knob"></div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="neu-btn neutral settings-back" id="btnBackFromSettings">Назад</button>
         </div>
     </div>
-</div>
 
-<!-- ===== КОМБО ТОСТ ===== -->
-<div class="combo-toast" id="comboToast"></div>
+    <!-- ИГРОВОЙ ЭКРАН -->
+    <div id="gameScreen" class="screen">
+        <div class="game-header">
+            <button class="game-header-btn" id="btnBackToMenu" aria-label="Назад в меню">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <div class="game-score-box">
+                <div class="game-score-label">Очки</div>
+                <div class="game-score-value" id="scoreDisplay">0</div>
+            </div>
+            <div class="game-score-box">
+                <div class="game-score-label">Рекорд</div>
+                <div class="game-score-value" id="bestDisplay" style="font-size:22px; color: var(--text-muted);">0</div>
+            </div>
+        </div>
+        <div class="game-board-wrap" id="boardWrap">
+            <div class="game-board" id="gameBoard"></div>
+        </div>
+        <div class="pieces-area" id="piecesArea"></div>
+    </div>
+
+    <!-- GAME OVER -->
+    <div class="game-over-overlay" id="gameOverOverlay">
+        <div class="game-over-card neu-card">
+            <div class="game-over-title">Игра окончена</div>
+            <div class="game-over-score" id="finalScore">0</div>
+            <div class="game-over-best" id="finalBest">Лучший результат: 0</div>
+            <div class="game-over-buttons">
+                <button class="neu-btn accent" id="btnRestart">Играть снова</button>
+                <button class="neu-btn neutral" id="btnBackFromGameOver">В меню</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- КОМБО ТОСТ -->
+    <div class="combo-toast" id="comboToast"></div>
 
 <script>
 /* ============================================
-   BLOCK BLAST — Полная игровая логика
+   BLOCK BLAST — Полная логика с темами
    ============================================ */
 
-// ===== КОНСТАНТЫ =====
+// ===== 12 ЦВЕТОВ БЛОКОВ =====
 const COLORS = [
-    { main: '#E8634A', light: '#f09080', dark: '#c04a35' },
-    { main: '#26A69A', light: '#5ec9be', dark: '#1a8279' },
-    { main: '#F0A030', light: '#f7c36a', dark: '#c88520' },
-    { main: '#D4608A', light: '#e890ad', dark: '#b04870' },
-    { main: '#4DA6C9', light: '#80c5de', dark: '#3888a8' },
-    { main: '#7CB342', light: '#a3d474', dark: '#609030' },
-    { main: '#9575CD', light: '#b8a0e0', dark: '#7558b0' }
+    { main: '#E8634A', light: '#f09080', dark: '#c04a35' },  // Коралл
+    { main: '#26A69A', light: '#5ec9be', dark: '#1a8279' },  // Бирюза
+    { main: '#F0A030', light: '#f7c36a', dark: '#c88520' },  // Янтарь
+    { main: '#D4608A', light: '#e890ad', dark: '#b04870' },  // Роза
+    { main: '#4DA6C9', light: '#80c5de', dark: '#3888a8' },  // Небо
+    { main: '#7CB342', light: '#a3d474', dark: '#609030' },  // Лайм
+    { main: '#9575CD', light: '#b8a0e0', dark: '#7558b0' },  // Фиалка
+    { main: '#FF7043', light: '#ff9a80', dark: '#d45030' },  // Оранж
+    { main: '#EC407A', light: '#f480a8', dark: '#c02860' },  // Малина
+    { main: '#5C6BC0', light: '#8e9ae0', dark: '#3e4ea0' },  // Индиго
+    { main: '#26C6DA', light: '#70e0f0', dark: '#18a0b0' },  // Циан
+    { main: '#FFCA28', light: '#ffe082', dark: '#d4a820' }   // Золото
 ];
 
-// Простые фигуры (для лёгкого режима)
+// ===== ФИГУРЫ =====
 const SHAPES_EASY = [
     [[1]],
     [[1,1]],
@@ -656,8 +830,6 @@ const SHAPES_EASY = [
     [[0,1],[1,1]],
     [[1,1],[1,1]]
 ];
-
-// Дополнительные фигуры (для сложного режима)
 const SHAPES_HARD = [
     [[1,1,1,1]],
     [[1],[1],[1],[1]],
@@ -683,7 +855,7 @@ const SHAPES_HARD = [
     [[1,1],[0,1],[0,1],[1,1]]
 ];
 
-// ===== СОСТОЯНИЕ ИГРЫ =====
+// ===== СОСТОЯНИЕ =====
 let difficulty = 'easy';
 let gridSize = 8;
 let grid = [];
@@ -691,6 +863,7 @@ let currentPieces = [null, null, null];
 let score = 0;
 let bestScore = parseInt(localStorage.getItem('blockblast_best') || '0');
 let gameActive = false;
+let currentTheme = localStorage.getItem('blockblast_theme') || 'light';
 
 // Перетаскивание
 let dragging = false;
@@ -700,7 +873,7 @@ let dragOffsetX = 0;
 let dragOffsetY = 0;
 let lastPreviewPos = null;
 
-// DOM-элементы
+// DOM
 const introCanvas = document.getElementById('introCanvas');
 const menuScreen = document.getElementById('menuScreen');
 const settingsScreen = document.getElementById('settingsScreen');
@@ -714,6 +887,51 @@ const boardWrap = document.getElementById('boardWrap');
 const comboToast = document.getElementById('comboToast');
 const finalScoreEl = document.getElementById('finalScore');
 const finalBestEl = document.getElementById('finalBest');
+const themeBlur = document.getElementById('themeBlur');
+
+// ===== ТЕМА =====
+function applyTheme(theme, animate) {
+    currentTheme = theme;
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('blockblast_theme', theme);
+
+    // Обновляем canvas intro
+    if (introCanvas.style.display !== 'none') {
+        introCanvas.style.background = theme === 'dark' ? '#1a2030' : '#dfe6ed';
+    }
+
+    // Обновляем заполненные ячейки на поле (они хранят inline background)
+    if (gameBoard.children.length > 0) {
+        for (let i = 0; i < gridSize * gridSize; i++) {
+            const cell = gameBoard.children[i];
+            if (cell.classList.contains('filled')) {
+                // Цвет остаётся, но обновляем тени через CSS класс
+                // Ячейки получат правильные тени через CSS переменные автоматически
+            }
+        }
+    }
+
+    if (animate) {
+        themeBlur.classList.add('active');
+        setTimeout(() => themeBlur.classList.remove('active'), 2000);
+    }
+}
+
+// Инициализация темы при загрузке
+applyTheme(currentTheme, false);
+
+// Переключатель темы
+const themeSwitch = document.getElementById('themeSwitch');
+themeSwitch.addEventListener('click', () => {
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    applyTheme(newTheme, true);
+});
+themeSwitch.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        themeSwitch.click();
+    }
+});
 
 // ===== INTRO АНИМАЦИЯ =====
 (function runIntro() {
@@ -729,7 +947,6 @@ const finalBestEl = document.getElementById('finalBest');
     resize();
     window.addEventListener('resize', resize);
 
-    // Генерация блоков для анимации
     function spawnBlock() {
         const cols = Math.floor(W / 44);
         const col = Math.floor(Math.random() * cols);
@@ -738,18 +955,17 @@ const finalBestEl = document.getElementById('finalBest');
         const targetY = getTargetY(col);
         const color = COLORS[Math.floor(Math.random() * COLORS.length)];
         return {
-            x, y: -size - Math.random() * 200,
+            x, y: -size - Math.random() * 300,
             targetY,
             size,
             color,
             speed: 1.5 + Math.random() * 2.5,
             settled: false,
-            delay: blocks.length * 120
+            delay: blocks.length * 100
         };
     }
 
     function getTargetY(col) {
-        // Находим нижнюю границу уже установленных блоков в этой колонке
         let bottom = H - 2;
         for (const b of blocks) {
             if (b.settled && Math.abs(b.x - (col * 44 + 2)) < 5) {
@@ -759,39 +975,30 @@ const finalBestEl = document.getElementById('finalBest');
         return bottom;
     }
 
-    // Создаём начальные блоки
-    for (let i = 0; i < 60; i++) {
-        blocks.push(spawnBlock());
-    }
+    for (let i = 0; i < 60; i++) blocks.push(spawnBlock());
 
     let startTime = performance.now();
     let allSettledTime = null;
 
     function drawBlock(b, alpha) {
-        const r = 8;
-        const x = b.x, y = b.y, s = b.size;
+        const r = 8, x = b.x, y = b.y, s = b.size;
         ctx.globalAlpha = alpha;
-
-        // Тень (нейроморфная тёмная)
-        ctx.fillStyle = 'rgba(160,170,181,0.6)';
-        roundRect(ctx, x + 3, y + 3, s, s, r);
-        ctx.fill();
-
+        // Тень
+        ctx.fillStyle = currentTheme === 'dark' ? 'rgba(0,0,0,0.4)' : 'rgba(160,170,181,0.6)';
+        roundRect(ctx, x + 3, y + 3, s, s, r); ctx.fill();
         // Основа
         ctx.fillStyle = b.color.main;
-        roundRect(ctx, x, y, s, s, r);
-        ctx.fill();
-
-        // Блик сверху-слева
+        roundRect(ctx, x, y, s, s, r); ctx.fill();
+        // Блик
         ctx.fillStyle = b.color.light;
-        roundRect(ctx, x + 3, y + 3, s - 6, s * 0.35, r - 2);
-        ctx.fill();
-
-        // Тень внутри снизу
+        roundRect(ctx, x + 3, y + 3, s - 6, s * 0.35, r - 2); ctx.fill();
+        // Нижняя тень
         ctx.fillStyle = 'rgba(0,0,0,0.08)';
-        roundRect(ctx, x + 3, y + s * 0.6, s - 6, s * 0.35, r - 2);
-        ctx.fill();
-
+        roundRect(ctx, x + 3, y + s * 0.6, s - 6, s * 0.35, r - 2); ctx.fill();
+        // Текстура — точки
+        ctx.fillStyle = 'rgba(255,255,255,0.15)';
+        ctx.beginPath(); ctx.arc(x + 8, y + 8, 1.5, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(x + s - 10, y + s - 10, 1, 0, Math.PI * 2); ctx.fill();
         ctx.globalAlpha = 1;
     }
 
@@ -812,23 +1019,17 @@ const finalBestEl = document.getElementById('finalBest');
     function animate(now) {
         if (introDone) return;
         const elapsed = now - startTime;
-        ctx.clearRect(0, 0, W, H);
+        const bgColor = currentTheme === 'dark' ? '#1a2030' : '#dfe6ed';
+        ctx.fillStyle = bgColor;
+        ctx.fillRect(0, 0, W, H);
 
         let allSettled = true;
-
         for (const b of blocks) {
-            if (elapsed < b.delay) {
-                allSettled = false;
-                continue;
-            }
+            if (elapsed < b.delay) { allSettled = false; continue; }
             if (!b.settled) {
                 b.y += b.speed;
-                if (b.y >= b.targetY) {
-                    b.y = b.targetY;
-                    b.settled = true;
-                } else {
-                    allSettled = false;
-                }
+                if (b.y >= b.targetY) { b.y = b.targetY; b.settled = true; }
+                else allSettled = false;
             }
             const fadeIn = Math.min(1, (elapsed - b.delay) / 300);
             if (fadeIn > 0) drawBlock(b, fadeIn);
@@ -836,10 +1037,11 @@ const finalBestEl = document.getElementById('finalBest');
 
         if (allSettled) {
             if (!allSettledTime) allSettledTime = now;
-            // Плавное затухание
             const fadeOut = Math.min(1, (now - allSettledTime) / 600);
-            ctx.fillStyle = `rgba(223, 230, 237, ${fadeOut})`;
+            ctx.fillStyle = bgColor;
+            ctx.globalAlpha = fadeOut;
             ctx.fillRect(0, 0, W, H);
+            ctx.globalAlpha = 1;
             if (fadeOut >= 1) {
                 introDone = true;
                 introCanvas.style.display = 'none';
@@ -847,19 +1049,15 @@ const finalBestEl = document.getElementById('finalBest');
                 return;
             }
         }
-
         requestAnimationFrame(animate);
     }
     requestAnimationFrame(animate);
 })();
 
-// ===== УПРАВЛЕНИЕ ЭКРАНАМИ =====
+// ===== ЭКРАНЫ =====
 function showScreen(target) {
     [menuScreen, settingsScreen, gameScreen].forEach(s => s.classList.remove('active'));
-    // Небольшая задержка для анимации
-    requestAnimationFrame(() => {
-        target.classList.add('active');
-    });
+    requestAnimationFrame(() => target.classList.add('active'));
 }
 
 // ===== НАСТРОЙКИ =====
@@ -871,11 +1069,10 @@ document.querySelectorAll('.diff-option').forEach(opt => {
         gridSize = difficulty === 'easy' ? 8 : 10;
     });
 });
-
 document.getElementById('btnSettings').addEventListener('click', () => showScreen(settingsScreen));
 document.getElementById('btnBackFromSettings').addEventListener('click', () => showScreen(menuScreen));
 
-// ===== ИГРА — ИНИЦИАЛИЗАЦИЯ =====
+// ===== ИГРА =====
 document.getElementById('btnPlay').addEventListener('click', startGame);
 document.getElementById('btnRestart').addEventListener('click', startGame);
 document.getElementById('btnBackToMenu').addEventListener('click', () => {
@@ -897,11 +1094,9 @@ function startGame() {
     updateScoreDisplay();
     bestDisplay.textContent = bestScore;
 
-    // Создаём ячейки поля
     gameBoard.innerHTML = '';
     gameBoard.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
 
-    // Вычисляем размер ячейки
     const maxBoardPx = Math.min(window.innerWidth - 56, 460, window.innerHeight - 280);
     const cellSize = Math.floor((maxBoardPx - (gridSize - 1) * 3) / gridSize);
     gameBoard.style.width = (cellSize * gridSize + (gridSize - 1) * 3) + 'px';
@@ -919,14 +1114,11 @@ function startGame() {
         }
     }
 
-    // Генерируем первые 3 блока
     currentPieces = [generatePiece(), generatePiece(), generatePiece()];
     renderPieces();
-
     showScreen(gameScreen);
 }
 
-// ===== ГЕНЕРАЦИЯ ФИГУР =====
 function generatePiece() {
     const pool = difficulty === 'easy' ? SHAPES_EASY : [...SHAPES_EASY, ...SHAPES_HARD];
     const shape = pool[Math.floor(Math.random() * pool.length)];
@@ -934,7 +1126,6 @@ function generatePiece() {
     return { shape, color, used: false };
 }
 
-// ===== РЕНДЕР БЛОКОВ В ЗОНЕ ВЫБОРА =====
 function renderPieces() {
     piecesArea.innerHTML = '';
     const cellSize = difficulty === 'easy' ? 18 : 15;
@@ -954,41 +1145,42 @@ function renderPieces() {
                 row.forEach(val => {
                     const cell = document.createElement('div');
                     cell.className = 'piece-cell ' + (val ? 'filled-cell' : 'empty-cell');
-                    if (val) {
-                        cell.style.background = piece.color.main;
-                    }
+                    if (val) cell.style.background = piece.color.main;
                     grid.appendChild(cell);
                 });
             });
 
-            // Обработчики для перетаскивания
-            grid.addEventListener('pointerdown', (e) => startDrag(e, idx));
+            // ПК: mousedown + мобильные: pointerdown
+            grid.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                startDrag(e.clientX, e.clientY, idx, grid);
+            });
+            grid.addEventListener('touchstart', (e) => {
+                const touch = e.touches[0];
+                startDrag(touch.clientX, touch.clientY, idx, grid);
+            }, { passive: false });
+
             slot.appendChild(grid);
         } else {
-            // Пустой слот — серая точка
             const dot = document.createElement('div');
             dot.style.cssText = 'width:8px;height:8px;border-radius:50%;background:var(--shadow-dark);opacity:0.3;';
             slot.appendChild(dot);
         }
-
         piecesArea.appendChild(slot);
     });
 }
 
-// ===== ПЕРЕТАСКИВАНИЕ =====
-function startDrag(e, pieceIdx) {
+// ===== ПЕРЕТАСКИВАНИЕ (исправлено для ПК) =====
+function startDrag(cx, cy, pieceIdx, originEl) {
     if (!gameActive || currentPieces[pieceIdx].used) return;
-    e.preventDefault();
-
     dragging = true;
     dragPieceIdx = pieceIdx;
     const piece = currentPieces[pieceIdx];
 
-    // Создаём перетаскиваемый элемент
+    // Создаём перетаскиваемый клон
     dragEl = document.createElement('div');
     dragEl.className = 'drag-piece';
 
-    // Получаем размер ячейки поля для масштабирования
     const boardCells = gameBoard.querySelectorAll('.board-cell');
     const boardCellSize = boardCells.length > 0 ? boardCells[0].offsetWidth : 40;
     const dragCellSize = boardCellSize - 2;
@@ -1000,30 +1192,22 @@ function startDrag(e, pieceIdx) {
         row.forEach(val => {
             const cell = document.createElement('div');
             cell.className = 'piece-cell ' + (val ? 'filled-cell' : 'empty-cell');
-            if (val) {
-                cell.style.background = piece.color.main;
-            }
+            if (val) cell.style.background = piece.color.main;
             dragEl.appendChild(cell);
         });
     });
 
     document.body.appendChild(dragEl);
 
-    // Центрируем перетаскиваемый элемент на пальце/мыши
-    const shapeW = piece.shape[0].length * dragCellSize + (piece.shape[0].length - 1) * 2;
-    const shapeH = piece.shape.length * dragCellSize + (piece.shape.length - 1) * 2;
+    const shapeW = piece.shape[0].length * (dragCellSize + 3) - 3;
+    const shapeH = piece.shape.length * (dragCellSize + 3) - 3;
     dragOffsetX = shapeW / 2;
     dragOffsetY = shapeH / 2;
 
-    moveDrag(e.clientX, e.clientY);
+    moveDrag(cx, cy);
 
     // Скрываем оригинал
-    const slotEl = piecesArea.children[pieceIdx];
-    if (slotEl) slotEl.style.opacity = '0.2';
-
-    document.addEventListener('pointermove', onDragMove);
-    document.addEventListener('pointerup', onDragEnd);
-    document.addEventListener('pointercancel', onDragEnd);
+    if (originEl) originEl.closest('.piece-slot').style.opacity = '0.2';
 }
 
 function moveDrag(cx, cy) {
@@ -1032,48 +1216,67 @@ function moveDrag(cx, cy) {
     dragEl.style.top = (cy - dragOffsetY) + 'px';
 }
 
-function onDragMove(e) {
+// Глобальные обработчики для мыши (ПК)
+document.addEventListener('mousemove', (e) => {
     if (!dragging) return;
     e.preventDefault();
     moveDrag(e.clientX, e.clientY);
     updatePreview(e.clientX, e.clientY);
-}
+});
 
-function onDragEnd(e) {
+document.addEventListener('mouseup', (e) => {
     if (!dragging) return;
-    document.removeEventListener('pointermove', onDragMove);
-    document.removeEventListener('pointerup', onDragEnd);
-    document.removeEventListener('pointercancel', onDragEnd);
+    endDrag(e.clientX, e.clientY);
+});
 
-    const pos = getGridPosition(e.clientX, e.clientY);
+// Глобальные обработчики для тача (мобильные)
+document.addEventListener('touchmove', (e) => {
+    if (!dragging) return;
+    e.preventDefault();
+    const touch = e.touches[0];
+    moveDrag(touch.clientX, touch.clientY);
+    updatePreview(touch.clientX, touch.clientY);
+}, { passive: false });
+
+document.addEventListener('touchend', (e) => {
+    if (!dragging) return;
+    const touch = e.changedTouches[0];
+    endDrag(touch.clientX, touch.clientY);
+});
+
+document.addEventListener('touchcancel', () => {
+    if (!dragging) return;
+    cleanupDrag();
+});
+
+function endDrag(cx, cy) {
+    const pos = getGridPosition(cx, cy);
     if (pos && canPlace(dragPieceIdx, pos.row, pos.col)) {
         placePiece(dragPieceIdx, pos.row, pos.col);
     }
+    cleanupDrag();
+}
 
-    // Убираем превью
+function cleanupDrag() {
     clearPreview();
-    // Удаляем перетаскиваемый элемент
     if (dragEl) { dragEl.remove(); dragEl = null; }
     // Восстанавливаем оригинал
     const slotEl = piecesArea.children[dragPieceIdx];
     if (slotEl) slotEl.style.opacity = '1';
-
     dragging = false;
     dragPieceIdx = -1;
     lastPreviewPos = null;
 }
 
-// ===== ПРЕВЬЮ РАЗМЕЩЕНИЯ =====
+// ===== ПРЕВЬЮ =====
 function getGridPosition(cx, cy) {
     const rect = gameBoard.getBoundingClientRect();
     const boardCells = gameBoard.querySelectorAll('.board-cell');
     if (boardCells.length === 0) return null;
-    const cellSize = boardCells[0].offsetWidth + 3; // включая gap
+    const cellSize = boardCells[0].offsetWidth + 3;
     const col = Math.floor((cx - rect.left) / cellSize);
     const row = Math.floor((cy - rect.top) / cellSize);
-    if (row >= 0 && row < gridSize && col >= 0 && col < gridSize) {
-        return { row, col };
-    }
+    if (row >= 0 && row < gridSize && col >= 0 && col < gridSize) return { row, col };
     return null;
 }
 
@@ -1082,8 +1285,7 @@ function canPlace(pieceIdx, startRow, startCol) {
     for (let r = 0; r < piece.shape.length; r++) {
         for (let c = 0; c < piece.shape[r].length; c++) {
             if (!piece.shape[r][c]) continue;
-            const gr = startRow + r;
-            const gc = startCol + c;
+            const gr = startRow + r, gc = startCol + c;
             if (gr < 0 || gr >= gridSize || gc < 0 || gc >= gridSize) return false;
             if (grid[gr][gc] !== null) return false;
         }
@@ -1093,25 +1295,18 @@ function canPlace(pieceIdx, startRow, startCol) {
 
 function updatePreview(cx, cy) {
     const pos = getGridPosition(cx, cy);
-    if (!pos) {
-        if (lastPreviewPos) clearPreview();
-        return;
-    }
-
-    // Проверяем, изменилась ли позиция
+    if (!pos) { if (lastPreviewPos) clearPreview(); return; }
     const key = pos.row + ',' + pos.col;
     if (key === lastPreviewPos) return;
     lastPreviewPos = key;
-
     clearPreview();
+
     const valid = canPlace(dragPieceIdx, pos.row, pos.col);
     const piece = currentPieces[dragPieceIdx];
-
     for (let r = 0; r < piece.shape.length; r++) {
         for (let c = 0; c < piece.shape[r].length; c++) {
             if (!piece.shape[r][c]) continue;
-            const gr = pos.row + r;
-            const gc = pos.col + c;
+            const gr = pos.row + r, gc = pos.col + c;
             if (gr >= 0 && gr < gridSize && gc >= 0 && gc < gridSize) {
                 const cell = getCellEl(gr, gc);
                 if (cell) cell.classList.add(valid ? 'preview' : 'preview-invalid');
@@ -1132,12 +1327,10 @@ function placePiece(pieceIdx, startRow, startCol) {
     const piece = currentPieces[pieceIdx];
     let placedCount = 0;
 
-    // Заполняем ячейки
     for (let r = 0; r < piece.shape.length; r++) {
         for (let c = 0; c < piece.shape[r].length; c++) {
             if (!piece.shape[r][c]) continue;
-            const gr = startRow + r;
-            const gc = startCol + c;
+            const gr = startRow + r, gc = startCol + c;
             grid[gr][gc] = piece.color;
             const cell = getCellEl(gr, gc);
             if (cell) {
@@ -1148,14 +1341,9 @@ function placePiece(pieceIdx, startRow, startCol) {
         }
     }
 
-    // Начисляем очки за размещение
     addScore(placedCount);
-
-    // Помечаем фигуру как использованную
     piece.used = true;
     renderPieces();
-
-    // Проверяем заполненные ряды
     setTimeout(() => checkAndClearLines(), 150);
 }
 
@@ -1177,9 +1365,7 @@ function checkAndClearLines() {
     const totalLines = rowsToClear.length + colsToClear.length;
 
     if (totalLines > 0) {
-        // Собираем уникальные ячейки для очистки
         const cellsToClear = new Set();
-
         rowsToClear.forEach(r => {
             for (let c = 0; c < gridSize; c++) cellsToClear.add(r + ',' + c);
         });
@@ -1187,23 +1373,17 @@ function checkAndClearLines() {
             for (let r = 0; r < gridSize; r++) cellsToClear.add(r + ',' + c);
         });
 
-        // Анимация очистки
         cellsToClear.forEach(key => {
             const [r, c] = key.split(',').map(Number);
             const cell = getCellEl(r, c);
             if (cell) cell.classList.add('clearing');
         });
 
-        // Показываем комбо
-        if (totalLines > 1) {
-            showCombo(totalLines);
-        }
+        if (totalLines > 1) showCombo(totalLines);
 
-        // Начисляем очки за линии
         const lineScore = totalLines * totalLines * 10 * gridSize;
         addScore(lineScore, true);
 
-        // После анимации очищаем
         setTimeout(() => {
             cellsToClear.forEach(key => {
                 const [r, c] = key.split(',').map(Number);
@@ -1214,8 +1394,6 @@ function checkAndClearLines() {
                     cell.style.background = '';
                 }
             });
-
-            // Проверяем, нужно ли генерировать новые фигуры
             checkGameState();
         }, 480);
     } else {
@@ -1224,14 +1402,11 @@ function checkAndClearLines() {
 }
 
 function checkGameState() {
-    // Все ли 3 фигуры использованы?
     if (currentPieces.every(p => p.used)) {
-        // Генерируем новые
         currentPieces = [generatePiece(), generatePiece(), generatePiece()];
         renderPieces();
     }
 
-    // Проверяем, может ли хотя бы одна фигура быть размещена
     const canPlaceAny = currentPieces.some((piece, idx) => {
         if (piece.used) return false;
         for (let r = 0; r < gridSize; r++) {
@@ -1259,12 +1434,10 @@ function showGameOver() {
 }
 
 // ===== ОЧКИ =====
-function addScore(points, showPopup = false) {
+function addScore(points, showPopup) {
     score += points;
     updateScoreDisplay();
-    if (showPopup) {
-        showScorePopup('+' + points);
-    }
+    if (showPopup) showScorePopup('+' + points);
 }
 
 function updateScoreDisplay() {
@@ -1289,17 +1462,16 @@ function showCombo(lines) {
     const labels = { 2: 'Двойное!', 3: 'Тройное!', 4: 'Четверное!', 5: 'ПЯТЕРОНО!' };
     comboToast.textContent = labels[lines] || (lines + 'x Комбо!');
     comboToast.classList.remove('show');
-    void comboToast.offsetWidth; // перезапуск анимации
+    void comboToast.offsetWidth;
     comboToast.classList.add('show');
     setTimeout(() => comboToast.classList.remove('show'), 1000);
 }
 
-// ===== УТИЛИТЫ =====
 function getCellEl(row, col) {
     return gameBoard.children[row * gridSize + col] || null;
 }
 
-// ===== ОБРАБОТКА RESIZE =====
+// ===== RESIZE =====
 window.addEventListener('resize', () => {
     if (gameActive && gameBoard.children.length > 0) {
         const maxBoardPx = Math.min(window.innerWidth - 56, 460, window.innerHeight - 280);
@@ -1312,11 +1484,6 @@ window.addEventListener('resize', () => {
         });
     }
 });
-
-// Предотвращаем скролл при перетаскивании
-document.addEventListener('touchmove', (e) => {
-    if (dragging) e.preventDefault();
-}, { passive: false });
 </script>
 </body>
 </html>
