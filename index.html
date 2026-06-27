@@ -6,7 +6,6 @@
     <title>BLOCK BLAST — Нейроморфная головоломка</title>
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        /* ===== ПЕРЕМЕННЫЕ НЕЙРОМОРФИЗМА ===== */
         :root {
             --bg: #dfe6ed;
             --bg-tex: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
@@ -15,7 +14,6 @@
             --shadow-dark2: #a0aab5;
             --accent: #2dba4e;
             --accent-glow: rgba(45, 186, 78, 0.35);
-            --accent-hover: #27a844;
             --text: #2c3e50;
             --text-muted: #6b7d8d;
             --danger: #e74c3c;
@@ -25,7 +23,6 @@
             --transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        /* Тёмная тема */
         [data-theme="dark"] {
             --bg: #1a2030;
             --bg-tex: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
@@ -34,648 +31,267 @@
             --shadow-dark2: #0a0e18;
             --accent: #34d058;
             --accent-glow: rgba(52, 208, 88, 0.3);
-            --accent-hover: #2eba4c;
             --text: #dce4f0;
             --text-muted: #7b8da6;
             --danger: #f04848;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
             font-family: 'Exo 2', sans-serif;
             background: var(--bg);
             background-image: var(--bg-tex);
             color: var(--text);
             overflow: hidden;
-            height: 100vh;
-            width: 100vw;
-            -webkit-user-select: none;
-            user-select: none;
+            height: 100vh; width: 100vw;
+            -webkit-user-select: none; user-select: none;
             -webkit-tap-highlight-color: transparent;
-            transition: background 2s ease, background-image 2s ease;
+            transition: background 2s ease, color 2s ease;
         }
-
-        /* ===== БЛЮР ПЕРЕХОД ТЕМЫ ===== */
         .theme-blur-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
-            backdrop-filter: blur(0px);
-            -webkit-backdrop-filter: blur(0px);
+            position: fixed; inset: 0; z-index: 9999;
+            backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px);
             pointer-events: none;
             transition: backdrop-filter 2s ease-in-out, -webkit-backdrop-filter 2s ease-in-out;
         }
         .theme-blur-overlay.active {
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
         }
-
-        /* ===== ЭКРАНЫ ===== */
         .screen {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            opacity: 0;
-            transform: translateY(-30px);
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center; flex-direction: column;
+            opacity: 0; transform: translateY(-30px);
             pointer-events: none;
-            transition: opacity 0.6s ease, transform 0.6s ease, background 2s ease;
+            transition: opacity 0.6s ease, transform 0.6s ease;
             z-index: 10;
         }
-        .screen.active {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: auto;
-            z-index: 20;
-        }
-
-        /* ===== CANVAS ВВОДА ===== */
-        #introCanvas {
-            position: fixed;
-            inset: 0;
-            z-index: 100;
-            background: var(--bg);
-            transition: background 2s ease;
-        }
-
-        /* ===== НЕЙРОМОРФНЫЕ КАРТОЧКИ ===== */
+        .screen.active { opacity: 1; transform: translateY(0); pointer-events: auto; z-index: 20; }
+        #introCanvas { position: fixed; inset: 0; z-index: 100; }
         .neu-card {
-            background: var(--bg);
-            background-image: var(--bg-tex);
+            background: var(--bg); background-image: var(--bg-tex);
             border-radius: var(--radius);
-            box-shadow:
-                8px 8px 20px var(--shadow-dark),
-                -8px -8px 20px var(--shadow-light);
-            padding: 40px;
-            max-width: 420px;
-            width: 90vw;
-            transition: background 2s ease, box-shadow 2s ease, background-image 2s ease;
+            box-shadow: 8px 8px 20px var(--shadow-dark), -8px -8px 20px var(--shadow-light);
+            padding: 40px; max-width: 420px; width: 90vw;
+            transition: background 2s ease, box-shadow 2s ease, color 2s ease;
         }
-        .neu-card-sm {
-            background: var(--bg);
-            background-image: var(--bg-tex);
-            border-radius: var(--radius-sm);
-            box-shadow:
-                5px 5px 12px var(--shadow-dark),
-                -5px -5px 12px var(--shadow-light);
-            padding: 24px;
-            transition: background 2s ease, box-shadow 2s ease, background-image 2s ease;
-        }
-
-        /* ===== КНОПКИ ===== */
         .neu-btn {
-            display: block;
-            width: 100%;
-            padding: 16px 24px;
-            border: none;
-            border-radius: var(--radius-sm);
-            font-family: 'Exo 2', sans-serif;
-            font-size: 17px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            transition: var(--transition);
-            outline: none;
-            position: relative;
-            overflow: hidden;
+            display: block; width: 100%; padding: 16px 24px; border: none;
+            border-radius: var(--radius-sm); font-family: 'Exo 2', sans-serif;
+            font-size: 17px; font-weight: 700; letter-spacing: 0.5px;
+            cursor: pointer; transition: var(--transition); outline: none;
         }
         .neu-btn.accent {
-            background: var(--accent);
-            color: #fff;
-            box-shadow:
-                6px 6px 14px var(--shadow-dark),
-                -4px -4px 12px var(--shadow-light),
-                inset 0 2px 4px rgba(255,255,255,0.2);
+            background: var(--accent); color: #fff;
+            box-shadow: 6px 6px 14px var(--shadow-dark), -4px -4px 12px var(--shadow-light), inset 0 2px 4px rgba(255,255,255,0.2);
         }
         .neu-btn.accent:hover {
-            box-shadow:
-                6px 6px 14px var(--shadow-dark),
-                -4px -4px 12px var(--shadow-light),
-                inset 0 2px 4px rgba(255,255,255,0.2),
-                0 0 25px var(--accent-glow);
+            box-shadow: 6px 6px 14px var(--shadow-dark), -4px -4px 12px var(--shadow-light), inset 0 2px 4px rgba(255,255,255,0.2), 0 0 25px var(--accent-glow);
         }
-        .neu-btn.accent:active,
-        .neu-btn.accent.pressed {
-            box-shadow:
-                inset 4px 4px 10px rgba(0,0,0,0.2),
-                inset -2px -2px 6px rgba(255,255,255,0.15);
+        .neu-btn.accent:active {
+            box-shadow: inset 4px 4px 10px rgba(0,0,0,0.2), inset -2px -2px 6px rgba(255,255,255,0.15);
             transform: scale(0.97);
         }
         .neu-btn.neutral {
-            background: var(--bg);
-            color: var(--text-muted);
-            box-shadow:
-                5px 5px 12px var(--shadow-dark),
-                -5px -5px 12px var(--shadow-light);
+            background: var(--bg); color: var(--text-muted);
+            box-shadow: 5px 5px 12px var(--shadow-dark), -5px -5px 12px var(--shadow-light);
             transition: var(--transition), background 2s ease, box-shadow 2s ease, color 2s ease;
         }
-        .neu-btn.neutral:active,
-        .neu-btn.neutral.pressed {
-            box-shadow:
-                inset 4px 4px 10px var(--shadow-dark2),
-                inset -4px -4px 10px var(--shadow-light);
+        .neu-btn.neutral:active {
+            box-shadow: inset 4px 4px 10px var(--shadow-dark2), inset -4px -4px 10px var(--shadow-light);
             transform: scale(0.97);
         }
-
-        /* ===== ЗАГОЛОВОК ===== */
         .game-title {
-            font-size: clamp(32px, 7vw, 52px);
-            font-weight: 900;
-            text-align: center;
-            letter-spacing: 3px;
-            margin-bottom: 8px;
+            font-size: clamp(32px, 7vw, 52px); font-weight: 900; text-align: center;
+            letter-spacing: 3px; margin-bottom: 8px;
             background: linear-gradient(135deg, var(--text) 0%, #4a6680 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            transition: background 2s ease;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
         [data-theme="dark"] .game-title {
             background: linear-gradient(135deg, #e0e8f4 0%, #6ea8d4 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
+            -webkit-background-clip: text; background-clip: text;
         }
         .game-subtitle {
-            text-align: center;
-            font-size: 14px;
-            font-weight: 300;
-            color: var(--text-muted);
-            margin-bottom: 36px;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            transition: color 2s ease;
+            text-align: center; font-size: 14px; font-weight: 300;
+            color: var(--text-muted); margin-bottom: 36px; letter-spacing: 4px; text-transform: uppercase;
         }
-
-        .menu-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        /* ===== НАСТРОЙКИ ===== */
-        .settings-title {
-            font-size: 22px;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 28px;
-            letter-spacing: 1px;
-        }
-        .settings-section {
-            margin-bottom: 24px;
-        }
+        .menu-buttons { display: flex; flex-direction: column; gap: 16px; }
+        .settings-title { font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 28px; }
+        .settings-section { margin-bottom: 24px; }
         .settings-section-label {
-            font-size: 12px;
-            font-weight: 300;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 14px;
-            transition: color 2s ease;
+            font-size: 12px; font-weight: 300; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 2px; margin-bottom: 14px;
         }
-        .difficulty-options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+        .difficulty-options { display: flex; flex-direction: column; gap: 12px; }
         .diff-option {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 14px 18px;
-            border-radius: var(--radius-sm);
-            background: var(--bg);
-            background-image: var(--bg-tex);
-            box-shadow:
-                4px 4px 10px var(--shadow-dark),
-                -4px -4px 10px var(--shadow-light);
-            cursor: pointer;
-            transition: var(--transition), background 2s ease, box-shadow 2s ease, border-color 0.3s ease;
-            border: 2px solid transparent;
+            display: flex; align-items: center; gap: 16px; padding: 14px 18px;
+            border-radius: var(--radius-sm); background: var(--bg); background-image: var(--bg-tex);
+            box-shadow: 4px 4px 10px var(--shadow-dark), -4px -4px 10px var(--shadow-light);
+            cursor: pointer; transition: var(--transition); border: 2px solid transparent;
         }
         .diff-option.selected {
             border-color: var(--accent);
-            box-shadow:
-                4px 4px 10px var(--shadow-dark),
-                -4px -4px 10px var(--shadow-light),
-                0 0 15px var(--accent-glow);
+            box-shadow: 4px 4px 10px var(--shadow-dark), -4px -4px 10px var(--shadow-light), 0 0 15px var(--accent-glow);
         }
-        .diff-option:active {
-            box-shadow:
-                inset 3px 3px 8px var(--shadow-dark2),
-                inset -3px -3px 8px var(--shadow-light);
-        }
+        .diff-option:active { box-shadow: inset 3px 3px 8px var(--shadow-dark2), inset -3px -3px 8px var(--shadow-light); }
         .diff-radio {
-            width: 22px; height: 22px;
-            border-radius: 50%;
-            background: var(--bg);
-            box-shadow:
-                inset 2px 2px 5px var(--shadow-dark2),
-                inset -2px -2px 5px var(--shadow-light);
-            position: relative;
-            flex-shrink: 0;
-            transition: var(--transition), background 2s ease, box-shadow 2s ease;
+            width: 22px; height: 22px; border-radius: 50%; background: var(--bg);
+            box-shadow: inset 2px 2px 5px var(--shadow-dark2), inset -2px -2px 5px var(--shadow-light);
+            position: relative; flex-shrink: 0;
         }
         .diff-option.selected .diff-radio::after {
-            content: '';
-            position: absolute;
-            inset: 4px;
-            border-radius: 50%;
-            background: var(--accent);
-            box-shadow: 0 0 8px var(--accent-glow);
+            content: ''; position: absolute; inset: 4px; border-radius: 50%;
+            background: var(--accent); box-shadow: 0 0 8px var(--accent-glow);
         }
         .diff-info { flex: 1; }
-        .diff-name {
-            font-weight: 700;
-            font-size: 15px;
-            margin-bottom: 2px;
-        }
-        .diff-desc {
-            font-size: 12px;
-            color: var(--text-muted);
-            font-weight: 300;
-            transition: color 2s ease;
-        }
-
-        /* ===== ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ ===== */
+        .diff-name { font-weight: 700; font-size: 15px; margin-bottom: 2px; }
+        .diff-desc { font-size: 12px; color: var(--text-muted); font-weight: 300; }
         .theme-toggle-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 18px;
-            border-radius: var(--radius-sm);
-            background: var(--bg);
-            background-image: var(--bg-tex);
-            box-shadow:
-                4px 4px 10px var(--shadow-dark),
-                -4px -4px 10px var(--shadow-light);
-            transition: background 2s ease, box-shadow 2s ease, background-image 2s ease;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 18px; border-radius: var(--radius-sm);
+            background: var(--bg); background-image: var(--bg-tex);
+            box-shadow: 4px 4px 10px var(--shadow-dark), -4px -4px 10px var(--shadow-light);
         }
-        .theme-toggle-label {
-            font-weight: 600;
-            font-size: 15px;
-        }
+        .theme-toggle-label { font-weight: 600; font-size: 15px; }
         .theme-switch {
-            width: 56px; height: 30px;
-            border-radius: 15px;
-            background: var(--bg);
-            box-shadow:
-                inset 3px 3px 6px var(--shadow-dark2),
-                inset -3px -3px 6px var(--shadow-light);
-            position: relative;
-            cursor: pointer;
-            transition: background 2s ease, box-shadow 2s ease;
-            flex-shrink: 0;
+            width: 56px; height: 30px; border-radius: 15px; background: var(--bg);
+            box-shadow: inset 3px 3px 6px var(--shadow-dark2), inset -3px -3px 6px var(--shadow-light);
+            position: relative; cursor: pointer; flex-shrink: 0;
         }
         .theme-switch-knob {
-            position: absolute;
-            top: 3px; left: 3px;
-            width: 24px; height: 24px;
-            border-radius: 50%;
+            position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 50%;
             background: var(--accent);
-            box-shadow:
-                2px 2px 5px var(--shadow-dark),
-                -1px -1px 3px var(--shadow-light),
-                0 0 8px var(--accent-glow);
-            transition: transform 0.4s var(--ease-bounce), background 2s ease, box-shadow 2s ease;
+            box-shadow: 2px 2px 5px var(--shadow-dark), -1px -1px 3px var(--shadow-light), 0 0 8px var(--accent-glow);
+            transition: transform 0.4s var(--ease-bounce);
         }
-        [data-theme="dark"] .theme-switch-knob {
-            transform: translateX(26px);
-        }
+        [data-theme="dark"] .theme-switch-knob { transform: translateX(26px); }
         .theme-icons {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 8px;
-            font-size: 13px;
-            pointer-events: none;
+            position: absolute; inset: 0; display: flex; align-items: center;
+            justify-content: space-between; padding: 0 8px; font-size: 13px; pointer-events: none;
         }
-        .theme-icons span {
-            opacity: 0.4;
-            transition: opacity 0.3s ease;
-        }
-        [data-theme="light"] .theme-icons .icon-moon { opacity: 0.4; }
-        [data-theme="light"] .theme-icons .icon-sun { opacity: 0.8; }
-        [data-theme="dark"] .theme-icons .icon-moon { opacity: 0.8; }
-        [data-theme="dark"] .theme-icons .icon-sun { opacity: 0.4; }
-
-        .settings-back {
-            margin-top: 8px;
-        }
-
-        /* ===== ИГРОВОЙ ЭКРАН ===== */
-        #gameScreen {
-            padding: 16px;
-            gap: 12px;
-            justify-content: flex-start;
-            padding-top: 20px;
-            overflow-y: auto;
-        }
-
+        .theme-icons span { opacity: 0.4; transition: opacity 0.3s ease; }
+        [data-theme="light"] .icon-sun { opacity: 0.8; }
+        [data-theme="dark"] .icon-moon { opacity: 0.8; }
+        #gameScreen { padding: 16px; gap: 12px; justify-content: flex-start; padding-top: 20px; overflow-y: auto; }
         .game-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            max-width: 500px;
-            padding: 0 4px;
+            display: flex; align-items: center; justify-content: space-between;
+            width: 100%; max-width: 500px; padding: 0 4px;
         }
-        .game-score-box {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+        .game-score-box { display: flex; flex-direction: column; align-items: center; }
         .game-score-label {
-            font-size: 11px;
-            font-weight: 300;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: color 2s ease;
+            font-size: 11px; font-weight: 300; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 2px;
         }
-        .game-score-value {
-            font-size: 32px;
-            font-weight: 900;
-            line-height: 1.1;
-            transition: var(--transition), color 2s ease;
-        }
-        .game-score-value.bump {
-            transform: scale(1.15);
-            color: var(--accent);
-        }
+        .game-score-value { font-size: 32px; font-weight: 900; line-height: 1.1; transition: var(--transition); }
+        .game-score-value.bump { transform: scale(1.15); color: var(--accent); }
         .game-header-btn {
-            width: 44px; height: 44px;
-            border: none;
-            border-radius: var(--radius-sm);
-            background: var(--bg);
-            background-image: var(--bg-tex);
-            box-shadow:
-                4px 4px 10px var(--shadow-dark),
-                -4px -4px 10px var(--shadow-light);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition), background 2s ease, box-shadow 2s ease, color 2s ease;
-            font-size: 20px;
-            color: var(--text-muted);
+            width: 44px; height: 44px; border: none; border-radius: var(--radius-sm);
+            background: var(--bg); background-image: var(--bg-tex);
+            box-shadow: 4px 4px 10px var(--shadow-dark), -4px -4px 10px var(--shadow-light);
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: var(--transition); color: var(--text-muted);
         }
-        .game-header-btn:active {
-            box-shadow:
-                inset 3px 3px 8px var(--shadow-dark2),
-                inset -3px -3px 8px var(--shadow-light);
-        }
-
-        /* ===== ИГРОВОЕ ПОЛЕ (вогнутое) ===== */
+        .game-header-btn:active { box-shadow: inset 3px 3px 8px var(--shadow-dark2), inset -3px -3px 8px var(--shadow-light); }
         .game-board-wrap {
-            position: relative;
-            border-radius: var(--radius);
-            padding: 6px;
-            box-shadow:
-                inset 6px 6px 16px var(--shadow-dark2),
-                inset -6px -6px 16px var(--shadow-light);
-            transition: box-shadow 2s ease;
+            position: relative; border-radius: var(--radius); padding: 6px;
+            box-shadow: inset 6px 6px 16px var(--shadow-dark2), inset -6px -6px 16px var(--shadow-light);
         }
-        .game-board {
-            display: grid;
-            gap: 3px;
-            border-radius: calc(var(--radius) - 4px);
-            overflow: hidden;
-        }
+        .game-board { display: grid; gap: 3px; border-radius: calc(var(--radius) - 4px); overflow: hidden; }
         .board-cell {
-            background: var(--bg);
-            border-radius: var(--radius-xs);
-            box-shadow:
-                inset 2px 2px 4px var(--shadow-dark2),
-                inset -2px -2px 4px var(--shadow-light);
-            transition: background 0.15s ease, box-shadow 0.15s ease, background-color 2s ease, box-shadow 2s ease;
-            aspect-ratio: 1;
-            position: relative;
-            overflow: hidden;
+            background: var(--bg); border-radius: var(--radius-xs);
+            box-shadow: inset 2px 2px 4px var(--shadow-dark2), inset -2px -2px 4px var(--shadow-light);
+            transition: background 0.12s ease, box-shadow 0.12s ease; aspect-ratio: 1;
+            position: relative; overflow: hidden;
         }
-        /* Текстура ячейки */
         .board-cell::after {
-            content: '';
-            position: absolute;
-            inset: 0;
+            content: ''; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
             background-image: url("data:image/svg+xml,%3Csvg width='8' height='8' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='0.4' fill='%23000' opacity='0.03'/%3E%3C/svg%3E");
-            pointer-events: none;
-            border-radius: inherit;
         }
         [data-theme="dark"] .board-cell::after {
             background-image: url("data:image/svg+xml,%3Csvg width='8' height='8' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='0.4' fill='%23fff' opacity='0.025'/%3E%3C/svg%3E");
         }
         .board-cell.preview {
-            background: rgba(45, 186, 78, 0.18);
-            box-shadow:
-                inset 2px 2px 4px var(--shadow-dark2),
-                inset -2px -2px 4px var(--shadow-light),
-                0 0 6px rgba(45, 186, 78, 0.15);
+            background: rgba(45, 186, 78, 0.2) !important;
+            box-shadow: inset 2px 2px 4px var(--shadow-dark2), inset -2px -2px 4px var(--shadow-light), 0 0 8px rgba(45, 186, 78, 0.2);
         }
         .board-cell.preview-invalid {
-            background: rgba(231, 76, 60, 0.15);
-            box-shadow:
-                inset 2px 2px 4px var(--shadow-dark2),
-                inset -2px -2px 4px var(--shadow-light),
-                0 0 6px rgba(231, 76, 60, 0.1);
+            background: rgba(231, 76, 60, 0.18) !important;
+            box-shadow: inset 2px 2px 4px var(--shadow-dark2), inset -2px -2px 4px var(--shadow-light), 0 0 8px rgba(231, 76, 60, 0.12);
         }
         .board-cell.filled {
-            box-shadow:
-                3px 3px 6px var(--shadow-dark),
-                -2px -2px 5px var(--shadow-light),
-                inset 0 2px 3px rgba(255,255,255,0.35),
-                inset 0 -1px 2px rgba(0,0,0,0.1);
+            box-shadow: 3px 3px 6px var(--shadow-dark), -2px -2px 5px var(--shadow-light),
+                inset 0 2px 3px rgba(255,255,255,0.35), inset 0 -1px 2px rgba(0,0,0,0.1);
         }
         .board-cell.filled::after {
-            /* Текстура на заполненных ячейках — микроблики */
             background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='1' y='1' width='3' height='2' rx='1' fill='%23fff' opacity='0.18'/%3E%3Crect x='7' y='8' width='2' height='2' rx='0.5' fill='%23fff' opacity='0.1'/%3E%3C/svg%3E");
         }
-        .board-cell.clearing {
-            animation: cellClear 0.45s ease forwards;
-        }
-
+        .board-cell.clearing { animation: cellClear 0.45s ease forwards; }
         @keyframes cellClear {
             0% { transform: scale(1); opacity: 1; filter: brightness(1); }
             30% { transform: scale(1.15); opacity: 1; filter: brightness(1.5); }
             100% { transform: scale(0.3); opacity: 0; filter: brightness(2); }
         }
-
-        /* ===== ЗОНА БЛОКОВ ===== */
-        .pieces-area {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-            padding: 20px 10px;
-            min-height: 100px;
-        }
-        .piece-slot {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 70px;
-            min-height: 70px;
-            transition: opacity 0.2s ease;
-        }
-        .piece-slot.empty {
-            opacity: 0.15;
-        }
-
-        /* ===== МАЛЕНЬКИЕ КУБИКИ БЛОКОВ ===== */
-        .piece-grid {
-            display: grid;
-            gap: 2px;
-            cursor: grab;
-            touch-action: none;
-        }
+        .pieces-area { display: flex; align-items: center; justify-content: center; gap: 16px; padding: 20px 10px; min-height: 100px; }
+        .piece-slot { display: flex; align-items: center; justify-content: center; min-width: 70px; min-height: 70px; transition: opacity 0.15s ease; }
+        .piece-slot.empty { opacity: 0.15; }
+        .piece-grid { display: grid; gap: 2px; cursor: grab; touch-action: none; }
         .piece-grid:active { cursor: grabbing; }
         .piece-cell {
-            width: var(--pc-size, 18px);
-            height: var(--pc-size, 18px);
+            width: var(--pc-size, 18px); height: var(--pc-size, 18px);
             border-radius: calc(var(--pc-size, 18px) * 0.28);
-            transition: transform 0.2s var(--ease-bounce);
-            position: relative;
-            overflow: hidden;
+            position: relative; overflow: hidden;
         }
-        .piece-cell.empty-cell {
-            background: transparent;
-            box-shadow: none;
-        }
+        .piece-cell.empty-cell { background: transparent; box-shadow: none; }
         .piece-cell.filled-cell {
-            box-shadow:
-                2px 2px 4px var(--shadow-dark),
-                -1px -1px 3px var(--shadow-light),
-                inset 0 1px 2px rgba(255,255,255,0.35),
-                inset 0 -1px 1px rgba(0,0,0,0.08);
+            box-shadow: 2px 2px 4px var(--shadow-dark), -1px -1px 3px var(--shadow-light),
+                inset 0 1px 2px rgba(255,255,255,0.35), inset 0 -1px 1px rgba(0,0,0,0.08);
         }
-        /* Текстура кубика */
         .piece-cell.filled-cell::after {
-            content: '';
-            position: absolute;
-            inset: 0;
+            content: ''; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
             background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='1' y='1' width='3' height='2' rx='1' fill='%23fff' opacity='0.2'/%3E%3Crect x='7' y='8' width='2' height='2' rx='0.5' fill='%23fff' opacity='0.12'/%3E%3C/svg%3E");
-            pointer-events: none;
-            border-radius: inherit;
         }
-
-        /* ===== ПЕРЕТАСКИВАЕМЫЙ БЛОК ===== */
         .drag-piece {
-            position: fixed;
-            pointer-events: none;
-            z-index: 1000;
-            display: grid;
-            gap: 3px;
-            transition: none;
+            position: fixed; pointer-events: none; z-index: 1000;
+            display: grid; gap: 3px;
             filter: drop-shadow(0 10px 20px rgba(0,0,0,0.25));
         }
-        .drag-piece .piece-cell {
-            transition: none;
-        }
-        .drag-piece .empty-cell {
-            background: transparent !important;
-            box-shadow: none !important;
-        }
+        .drag-piece .empty-cell { background: transparent !important; box-shadow: none !important; }
         .drag-piece .empty-cell::after { display: none; }
-
-        /* ===== GAME OVER ОВЕРЛЕЙ ===== */
         .game-over-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(223, 230, 237, 0.8);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 500;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.5s ease, background 2s ease;
+            position: fixed; inset: 0;
+            background: rgba(223, 230, 237, 0.8); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 500; opacity: 0; pointer-events: none; transition: opacity 0.5s ease;
         }
-        [data-theme="dark"] .game-over-overlay {
-            background: rgba(26, 32, 48, 0.8);
-        }
-        .game-over-overlay.show {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .game-over-card {
-            text-align: center;
-            transform: scale(0.85);
-            transition: transform 0.5s var(--ease-bounce);
-        }
-        .game-over-overlay.show .game-over-card {
-            transform: scale(1);
-        }
-        .game-over-title {
-            font-size: 28px;
-            font-weight: 900;
-            margin-bottom: 8px;
-        }
-        .game-over-score {
-            font-size: 48px;
-            font-weight: 900;
-            color: var(--accent);
-            margin-bottom: 6px;
-        }
-        .game-over-best {
-            font-size: 14px;
-            color: var(--text-muted);
-            margin-bottom: 28px;
-            font-weight: 300;
-            transition: color 2s ease;
-        }
-        .game-over-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        /* ===== КОМБО УВЕДОМЛЕНИЕ ===== */
+        [data-theme="dark"] .game-over-overlay { background: rgba(26, 32, 48, 0.8); }
+        .game-over-overlay.show { opacity: 1; pointer-events: auto; }
+        .game-over-card { text-align: center; transform: scale(0.85); transition: transform 0.5s var(--ease-bounce); }
+        .game-over-overlay.show .game-over-card { transform: scale(1); }
+        .game-over-title { font-size: 28px; font-weight: 900; margin-bottom: 8px; }
+        .game-over-score { font-size: 48px; font-weight: 900; color: var(--accent); margin-bottom: 6px; }
+        .game-over-best { font-size: 14px; color: var(--text-muted); margin-bottom: 28px; font-weight: 300; }
+        .game-over-buttons { display: flex; flex-direction: column; gap: 12px; }
         .combo-toast {
-            position: fixed;
-            top: 20%;
-            left: 50%;
+            position: fixed; top: 20%; left: 50%;
             transform: translate(-50%, -50%) scale(0.5);
-            font-size: 28px;
-            font-weight: 900;
-            color: var(--accent);
+            font-size: 28px; font-weight: 900; color: var(--accent);
             text-shadow: 0 2px 10px var(--accent-glow);
-            opacity: 0;
-            pointer-events: none;
-            z-index: 600;
+            opacity: 0; pointer-events: none; z-index: 600;
         }
-        .combo-toast.show {
-            animation: comboAnim 0.9s ease forwards;
-        }
+        .combo-toast.show { animation: comboAnim 0.9s ease forwards; }
         @keyframes comboAnim {
             0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
             20% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
             50% { opacity: 1; transform: translate(-50%, -60%) scale(1); }
             100% { opacity: 0; transform: translate(-50%, -80%) scale(0.9); }
         }
-
-        /* ===== ОЧКИ ПЛЮС ===== */
         .score-popup {
-            position: fixed;
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--accent);
-            pointer-events: none;
-            z-index: 550;
-            animation: scorePop 0.8s ease forwards;
+            position: fixed; font-size: 20px; font-weight: 700; color: var(--accent);
+            pointer-events: none; z-index: 550; animation: scorePop 0.8s ease forwards;
         }
         @keyframes scorePop {
             0% { opacity: 0; transform: translateY(0) scale(0.7); }
             20% { opacity: 1; transform: translateY(-10px) scale(1.1); }
             100% { opacity: 0; transform: translateY(-50px) scale(0.9); }
         }
-
-        /* ===== АДАПТИВНОСТЬ ===== */
         @media (max-width: 480px) {
             .neu-card { padding: 28px 20px; }
             .game-title { letter-spacing: 1px; }
@@ -688,21 +304,14 @@
             .pieces-area { padding: 10px 6px; min-height: 70px; }
         }
         @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                transition-duration: 0.01ms !important;
-            }
+            *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
         }
     </style>
 </head>
 <body>
-    <!-- Оверлей блюра для переключения темы -->
     <div class="theme-blur-overlay" id="themeBlur"></div>
-
-    <!-- INTRO CANVAS -->
     <canvas id="introCanvas"></canvas>
 
-    <!-- ГЛАВНОЕ МЕНЮ -->
     <div id="menuScreen" class="screen">
         <div class="neu-card">
             <div class="game-title">BLOCK BLAST</div>
@@ -714,12 +323,9 @@
         </div>
     </div>
 
-    <!-- НАСТРОЙКИ -->
     <div id="settingsScreen" class="screen">
         <div class="neu-card">
             <div class="settings-title">Настройки</div>
-
-            <!-- Сложность -->
             <div class="settings-section">
                 <div class="settings-section-label">Сложность</div>
                 <div class="difficulty-options">
@@ -739,8 +345,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Тема -->
             <div class="settings-section">
                 <div class="settings-section-label">Оформление</div>
                 <div class="theme-toggle-row">
@@ -754,12 +358,10 @@
                     </div>
                 </div>
             </div>
-
             <button class="neu-btn neutral settings-back" id="btnBackFromSettings">Назад</button>
         </div>
     </div>
 
-    <!-- ИГРОВОЙ ЭКРАН -->
     <div id="gameScreen" class="screen">
         <div class="game-header">
             <button class="game-header-btn" id="btnBackToMenu" aria-label="Назад в меню">
@@ -780,7 +382,6 @@
         <div class="pieces-area" id="piecesArea"></div>
     </div>
 
-    <!-- GAME OVER -->
     <div class="game-over-overlay" id="gameOverOverlay">
         <div class="game-over-card neu-card">
             <div class="game-over-title">Игра окончена</div>
@@ -792,70 +393,45 @@
             </div>
         </div>
     </div>
-
-    <!-- КОМБО ТОСТ -->
     <div class="combo-toast" id="comboToast"></div>
 
 <script>
 /* ============================================
-   BLOCK BLAST — Полная логика с темами
+   BLOCK BLAST — Исправленное перетаскивание
    ============================================ */
 
-// ===== 12 ЦВЕТОВ БЛОКОВ =====
 const COLORS = [
-    { main: '#E8634A', light: '#f09080', dark: '#c04a35' },  // Коралл
-    { main: '#26A69A', light: '#5ec9be', dark: '#1a8279' },  // Бирюза
-    { main: '#F0A030', light: '#f7c36a', dark: '#c88520' },  // Янтарь
-    { main: '#D4608A', light: '#e890ad', dark: '#b04870' },  // Роза
-    { main: '#4DA6C9', light: '#80c5de', dark: '#3888a8' },  // Небо
-    { main: '#7CB342', light: '#a3d474', dark: '#609030' },  // Лайм
-    { main: '#9575CD', light: '#b8a0e0', dark: '#7558b0' },  // Фиалка
-    { main: '#FF7043', light: '#ff9a80', dark: '#d45030' },  // Оранж
-    { main: '#EC407A', light: '#f480a8', dark: '#c02860' },  // Малина
-    { main: '#5C6BC0', light: '#8e9ae0', dark: '#3e4ea0' },  // Индиго
-    { main: '#26C6DA', light: '#70e0f0', dark: '#18a0b0' },  // Циан
-    { main: '#FFCA28', light: '#ffe082', dark: '#d4a820' }   // Золото
+    { main: '#E8634A', light: '#f09080', dark: '#c04a35' },
+    { main: '#26A69A', light: '#5ec9be', dark: '#1a8279' },
+    { main: '#F0A030', light: '#f7c36a', dark: '#c88520' },
+    { main: '#D4608A', light: '#e890ad', dark: '#b04870' },
+    { main: '#4DA6C9', light: '#80c5de', dark: '#3888a8' },
+    { main: '#7CB342', light: '#a3d474', dark: '#609030' },
+    { main: '#9575CD', light: '#b8a0e0', dark: '#7558b0' },
+    { main: '#FF7043', light: '#ff9a80', dark: '#d45030' },
+    { main: '#EC407A', light: '#f480a8', dark: '#c02860' },
+    { main: '#5C6BC0', light: '#8e9ae0', dark: '#3e4ea0' },
+    { main: '#26C6DA', light: '#70e0f0', dark: '#18a0b0' },
+    { main: '#FFCA28', light: '#ffe082', dark: '#d4a820' }
 ];
 
-// ===== ФИГУРЫ =====
 const SHAPES_EASY = [
-    [[1]],
-    [[1,1]],
-    [[1],[1]],
-    [[1,1,1]],
-    [[1],[1],[1]],
-    [[1,1],[1,0]],
-    [[1,1],[0,1]],
-    [[1,0],[1,1]],
-    [[0,1],[1,1]],
-    [[1,1],[1,1]]
+    [[1]], [[1,1]], [[1],[1]], [[1,1,1]], [[1],[1],[1]],
+    [[1,1],[1,0]], [[1,1],[0,1]], [[1,0],[1,1]], [[0,1],[1,1]], [[1,1],[1,1]]
 ];
 const SHAPES_HARD = [
-    [[1,1,1,1]],
-    [[1],[1],[1],[1]],
-    [[1,1,1],[1,0,0]],
-    [[1,1,1],[0,0,1]],
-    [[1,0,0],[1,1,1]],
-    [[0,0,1],[1,1,1]],
-    [[1,1,0],[0,1,1]],
-    [[0,1,1],[1,1,0]],
-    [[1,1,1],[0,1,0]],
-    [[0,1,0],[1,1,1]],
-    [[1,0],[1,1],[0,1]],
-    [[0,1],[1,1],[1,0]],
-    [[1,0],[1,0],[1,1]],
-    [[0,1],[0,1],[1,1]],
-    [[1,1],[1,0],[1,0]],
-    [[1,1],[0,1],[0,1]],
-    [[1,0,1],[1,1,1]],
-    [[1,1,1],[1,0,1]],
-    [[0,1,0,0],[1,1,1,1]],
-    [[0,0,1,0],[1,1,1,1]],
-    [[1,1],[1,0],[1,0],[1,1]],
-    [[1,1],[0,1],[0,1],[1,1]]
+    [[1,1,1,1]], [[1],[1],[1],[1]],
+    [[1,1,1],[1,0,0]], [[1,1,1],[0,0,1]], [[1,0,0],[1,1,1]], [[0,0,1],[1,1,1]],
+    [[1,1,0],[0,1,1]], [[0,1,1],[1,1,0]],
+    [[1,1,1],[0,1,0]], [[0,1,0],[1,1,1]],
+    [[1,0],[1,1],[0,1]], [[0,1],[1,1],[1,0]],
+    [[1,0],[1,0],[1,1]], [[0,1],[0,1],[1,1]],
+    [[1,1],[1,0],[1,0]], [[1,1],[0,1],[0,1]],
+    [[1,0,1],[1,1,1]], [[1,1,1],[1,0,1]],
+    [[0,1,0,0],[1,1,1,1]], [[0,0,1,0],[1,1,1,1]],
+    [[1,1],[1,0],[1,0],[1,1]], [[1,1],[0,1],[0,1],[1,1]]
 ];
 
-// ===== СОСТОЯНИЕ =====
 let difficulty = 'easy';
 let gridSize = 8;
 let grid = [];
@@ -865,15 +441,15 @@ let bestScore = parseInt(localStorage.getItem('blockblast_best') || '0');
 let gameActive = false;
 let currentTheme = localStorage.getItem('blockblast_theme') || 'light';
 
-// Перетаскивание
+// Состояние перетаскивания
 let dragging = false;
 let dragPieceIdx = -1;
 let dragEl = null;
-let dragOffsetX = 0;
-let dragOffsetY = 0;
+// Смещение: куда именно пользователь кликнул внутри фигуры (в координатах ячеек фигуры)
+let grabRow = 0;
+let grabCol = 0;
 let lastPreviewPos = null;
 
-// DOM
 const introCanvas = document.getElementById('introCanvas');
 const menuScreen = document.getElementById('menuScreen');
 const settingsScreen = document.getElementById('settingsScreen');
@@ -894,160 +470,90 @@ function applyTheme(theme, animate) {
     currentTheme = theme;
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('blockblast_theme', theme);
-
-    // Обновляем canvas intro
     if (introCanvas.style.display !== 'none') {
         introCanvas.style.background = theme === 'dark' ? '#1a2030' : '#dfe6ed';
     }
-
-    // Обновляем заполненные ячейки на поле (они хранят inline background)
-    if (gameBoard.children.length > 0) {
-        for (let i = 0; i < gridSize * gridSize; i++) {
-            const cell = gameBoard.children[i];
-            if (cell.classList.contains('filled')) {
-                // Цвет остаётся, но обновляем тени через CSS класс
-                // Ячейки получат правильные тени через CSS переменные автоматически
-            }
-        }
-    }
-
     if (animate) {
         themeBlur.classList.add('active');
         setTimeout(() => themeBlur.classList.remove('active'), 2000);
     }
 }
-
-// Инициализация темы при загрузке
 applyTheme(currentTheme, false);
 
-// Переключатель темы
 const themeSwitch = document.getElementById('themeSwitch');
 themeSwitch.addEventListener('click', () => {
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    applyTheme(newTheme, true);
+    applyTheme(currentTheme === 'light' ? 'dark' : 'light', true);
 });
 themeSwitch.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        themeSwitch.click();
-    }
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); themeSwitch.click(); }
 });
 
-// ===== INTRO АНИМАЦИЯ =====
+// ===== INTRO =====
 (function runIntro() {
     const ctx = introCanvas.getContext('2d');
-    let W, H;
-    let blocks = [];
-    let introDone = false;
-
-    function resize() {
-        W = introCanvas.width = window.innerWidth;
-        H = introCanvas.height = window.innerHeight;
-    }
-    resize();
-    window.addEventListener('resize', resize);
-
-    function spawnBlock() {
-        const cols = Math.floor(W / 44);
-        const col = Math.floor(Math.random() * cols);
-        const size = 40;
-        const x = col * (size + 4) + 2;
-        const targetY = getTargetY(col);
-        const color = COLORS[Math.floor(Math.random() * COLORS.length)];
-        return {
-            x, y: -size - Math.random() * 300,
-            targetY,
-            size,
-            color,
-            speed: 1.5 + Math.random() * 2.5,
-            settled: false,
-            delay: blocks.length * 100
-        };
-    }
+    let W, H, blocks = [], introDone = false;
+    function resize() { W = introCanvas.width = window.innerWidth; H = introCanvas.height = window.innerHeight; }
+    resize(); window.addEventListener('resize', resize);
 
     function getTargetY(col) {
         let bottom = H - 2;
         for (const b of blocks) {
-            if (b.settled && Math.abs(b.x - (col * 44 + 2)) < 5) {
-                bottom = Math.min(bottom, b.targetY - 44);
-            }
+            if (b.settled && Math.abs(b.x - (col * 44 + 2)) < 5) bottom = Math.min(bottom, b.targetY - 44);
         }
         return bottom;
     }
-
+    function spawnBlock() {
+        const cols = Math.floor(W / 44);
+        const col = Math.floor(Math.random() * cols);
+        const size = 40;
+        return {
+            x: col * (size + 4) + 2, y: -size - Math.random() * 300,
+            targetY: getTargetY(col), size,
+            color: COLORS[Math.floor(Math.random() * COLORS.length)],
+            speed: 1.5 + Math.random() * 2.5, settled: false,
+            delay: blocks.length * 100
+        };
+    }
     for (let i = 0; i < 60; i++) blocks.push(spawnBlock());
+    let startTime = performance.now(), allSettledTime = null;
 
-    let startTime = performance.now();
-    let allSettledTime = null;
-
+    function rr(ctx, x, y, w, h, r) {
+        ctx.beginPath(); ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y);
+        ctx.quadraticCurveTo(x+w,y,x+w,y+r); ctx.lineTo(x+w,y+h-r);
+        ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h); ctx.lineTo(x+r,y+h);
+        ctx.quadraticCurveTo(x,y+h,x,y+h-r); ctx.lineTo(x,y+r);
+        ctx.quadraticCurveTo(x,y,x+r,y); ctx.closePath();
+    }
     function drawBlock(b, alpha) {
-        const r = 8, x = b.x, y = b.y, s = b.size;
+        const r=8, x=b.x, y=b.y, s=b.size;
         ctx.globalAlpha = alpha;
-        // Тень
-        ctx.fillStyle = currentTheme === 'dark' ? 'rgba(0,0,0,0.4)' : 'rgba(160,170,181,0.6)';
-        roundRect(ctx, x + 3, y + 3, s, s, r); ctx.fill();
-        // Основа
-        ctx.fillStyle = b.color.main;
-        roundRect(ctx, x, y, s, s, r); ctx.fill();
-        // Блик
-        ctx.fillStyle = b.color.light;
-        roundRect(ctx, x + 3, y + 3, s - 6, s * 0.35, r - 2); ctx.fill();
-        // Нижняя тень
-        ctx.fillStyle = 'rgba(0,0,0,0.08)';
-        roundRect(ctx, x + 3, y + s * 0.6, s - 6, s * 0.35, r - 2); ctx.fill();
-        // Текстура — точки
+        ctx.fillStyle = currentTheme==='dark' ? 'rgba(0,0,0,0.4)' : 'rgba(160,170,181,0.6)';
+        rr(ctx,x+3,y+3,s,s,r); ctx.fill();
+        ctx.fillStyle = b.color.main; rr(ctx,x,y,s,s,r); ctx.fill();
+        ctx.fillStyle = b.color.light; rr(ctx,x+3,y+3,s-6,s*0.35,r-2); ctx.fill();
+        ctx.fillStyle = 'rgba(0,0,0,0.08)'; rr(ctx,x+3,y+s*0.6,s-6,s*0.35,r-2); ctx.fill();
         ctx.fillStyle = 'rgba(255,255,255,0.15)';
-        ctx.beginPath(); ctx.arc(x + 8, y + 8, 1.5, 0, Math.PI * 2); ctx.fill();
-        ctx.beginPath(); ctx.arc(x + s - 10, y + s - 10, 1, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(x+8,y+8,1.5,0,Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.arc(x+s-10,y+s-10,1,0,Math.PI*2); ctx.fill();
         ctx.globalAlpha = 1;
     }
-
-    function roundRect(ctx, x, y, w, h, r) {
-        ctx.beginPath();
-        ctx.moveTo(x + r, y);
-        ctx.lineTo(x + w - r, y);
-        ctx.quadraticCurveTo(x + w, y, x + w, y + r);
-        ctx.lineTo(x + w, y + h - r);
-        ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-        ctx.lineTo(x + r, y + h);
-        ctx.quadraticCurveTo(x, y + h, x, y + h - r);
-        ctx.lineTo(x, y + r);
-        ctx.quadraticCurveTo(x, y, x + r, y);
-        ctx.closePath();
-    }
-
     function animate(now) {
         if (introDone) return;
         const elapsed = now - startTime;
-        const bgColor = currentTheme === 'dark' ? '#1a2030' : '#dfe6ed';
-        ctx.fillStyle = bgColor;
-        ctx.fillRect(0, 0, W, H);
-
+        const bg = currentTheme==='dark' ? '#1a2030' : '#dfe6ed';
+        ctx.fillStyle = bg; ctx.fillRect(0,0,W,H);
         let allSettled = true;
         for (const b of blocks) {
             if (elapsed < b.delay) { allSettled = false; continue; }
-            if (!b.settled) {
-                b.y += b.speed;
-                if (b.y >= b.targetY) { b.y = b.targetY; b.settled = true; }
-                else allSettled = false;
-            }
+            if (!b.settled) { b.y += b.speed; if (b.y >= b.targetY) { b.y = b.targetY; b.settled = true; } else allSettled = false; }
             const fadeIn = Math.min(1, (elapsed - b.delay) / 300);
             if (fadeIn > 0) drawBlock(b, fadeIn);
         }
-
         if (allSettled) {
             if (!allSettledTime) allSettledTime = now;
             const fadeOut = Math.min(1, (now - allSettledTime) / 600);
-            ctx.fillStyle = bgColor;
-            ctx.globalAlpha = fadeOut;
-            ctx.fillRect(0, 0, W, H);
-            ctx.globalAlpha = 1;
-            if (fadeOut >= 1) {
-                introDone = true;
-                introCanvas.style.display = 'none';
-                showScreen(menuScreen);
-                return;
-            }
+            ctx.globalAlpha = fadeOut; ctx.fillStyle = bg; ctx.fillRect(0,0,W,H); ctx.globalAlpha = 1;
+            if (fadeOut >= 1) { introDone = true; introCanvas.style.display = 'none'; showScreen(menuScreen); return; }
         }
         requestAnimationFrame(animate);
     }
@@ -1075,45 +581,32 @@ document.getElementById('btnBackFromSettings').addEventListener('click', () => s
 // ===== ИГРА =====
 document.getElementById('btnPlay').addEventListener('click', startGame);
 document.getElementById('btnRestart').addEventListener('click', startGame);
-document.getElementById('btnBackToMenu').addEventListener('click', () => {
-    gameActive = false;
-    gameOverOverlay.classList.remove('show');
-    showScreen(menuScreen);
-});
-document.getElementById('btnBackFromGameOver').addEventListener('click', () => {
-    gameOverOverlay.classList.remove('show');
-    showScreen(menuScreen);
-});
+document.getElementById('btnBackToMenu').addEventListener('click', () => { gameActive = false; gameOverOverlay.classList.remove('show'); showScreen(menuScreen); });
+document.getElementById('btnBackFromGameOver').addEventListener('click', () => { gameOverOverlay.classList.remove('show'); showScreen(menuScreen); });
 
 function startGame() {
     gameOverOverlay.classList.remove('show');
     gridSize = difficulty === 'easy' ? 8 : 10;
     grid = Array.from({ length: gridSize }, () => Array(gridSize).fill(null));
-    score = 0;
-    gameActive = true;
-    updateScoreDisplay();
-    bestDisplay.textContent = bestScore;
+    score = 0; gameActive = true;
+    updateScoreDisplay(); bestDisplay.textContent = bestScore;
 
     gameBoard.innerHTML = '';
     gameBoard.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
-
-    const maxBoardPx = Math.min(window.innerWidth - 56, 460, window.innerHeight - 280);
-    const cellSize = Math.floor((maxBoardPx - (gridSize - 1) * 3) / gridSize);
-    gameBoard.style.width = (cellSize * gridSize + (gridSize - 1) * 3) + 'px';
+    const maxPx = Math.min(window.innerWidth - 56, 460, window.innerHeight - 280);
+    const cs = Math.floor((maxPx - (gridSize - 1) * 3) / gridSize);
+    gameBoard.style.width = (cs * gridSize + (gridSize - 1) * 3) + 'px';
     gameBoard.style.height = gameBoard.style.width;
 
     for (let r = 0; r < gridSize; r++) {
         for (let c = 0; c < gridSize; c++) {
             const cell = document.createElement('div');
             cell.className = 'board-cell';
-            cell.dataset.row = r;
-            cell.dataset.col = c;
-            cell.style.width = cellSize + 'px';
-            cell.style.height = cellSize + 'px';
+            cell.dataset.row = r; cell.dataset.col = c;
+            cell.style.width = cs + 'px'; cell.style.height = cs + 'px';
             gameBoard.appendChild(cell);
         }
     }
-
     currentPieces = [generatePiece(), generatePiece(), generatePiece()];
     renderPieces();
     showScreen(gameScreen);
@@ -1121,46 +614,47 @@ function startGame() {
 
 function generatePiece() {
     const pool = difficulty === 'easy' ? SHAPES_EASY : [...SHAPES_EASY, ...SHAPES_HARD];
-    const shape = pool[Math.floor(Math.random() * pool.length)];
-    const color = COLORS[Math.floor(Math.random() * COLORS.length)];
-    return { shape, color, used: false };
+    return {
+        shape: pool[Math.floor(Math.random() * pool.length)],
+        color: COLORS[Math.floor(Math.random() * COLORS.length)],
+        used: false
+    };
+}
+
+// Вычисляет визуальный центр фигуры (среднее положение всех заполненных ячеек)
+function getPieceCenter(shape) {
+    let sr = 0, sc = 0, cnt = 0;
+    for (let r = 0; r < shape.length; r++) {
+        for (let c = 0; c < shape[r].length; c++) {
+            if (shape[r][c]) { sr += r; sc += c; cnt++; }
+        }
+    }
+    return cnt > 0 ? { row: sr / cnt, col: sc / cnt } : { row: 0, col: 0 };
 }
 
 function renderPieces() {
     piecesArea.innerHTML = '';
-    const cellSize = difficulty === 'easy' ? 18 : 15;
-
+    const cs = difficulty === 'easy' ? 18 : 15;
     currentPieces.forEach((piece, idx) => {
         const slot = document.createElement('div');
         slot.className = 'piece-slot' + (piece.used ? ' empty' : '');
-
         if (!piece.used) {
-            const grid = document.createElement('div');
-            grid.className = 'piece-grid';
-            grid.style.setProperty('--pc-size', cellSize + 'px');
-            grid.style.gridTemplateColumns = `repeat(${piece.shape[0].length}, var(--pc-size))`;
-            grid.dataset.pieceIdx = idx;
-
+            const g = document.createElement('div');
+            g.className = 'piece-grid';
+            g.style.setProperty('--pc-size', cs + 'px');
+            g.style.gridTemplateColumns = `repeat(${piece.shape[0].length}, var(--pc-size))`;
+            g.dataset.pieceIdx = idx;
             piece.shape.forEach(row => {
                 row.forEach(val => {
                     const cell = document.createElement('div');
                     cell.className = 'piece-cell ' + (val ? 'filled-cell' : 'empty-cell');
                     if (val) cell.style.background = piece.color.main;
-                    grid.appendChild(cell);
+                    g.appendChild(cell);
                 });
             });
-
-            // ПК: mousedown + мобильные: pointerdown
-            grid.addEventListener('mousedown', (e) => {
-                e.preventDefault();
-                startDrag(e.clientX, e.clientY, idx, grid);
-            });
-            grid.addEventListener('touchstart', (e) => {
-                const touch = e.touches[0];
-                startDrag(touch.clientX, touch.clientY, idx, grid);
-            }, { passive: false });
-
-            slot.appendChild(grid);
+            g.addEventListener('mousedown', (e) => { e.preventDefault(); beginDrag(e.clientX, e.clientY, idx, g); });
+            g.addEventListener('touchstart', (e) => { const t = e.touches[0]; beginDrag(t.clientX, t.clientY, idx, g); }, { passive: false });
+            slot.appendChild(g);
         } else {
             const dot = document.createElement('div');
             dot.style.cssText = 'width:8px;height:8px;border-radius:50%;background:var(--shadow-dark);opacity:0.3;';
@@ -1170,22 +664,46 @@ function renderPieces() {
     });
 }
 
-// ===== ПЕРЕТАСКИВАНИЕ (исправлено для ПК) =====
-function startDrag(cx, cy, pieceIdx, originEl) {
+// ===== ПЕРЕТАСКИВАНИЕ — ИСПРАВЛЕНО =====
+function beginDrag(cx, cy, pieceIdx, originEl) {
     if (!gameActive || currentPieces[pieceIdx].used) return;
     dragging = true;
     dragPieceIdx = pieceIdx;
     const piece = currentPieces[pieceIdx];
 
-    // Создаём перетаскиваемый клон
+    // Определяем, в какую именно ячейку фигуры кликнул пользователь
+    const rect = originEl.getBoundingClientRect();
+    const pcSize = parseFloat(getComputedStyle(originEl).getPropertyValue('--pc-size')) || 18;
+    const gap = 2;
+    const clickCol = Math.floor((cx - rect.left) / (pcSize + gap));
+    const clickRow = Math.floor((cy - rect.top) / (pcSize + gap));
+
+    // Ограничиваем
+    grabRow = Math.max(0, Math.min(piece.shape.length - 1, clickRow));
+    grabCol = Math.max(0, Math.min(piece.shape[0].length - 1, clickCol));
+
+    // Если кликнули в пустую ячейку — берём ближайшую заполненную
+    if (!piece.shape[grabRow][grabCol]) {
+        let bestDist = Infinity;
+        for (let r = 0; r < piece.shape.length; r++) {
+            for (let c = 0; c < piece.shape[r].length; c++) {
+                if (piece.shape[r][c]) {
+                    const d = Math.abs(r - clickRow) + Math.abs(c - clickCol);
+                    if (d < bestDist) { bestDist = d; grabRow = r; grabCol = c; }
+                }
+            }
+        }
+    }
+
+    // Создаём перетаскиваемый элемент с учётом размера ячеек поля
     dragEl = document.createElement('div');
     dragEl.className = 'drag-piece';
+    const bCells = gameBoard.querySelectorAll('.board-cell');
+    const bcs = bCells.length > 0 ? bCells[0].offsetWidth : 40;
+    const dcs = bcs - 2;
+    const dGap = 3;
 
-    const boardCells = gameBoard.querySelectorAll('.board-cell');
-    const boardCellSize = boardCells.length > 0 ? boardCells[0].offsetWidth : 40;
-    const dragCellSize = boardCellSize - 2;
-
-    dragEl.style.setProperty('--pc-size', dragCellSize + 'px');
+    dragEl.style.setProperty('--pc-size', dcs + 'px');
     dragEl.style.gridTemplateColumns = `repeat(${piece.shape[0].length}, var(--pc-size))`;
 
     piece.shape.forEach(row => {
@@ -1199,12 +717,11 @@ function startDrag(cx, cy, pieceIdx, originEl) {
 
     document.body.appendChild(dragEl);
 
-    const shapeW = piece.shape[0].length * (dragCellSize + 3) - 3;
-    const shapeH = piece.shape.length * (dragCellSize + 3) - 3;
-    dragOffsetX = shapeW / 2;
-    dragOffsetY = shapeH / 2;
-
-    moveDrag(cx, cy);
+    // Смещение: курсор должен быть ровно над той ячейкой фигуры, за которую взялись
+    const offsetX = grabCol * (dcs + dGap) + dcs / 2;
+    const offsetY = grabRow * (dcs + dGap) + dcs / 2;
+    dragEl.style.left = (cx - offsetX) + 'px';
+    dragEl.style.top = (cy - offsetY) + 'px';
 
     // Скрываем оригинал
     if (originEl) originEl.closest('.piece-slot').style.opacity = '0.2';
@@ -1212,42 +729,34 @@ function startDrag(cx, cy, pieceIdx, originEl) {
 
 function moveDrag(cx, cy) {
     if (!dragEl) return;
-    dragEl.style.left = (cx - dragOffsetX) + 'px';
-    dragEl.style.top = (cy - dragOffsetY) + 'px';
+    const piece = currentPieces[dragPieceIdx];
+    const bCells = gameBoard.querySelectorAll('.board-cell');
+    const bcs = bCells.length > 0 ? bCells[0].offsetWidth : 40;
+    const dcs = bcs - 2;
+    const dGap = 3;
+
+    const offsetX = grabCol * (dcs + dGap) + dcs / 2;
+    const offsetY = grabRow * (dcs + dGap) + dcs / 2;
+    dragEl.style.left = (cx - offsetX) + 'px';
+    dragEl.style.top = (cy - offsetY) + 'px';
 }
 
-// Глобальные обработчики для мыши (ПК)
 document.addEventListener('mousemove', (e) => {
     if (!dragging) return;
     e.preventDefault();
     moveDrag(e.clientX, e.clientY);
     updatePreview(e.clientX, e.clientY);
 });
-
-document.addEventListener('mouseup', (e) => {
-    if (!dragging) return;
-    endDrag(e.clientX, e.clientY);
-});
-
-// Глобальные обработчики для тача (мобильные)
+document.addEventListener('mouseup', (e) => { if (dragging) endDrag(e.clientX, e.clientY); });
 document.addEventListener('touchmove', (e) => {
     if (!dragging) return;
     e.preventDefault();
-    const touch = e.touches[0];
-    moveDrag(touch.clientX, touch.clientY);
-    updatePreview(touch.clientX, touch.clientY);
+    const t = e.touches[0];
+    moveDrag(t.clientX, t.clientY);
+    updatePreview(t.clientX, t.clientY);
 }, { passive: false });
-
-document.addEventListener('touchend', (e) => {
-    if (!dragging) return;
-    const touch = e.changedTouches[0];
-    endDrag(touch.clientX, touch.clientY);
-});
-
-document.addEventListener('touchcancel', () => {
-    if (!dragging) return;
-    cleanupDrag();
-});
+document.addEventListener('touchend', (e) => { if (dragging) { const t = e.changedTouches[0]; endDrag(t.clientX, t.clientY); } });
+document.addEventListener('touchcancel', () => { if (dragging) cleanupDrag(); });
 
 function endDrag(cx, cy) {
     const pos = getGridPosition(cx, cy);
@@ -1260,31 +769,39 @@ function endDrag(cx, cy) {
 function cleanupDrag() {
     clearPreview();
     if (dragEl) { dragEl.remove(); dragEl = null; }
-    // Восстанавливаем оригинал
-    const slotEl = piecesArea.children[dragPieceIdx];
-    if (slotEl) slotEl.style.opacity = '1';
+    const slot = piecesArea.children[dragPieceIdx];
+    if (slot) slot.style.opacity = '1';
     dragging = false;
     dragPieceIdx = -1;
     lastPreviewPos = null;
 }
 
-// ===== ПРЕВЬЮ =====
+// ===== ПРЕВЬЮ — КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ =====
 function getGridPosition(cx, cy) {
     const rect = gameBoard.getBoundingClientRect();
-    const boardCells = gameBoard.querySelectorAll('.board-cell');
-    if (boardCells.length === 0) return null;
-    const cellSize = boardCells[0].offsetWidth + 3;
-    const col = Math.floor((cx - rect.left) / cellSize);
-    const row = Math.floor((cy - rect.top) / cellSize);
-    if (row >= 0 && row < gridSize && col >= 0 && col < gridSize) return { row, col };
-    return null;
+    const bCells = gameBoard.querySelectorAll('.board-cell');
+    if (bCells.length === 0) return null;
+    const cellStep = bCells[0].offsetWidth + 3; // размер ячейки + gap
+
+    // Ячейка поля, над которой находится курсор
+    const cursorCol = Math.floor((cx - rect.left) / cellStep);
+    const cursorRow = Math.floor((cy - rect.top) / cellStep);
+
+    // Если курсор вне поля — ничего не показываем
+    if (cursorRow < 0 || cursorRow >= gridSize || cursorCol < 0 || cursorCol >= gridSize) return null;
+
+    // Точка привязки: та ячейка фигуры, за которую взялись, попадает точно в ячейку поля под курсором
+    const anchorRow = cursorRow - grabRow;
+    const anchorCol = cursorCol - grabCol;
+
+    return { row: anchorRow, col: anchorCol };
 }
 
 function canPlace(pieceIdx, startRow, startCol) {
-    const piece = currentPieces[pieceIdx];
-    for (let r = 0; r < piece.shape.length; r++) {
-        for (let c = 0; c < piece.shape[r].length; c++) {
-            if (!piece.shape[r][c]) continue;
+    const shape = currentPieces[pieceIdx].shape;
+    for (let r = 0; r < shape.length; r++) {
+        for (let c = 0; c < shape[r].length; c++) {
+            if (!shape[r][c]) continue;
             const gr = startRow + r, gc = startCol + c;
             if (gr < 0 || gr >= gridSize || gc < 0 || gc >= gridSize) return false;
             if (grid[gr][gc] !== null) return false;
@@ -1302,10 +819,10 @@ function updatePreview(cx, cy) {
     clearPreview();
 
     const valid = canPlace(dragPieceIdx, pos.row, pos.col);
-    const piece = currentPieces[dragPieceIdx];
-    for (let r = 0; r < piece.shape.length; r++) {
-        for (let c = 0; c < piece.shape[r].length; c++) {
-            if (!piece.shape[r][c]) continue;
+    const shape = currentPieces[dragPieceIdx].shape;
+    for (let r = 0; r < shape.length; r++) {
+        for (let c = 0; c < shape[r].length; c++) {
+            if (!shape[r][c]) continue;
             const gr = pos.row + r, gc = pos.col + c;
             if (gr >= 0 && gr < gridSize && gc >= 0 && gc < gridSize) {
                 const cell = getCellEl(gr, gc);
@@ -1322,83 +839,52 @@ function clearPreview() {
     lastPreviewPos = null;
 }
 
-// ===== РАЗМЕЩЕНИЕ И ОЧИСТКА =====
+// ===== РАЗМЕЩЕНИЕ =====
 function placePiece(pieceIdx, startRow, startCol) {
     const piece = currentPieces[pieceIdx];
-    let placedCount = 0;
-
+    let cnt = 0;
     for (let r = 0; r < piece.shape.length; r++) {
         for (let c = 0; c < piece.shape[r].length; c++) {
             if (!piece.shape[r][c]) continue;
             const gr = startRow + r, gc = startCol + c;
             grid[gr][gc] = piece.color;
             const cell = getCellEl(gr, gc);
-            if (cell) {
-                cell.classList.add('filled');
-                cell.style.background = piece.color.main;
-            }
-            placedCount++;
+            if (cell) { cell.classList.add('filled'); cell.style.background = piece.color.main; }
+            cnt++;
         }
     }
-
-    addScore(placedCount);
+    addScore(cnt);
     piece.used = true;
     renderPieces();
     setTimeout(() => checkAndClearLines(), 150);
 }
 
 function checkAndClearLines() {
-    const rowsToClear = [];
-    const colsToClear = [];
-
-    for (let r = 0; r < gridSize; r++) {
-        if (grid[r].every(c => c !== null)) rowsToClear.push(r);
-    }
+    const rowsC = [], colsC = [];
+    for (let r = 0; r < gridSize; r++) { if (grid[r].every(c => c !== null)) rowsC.push(r); }
     for (let c = 0; c < gridSize; c++) {
-        let full = true;
-        for (let r = 0; r < gridSize; r++) {
-            if (grid[r][c] === null) { full = false; break; }
-        }
-        if (full) colsToClear.push(c);
+        let f = true;
+        for (let r = 0; r < gridSize; r++) { if (grid[r][c] === null) { f = false; break; } }
+        if (f) colsC.push(c);
     }
-
-    const totalLines = rowsToClear.length + colsToClear.length;
-
-    if (totalLines > 0) {
-        const cellsToClear = new Set();
-        rowsToClear.forEach(r => {
-            for (let c = 0; c < gridSize; c++) cellsToClear.add(r + ',' + c);
-        });
-        colsToClear.forEach(c => {
-            for (let r = 0; r < gridSize; r++) cellsToClear.add(r + ',' + c);
-        });
-
-        cellsToClear.forEach(key => {
-            const [r, c] = key.split(',').map(Number);
-            const cell = getCellEl(r, c);
-            if (cell) cell.classList.add('clearing');
-        });
-
-        if (totalLines > 1) showCombo(totalLines);
-
-        const lineScore = totalLines * totalLines * 10 * gridSize;
-        addScore(lineScore, true);
-
+    const total = rowsC.length + colsC.length;
+    if (total > 0) {
+        const cells = new Set();
+        rowsC.forEach(r => { for (let c = 0; c < gridSize; c++) cells.add(r+','+c); });
+        colsC.forEach(c => { for (let r = 0; r < gridSize; r++) cells.add(r+','+c); });
+        cells.forEach(k => { const [r,c] = k.split(',').map(Number); const el = getCellEl(r,c); if (el) el.classList.add('clearing'); });
+        if (total > 1) showCombo(total);
+        addScore(total * total * 10 * gridSize, true);
         setTimeout(() => {
-            cellsToClear.forEach(key => {
-                const [r, c] = key.split(',').map(Number);
+            cells.forEach(k => {
+                const [r,c] = k.split(',').map(Number);
                 grid[r][c] = null;
-                const cell = getCellEl(r, c);
-                if (cell) {
-                    cell.classList.remove('filled', 'clearing');
-                    cell.style.background = '';
-                }
+                const el = getCellEl(r,c);
+                if (el) { el.classList.remove('filled','clearing'); el.style.background = ''; }
             });
             checkGameState();
         }, 480);
-    } else {
-        checkGameState();
-    }
+    } else { checkGameState(); }
 }
 
 function checkGameState() {
@@ -1406,82 +892,53 @@ function checkGameState() {
         currentPieces = [generatePiece(), generatePiece(), generatePiece()];
         renderPieces();
     }
-
-    const canPlaceAny = currentPieces.some((piece, idx) => {
-        if (piece.used) return false;
-        for (let r = 0; r < gridSize; r++) {
-            for (let c = 0; c < gridSize; c++) {
-                if (canPlace(idx, r, c)) return true;
-            }
-        }
+    const canAny = currentPieces.some((p, i) => {
+        if (p.used) return false;
+        for (let r = 0; r < gridSize; r++) for (let c = 0; c < gridSize; c++) if (canPlace(i, r, c)) return true;
         return false;
     });
-
-    if (!canPlaceAny) {
-        gameActive = false;
-        setTimeout(showGameOver, 500);
-    }
+    if (!canAny) { gameActive = false; setTimeout(showGameOver, 500); }
 }
 
 function showGameOver() {
-    if (score > bestScore) {
-        bestScore = score;
-        localStorage.setItem('blockblast_best', bestScore.toString());
-    }
+    if (score > bestScore) { bestScore = score; localStorage.setItem('blockblast_best', bestScore.toString()); }
     finalScoreEl.textContent = score;
     finalBestEl.textContent = 'Лучший результат: ' + bestScore;
     gameOverOverlay.classList.add('show');
 }
 
-// ===== ОЧКИ =====
-function addScore(points, showPopup) {
-    score += points;
-    updateScoreDisplay();
-    if (showPopup) showScorePopup('+' + points);
+function addScore(pts, popup) {
+    score += pts; updateScoreDisplay();
+    if (popup) showScorePopup('+' + pts);
 }
-
 function updateScoreDisplay() {
     scoreDisplay.textContent = score;
     scoreDisplay.classList.add('bump');
     setTimeout(() => scoreDisplay.classList.remove('bump'), 300);
     bestDisplay.textContent = bestScore;
 }
-
 function showScorePopup(text) {
-    const popup = document.createElement('div');
-    popup.className = 'score-popup';
-    popup.textContent = text;
-    const boardRect = boardWrap.getBoundingClientRect();
-    popup.style.left = (boardRect.left + boardRect.width / 2 - 30) + 'px';
-    popup.style.top = (boardRect.top + boardRect.height / 2) + 'px';
-    document.body.appendChild(popup);
-    setTimeout(() => popup.remove(), 900);
+    const p = document.createElement('div'); p.className = 'score-popup'; p.textContent = text;
+    const r = boardWrap.getBoundingClientRect();
+    p.style.left = (r.left + r.width/2 - 30) + 'px';
+    p.style.top = (r.top + r.height/2) + 'px';
+    document.body.appendChild(p); setTimeout(() => p.remove(), 900);
 }
-
-function showCombo(lines) {
-    const labels = { 2: 'Двойное!', 3: 'Тройное!', 4: 'Четверное!', 5: 'ПЯТЕРОНО!' };
-    comboToast.textContent = labels[lines] || (lines + 'x Комбо!');
-    comboToast.classList.remove('show');
-    void comboToast.offsetWidth;
-    comboToast.classList.add('show');
+function showCombo(n) {
+    const l = {2:'Двойное!',3:'Тройное!',4:'Четверное!',5:'ПЯТЕРОНО!'};
+    comboToast.textContent = l[n] || (n+'x Комбо!');
+    comboToast.classList.remove('show'); void comboToast.offsetWidth; comboToast.classList.add('show');
     setTimeout(() => comboToast.classList.remove('show'), 1000);
 }
+function getCellEl(r, c) { return gameBoard.children[r * gridSize + c] || null; }
 
-function getCellEl(row, col) {
-    return gameBoard.children[row * gridSize + col] || null;
-}
-
-// ===== RESIZE =====
 window.addEventListener('resize', () => {
     if (gameActive && gameBoard.children.length > 0) {
-        const maxBoardPx = Math.min(window.innerWidth - 56, 460, window.innerHeight - 280);
-        const cellSize = Math.floor((maxBoardPx - (gridSize - 1) * 3) / gridSize);
-        gameBoard.style.width = (cellSize * gridSize + (gridSize - 1) * 3) + 'px';
+        const mx = Math.min(window.innerWidth - 56, 460, window.innerHeight - 280);
+        const cs = Math.floor((mx - (gridSize - 1) * 3) / gridSize);
+        gameBoard.style.width = (cs * gridSize + (gridSize - 1) * 3) + 'px';
         gameBoard.style.height = gameBoard.style.width;
-        gameBoard.querySelectorAll('.board-cell').forEach(c => {
-            c.style.width = cellSize + 'px';
-            c.style.height = cellSize + 'px';
-        });
+        gameBoard.querySelectorAll('.board-cell').forEach(c => { c.style.width = cs+'px'; c.style.height = cs+'px'; });
     }
 });
 </script>
