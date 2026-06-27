@@ -1,1 +1,578 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMW Concept — The Future of Driving</title>
+    
+    <!-- GSAP for Scroll-Driven Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
+    <style>
+        /* =========================================
+           1. CSS VARIABLES (CUSTOMIZATION PANEL)
+           ========================================= */
+        :root {
+            /* Backgrounds */
+            --bg-deep: #050508;
+            --bg-gradient-1: #0a0f1a;
+            --bg-gradient-2: #020305;
+            
+            /* Glass Effects */
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-shadow: rgba(0, 0, 0, 0.5);
+            --glass-blur: 20px;
+            --glass-blur-heavy: 40px;
+            
+            /* Accent Colors (Neon) */
+            --accent-blue: #00d4ff;
+            --accent-red: #ff003c;
+            --accent-blue-glow: rgba(0, 212, 255, 0.4);
+            --accent-red-glow: rgba(255, 0, 60, 0.6);
+            
+            /* Typography */
+            --text-main: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.5);
+            --font-main: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        /* =========================================
+           2. RESET & BASE STYLES
+           ========================================= */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        html { scroll-behavior: smooth; }
+        
+        body {
+            font-family: var(--font-main);
+            background: var(--bg-deep);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Hidden SVG Filters for Glow Effects */
+        .svg-filters { position: absolute; width: 0; height: 0; }
+
+        /* =========================================
+           3. GLASSMORPHISM UTILITY CLASSES
+           ========================================= */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px 0 var(--glass-shadow);
+        }
+
+        .glass-heavy {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(var(--glass-blur-heavy));
+            -webkit-backdrop-filter: blur(var(--glass-blur-heavy));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+        }
+
+        /* =========================================
+           4. INTRO ANIMATION LOGIC
+           Elements appear from blurred opacity state
+           ========================================= */
+        .intro-hidden {
+            opacity: 0;
+            filter: blur(15px);
+            transform: translateY(30px) scale(0.98);
+            transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), 
+                        filter 1.2s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .intro-visible {
+            opacity: 1;
+            filter: blur(0px);
+            transform: translateY(0) scale(1);
+        }
+
+        /* =========================================
+           5. NAVIGATION
+           ========================================= */
+        header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #fff, #aaa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover { color: var(--accent-blue); }
+
+        /* =========================================
+           6. HERO SECTION
+           ========================================= */
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            /* Deep background with subtle gradient */
+            background: radial-gradient(circle at 50% 80%, var(--bg-gradient-1) 0%, var(--bg-deep) 70%);
+        }
+
+        /* Background Neon Orbs for depth */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+        }
+        .orb-1 { width: 600px; height: 600px; background: var(--accent-blue); top: 20%; left: -10%; }
+        .orb-2 { width: 400px; height: 400px; background: var(--accent-red); bottom: -10%; right: -5%; opacity: 0.2; }
+
+        /* Car Container */
+        .car-container {
+            position: relative;
+            z-index: 2;
+            width: 80%;
+            max-width: 1000px;
+            margin-bottom: 50px;
+        }
+
+        .car-image {
+            width: 100%;
+            height: auto;
+            /* Using SVG filter for subtle neon reflection under the car */
+            filter: drop-shadow(0 30px 40px rgba(0, 212, 255, 0.2));
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .hero:hover .car-image {
+            transform: scale(1.02) translateY(-5px);
+        }
+
+        /* Hero Text & Button UI */
+        .hero-ui {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        h1 {
+            font-size: clamp(40px, 6vw, 80px);
+            font-weight: 800;
+            line-height: 0.9;
+            letter-spacing: -2px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 18px;
+            max-width: 500px;
+        }
+
+        /* =========================================
+           7. BUTTON: START ENGINE
+           Hover logic: Glowing border expansion 
+           ========================================= */
+        .btn-start {
+            position: relative;
+            padding: 18px 50px;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            cursor: pointer;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 1;
+        }
+
+        .btn-start::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 0%; height: 0%;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+            z-index: -1;
+            filter: blur(20px);
+            opacity: 0;
+        }
+
+        .btn-start:hover {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 30px var(--accent-blue-glow), inset 0 0 20px rgba(0, 212, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn-start:hover::before {
+            width: 300%; height: 300%;
+            opacity: 0.2;
+        }
+
+        .btn-start:active {
+            transform: translateY(1px) scale(0.98);
+        }
+
+        /* =========================================
+           8. INTERACTIVE SPECS SECTION
+           ========================================= */
+        .specs-section {
+            position: relative;
+            padding: 150px 40px;
+            background: var(--bg-deep);
+            overflow: hidden;
+        }
+
+        .specs-title {
+            text-align: center;
+            font-size: 40px;
+            margin-bottom: 80px;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Individual Spec Card */
+        .spec-card {
+            position: relative;
+            padding: 40px;
+            border-radius: 24px;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+            cursor: default;
+        }
+
+        /* Inner animated neon border on hover */
+        .spec-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            padding: 1px;
+            background: linear-gradient(135deg, transparent 40%, var(--accent-blue) 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .spec-card:hover {
+            transform: translateY(-10px) rotateX(5deg) rotateY(-5deg);
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8), 0 0 40px -10px var(--accent-blue-glow);
+        }
+
+        .spec-card:hover::after { opacity: 1; }
+
+        .spec-label {
+            font-size: 14px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        .spec-value {
+            font-size: 60px;
+            font-weight: 800;
+            background: linear-gradient(180deg, #fff 0%, #888 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .spec-unit {
+            font-size: 18px;
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        /* Decorative background glow inside card */
+        .card-glow {
+            position: absolute;
+            width: 150px; height: 150px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            top: -50px; right: -50px;
+            pointer-events: none;
+        }
+
+        .spec-card:hover .card-glow { opacity: 0.15; }
+
+        /* =========================================
+           9. RESPONSIVE ADAPTATION
+           ========================================= */
+        @media (max-width: 768px) {
+            header { padding: 15px 20px; }
+            .nav-links { display: none; } /* Hamburger logic can be added here */
+            .hero { padding: 0 20px; }
+            .car-container { width: 120%; margin-left: -10%; }
+            .specs-section { padding: 80px 20px; }
+            .spec-value { font-size: 48px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SVG Filters Definitions for advanced neon glow -->
+    <svg class="svg-filters">
+        <defs>
+            <filter id="neon-glow">
+                <feGaussianBlur stdDeviation="3.5" result="coloredBlur"/>
+                <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- HEADER -->
+    <header class="intro-hidden">
+        <div class="logo">BMW</div>
+        <ul class="nav-links">
+            <li><a href="#hero">Concept</a></li>
+            <li><a href="#specs">Specs</a></li>
+            <li><a href="#">Design</a></li>
+            <li><a href="#" class="glass" style="padding: 8px 20px; border-radius: 20px; color: #fff;">Configure</a></li>
+        </ul>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero" id="hero">
+        <!-- Background depth orbs -->
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+
+        <div class="car-container intro-hidden" style="transition-delay: 0.2s;">
+            <!-- Replaced with a high-quality external placeholder -->
+            <img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" alt="BMW Concept Car" class="car-image">
+        </div>
+
+        <div class="hero-ui">
+            <h1 class="intro-hidden" style="transition-delay: 0.4s;">BEYOND<br>REALITY</h1>
+            <p class="subtitle intro-hidden" style="transition-delay: 0.6s;">
+                Новый электромобиль от BMW. Там, где заканчивается физика, начинается драйв.
+            </p>
+            <button class="btn-start glass intro-hidden" style="transition-delay: 0.8s;" id="engineBtn">
+                Start Engine
+            </button>
+        </div>
+    </section>
+
+    <!-- INTERACTIVE SPECS SECTION -->
+    <section class="specs-section" id="specs">
+        <h2 class="specs-title">ТЕХНИЧЕСКИЕ ХАРАКТЕРИСТИКИ</h2>
+        
+        <div class="specs-grid">
+            <!-- Card 1 -->
+            <div class="spec-card glass" data-scroll-card>
+                <div class="card-glow"></div>
+                <div class="spec-label">Максимальная скорость</div>
+                <div class="spec-value">250</div>
+                <div class="spec-unit">км/ч (ограничена)</div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="spec-card glass" data-scroll-card>
+                <div class="card-glow"></div>
+                <div class="spec-label">Мощность</div>
+                <div class="spec-value">600</div>
+                <div class="spec-unit">л.с. (M Power)</div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="spec-card glass" data-scroll-card>
+                <div class="card-glow"></div>
+                <div class="spec-label">Разгон 0-100</div>
+                <div class="spec-value">2.9</div>
+                <div class="spec-unit">секунды</div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="spec-card glass" data-scroll-card>
+                <div class="card-glow"></div>
+                <div class="spec-label">Запас хода</div>
+                <div class="spec-value">700</div>
+                <div class="spec-unit">километров</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================
+         JAVASCRIPT LOGIC
+         ========================================= -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // 1. INTRO ANIMATION LOGIC
+            // Triggered shortly after load to allow fonts/rendering to settle
+            setTimeout(() => {
+                const introElements = document.querySelectorAll('.intro-hidden');
+                introElements.forEach(el => el.classList.add('intro-visible'));
+            }, 300);
+
+            // 2. "START ENGINE" BUTTON INTERACTION
+            const engineBtn = document.getElementById('engineBtn');
+            const heroSection = document.querySelector('.hero');
+            const orbs = document.querySelectorAll('.orb');
+            
+            let isEngineRunning = false;
+
+            engineBtn.addEventListener('click', (e) => {
+                isEngineRunning = !isEngineRunning;
+                
+                if (isEngineRunning) {
+                    e.target.innerText = 'Stop Engine';
+                    // Change accent color to Track Red
+                    document.documentElement.style.setProperty('--accent-blue', '#ff003c');
+                    document.documentElement.style.setProperty('--accent-blue-glow', 'rgba(255, 0, 60, 0.6)');
+                    
+                    // Intensify background orbs (simulating vibration/energy)
+                    orbs.forEach(orb => {
+                        orb.style.transition = 'all 1s cubic-bezier(0.16, 1, 0.3, 1)';
+                        orb.style.opacity = '0.7';
+                        orb.style.transform = 'scale(1.2)';
+                    });
+                } else {
+                    e.target.innerText = 'Start Engine';
+                    // Revert to Premium Blue
+                    document.documentElement.style.setProperty('--accent-blue', '#00d4ff');
+                    document.documentElement.style.setProperty('--accent-blue-glow', 'rgba(0, 212, 255, 0.4)');
+                    
+                    orbs.forEach(orb => {
+                        orb.style.opacity = '0.4';
+                        orb.style.transform = 'scale(1)';
+                    });
+                }
+            });
+
+            // 3. 3D TILT EFFECT FOR SPEC CARDS (Mouse Tracking)
+            const cards = document.querySelectorAll('.spec-card');
+            
+            cards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    // Calculate rotation based on mouse position inside card
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = (y - centerY) / 15; // Inverted for natural feel
+                    const rotateY = (centerX - x) / 15;
+                    
+                    card.style.transform = `translateY(-10px) perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0) perspective(1000px) rotateX(0) rotateY(0)';
+                });
+            });
+
+            // 4. SCROLL-DRIVEN ANIMATIONS (GSAP + ScrollTrigger)
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Animate each card individually based on scroll progress
+            const scrollCards = document.querySelectorAll('[data-scroll-card]');
+            
+            scrollCards.forEach((card, i) => {
+                // Initial state setup
+                gsap.set(card, {
+                    opacity: 0,
+                    y: 100,
+                    scale: 0.9,
+                    rotateX: -15,
+                    filter: 'blur(10px)'
+                });
+
+                // Scroll-triggered animation
+                gsap.to(card, {
+                    opacity: 1,
+                    y: 0,
+                    scale: 1,
+                    rotateX: 0,
+                    filter: 'blur(0px)',
+                    duration: 1,
+                    ease: 'power3.out',
+                    // Stagger effect based on index
+                    delay: i * 0.15, 
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top 85%', // When top of card hits 85% of viewport
+                        end: 'top 50%',   // Animation ends when top hits 50%
+                        toggleActions: 'play none none reverse', // Revert if scrolling back up
+                        // markers: true // Uncomment to debug trigger points
+                    }
+                });
+            });
+
+            // Parallax effect for the section title
+            gsap.to('.specs-title', {
+                y: -50,
+                opacity: 0.2,
+                filter: 'blur(5px)',
+                scrollTrigger: {
+                    trigger: '.specs-section',
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: 1 // Smoothly ties animation to scroll position
+                }
+            });
+
+        });
+    </script>
+</body>
+</html>
