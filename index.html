@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BilimClass</title
-  <link rel="stylesheet" href="Bilim.css">
-  <script src="Bilim.js"></script>
 
-  <!-- Подключение стилей -->
-  <link rel="stylesheet" href="Bilim.css">
+  <title>BilimClass</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="Bilim.css"/>
 
   <!-- Шрифт -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,85 +15,142 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
-  <!-- Фоновые световые элементы -->
-  <div class="bg-circle circle1"></div>
-  <div class="bg-circle circle2"></div>
-  <div class="bg-circle circle3"></div>
+  <!-- Фон -->
+  <div class="gradient-bg"></div>
+
+  <div class="blur-circle circle-1"></div>
+  <div class="blur-circle circle-2"></div>
+  <div class="blur-circle circle-3"></div>
 
   <!-- Контейнер -->
-  <main class="container">
+  <main class="app">
 
-    <!-- Экран входа -->
-    <section class="glass-card auth-card" id="loginScreen">
+    <!-- LOGIN -->
+    <section class="glass login-screen" id="loginScreen">
 
-      <div class="logo">
-        <span class="logo-green">Bilim</span>
-        <span class="logo-dark">Class</span>
+      <div class="logo-box">
+
+        <div class="logo-icon">
+          B
+        </div>
+
+        <h1>
+          <span class="green">Bilim</span>
+          <span class="dark">Class</span>
+        </h1>
+
+        <p>
+          Современная образовательная платформа
+        </p>
+
       </div>
 
-      <p class="subtitle">
-        Современная образовательная платформа
-      </p>
+      <!-- Поля -->
+      <div class="form">
 
-      <!-- Поле логина -->
-      <div class="input-group">
-        <label>Логин</label>
-        <input
-          type="text"
-          id="loginInput"
-          placeholder="Введите логин"
-        >
+        <div class="input-box">
+          <label>Логин</label>
+
+          <input
+            type="text"
+            id="loginInput"
+            placeholder="Введите логин"
+          >
+        </div>
+
+        <div class="input-box">
+          <label>Пароль</label>
+
+          <input
+            type="password"
+            id="passwordInput"
+            placeholder="Введите пароль"
+          >
+        </div>
+
+        <!-- Кнопка -->
+        <button id="loginBtn" class="login-btn">
+          Войти →
+        </button>
+
       </div>
-
-      <!-- Поле пароля -->
-      <div class="input-group">
-        <label>Пароль</label>
-        <input
-          type="password"
-          id="passwordInput"
-          placeholder="Введите пароль"
-        >
-      </div>
-
-      <!-- Кнопка входа -->
-      <button class="main-btn" id="loginBtn">
-        Войти
-      </button>
 
     </section>
 
-    <!-- Главный экран -->
-    <section class="glass-card dashboard hidden" id="dashboard">
+    <!-- DASHBOARD -->
+    <section class="dashboard hidden" id="dashboard">
 
-      <div class="top-bar">
+      <!-- Верх -->
+      <header class="topbar glass">
+
         <div>
-          <h1>Добро пожаловать 👋</h1>
-          <p id="userInfo">Пользователь</p>
+          <h2>
+            Добро пожаловать 👋
+          </h2>
+
+          <p id="usernameText">
+            Пользователь
+          </p>
         </div>
 
-        <button class="logout-btn" id="logoutBtn">
+        <button id="logoutBtn" class="logout-btn">
           Выйти
         </button>
-      </div>
+
+      </header>
 
       <!-- Карточки -->
       <div class="cards">
 
-        <div class="mini-card">
-          <h3>📚 Предметы</h3>
-          <p>Математика, История, Физика</p>
+        <div class="card glass">
+          <div class="card-icon">
+            📚
+          </div>
+
+          <h3>Предметы</h3>
+
+          <p>
+            Математика, История, Физика
+          </p>
         </div>
 
-        <div class="mini-card">
-          <h3>📝 Домашнее задание</h3>
-          <p>3 активных задания</p>
+        <div class="card glass">
+          <div class="card-icon">
+            📝
+          </div>
+
+          <h3>Домашнее задание</h3>
+
+          <p>
+            3 активных задания
+          </p>
         </div>
 
-        <div class="mini-card">
-          <h3>⭐ Успеваемость</h3>
-          <p>Средний балл: 4.9</p>
+        <div class="card glass">
+          <div class="card-icon">
+            ⭐
+          </div>
+
+          <h3>Успеваемость</h3>
+
+          <p>
+            Средний балл: 4.9
+          </p>
+        </div>
+
+        <div class="card glass">
+          <div class="card-icon">
+            ⏰
+          </div>
+
+          <h3>Расписание</h3>
+
+          <p>
+            Сегодня 5 уроков
+          </p>
         </div>
 
       </div>
@@ -103,7 +159,7 @@
 
   </main>
 
-  <!-- Подключение JS -->
+  <!-- JS -->
   <script src="Bilim.js"></script>
 
 </body>
