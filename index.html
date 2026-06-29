@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BilimClass</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="Bilim.css">
+</head>
+<body>
+
+<div class="loginScreen" id="loginScreen">
+    <div class="loginCard">
+        <div class="logo">
+            <div class="logoBox">Б</div>
+            <div class="logoText">
+                <span>Bilim</span><span>Class</span>
+            </div>
+        </div>
+
+        <h1 class="loginTitle">Вход</h1>
+
+        <p class="loginDesc">
+            Новый удобный сайт теперь доступен для четвертых, пятых и шестых классов. Учиться стало легче ✨
+        </p>
+
+        <input class="input" type="text" placeholder="Логин">
+        <input class="input" type="password" placeholder="Пароль">
+
+        <button class="loginBtn" id="loginBtn">Войти</button>
+    </div>
+</div>
+
+<button class="mobileBtn" id="mobileBtn">Б</button>
+
+<div class="app" id="app">
+    <aside class="sidebar" id="sidebar">
+        <div class="logo">
+            <div class="logoBox">Б</div>
+            <div class="logoText">
+                <span>Bilim</span><span>Class</span>
+            </div>
+        </div>
+
+        <div class="profile">
+            <div class="avatar"></div>
+            <div>
+                <h3>Ученик</h3>
+                <p>Добро пожаловать ✨</p>
+            </div>
+        </div>
+
+        <div class="nav">
+            <div class="navItem active">
+                <div class="dot"></div>
+                <div>Главное</div>
+            </div>
+            <div class="navItem">
+                <div class="dot"></div>
+                <div>Расписание</div>
+            </div>
+            <div class="navItem">
+                <div class="dot"></div>
+                <div>Домашнее задание</div>
+            </div>
+            <div class="navItem">
+                <div class="dot"></div>
+                <div>Оценки</div>
+            </div>
+        </div>
+    </aside>
+
+    <main class="content">
+        <div class="topbar">
+            <div class="title">
+                <h1>Главное</h1>
+                <p>образовательная платформа BilimClass</p>
+            </div>
+            <div class="search">
+                🔍
+                <input type="text" placeholder="Поиск...">
+            </div>
+        </div>
+
+        <div class="weekBar">
+            <button class="weekBtn">← Предыдущая неделя</button>
+            <div class="day" data-day="1">ПОНЕДЕЛЬНИК</div>
+            <div class="day" data-day="2">ВТОРНИК</div>
+            <div class="day" data-day="3">СРЕДА</div>
+            <div class="day" data-day="4">ЧЕТВЕРГ</div>
+            <div class="day" data-day="5">ПЯТНИЦА</div>
+            <button class="weekBtn">Следующая неделя →</button>
+        </div>
+
+        <div class="today">
+            <div class="todayTitle">
+                СЕГОДНЯ
+                <span id="todayDate">29 ИЮНЯ</span>
+            </div>
+            <div class="lessons" id="lessons"></div>
+        </div>
+    </main>
+</div>
+
+<button class="ai">🤖</button>
+
+<script src="Bilim.js"></script>
+</body>
+</html>
