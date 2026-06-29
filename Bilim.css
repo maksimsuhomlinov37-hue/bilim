@@ -1,166 +1,410 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+/* =========================
+   RESET
+========================= */
 
-  <title>BilimClass</title>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="Bilim.css"/>
+body{
+  font-family:'Comfortaa',sans-serif;
+  min-height:100vh;
+  overflow:hidden;
+  color:white;
+  position:relative;
 
-  <!-- Шрифт -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  background:#07140f;
 
-  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-</head>
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
 
-<body>
+/* =========================
+   BACKGROUND
+========================= */
 
-  <!-- Фон -->
-  <div class="gradient-bg"></div>
+.gradient-bg{
+  position:absolute;
+  inset:0;
 
-  <div class="blur-circle circle-1"></div>
-  <div class="blur-circle circle-2"></div>
-  <div class="blur-circle circle-3"></div>
+  background:
+    radial-gradient(circle at top left,#00ffbf33,transparent 30%),
+    radial-gradient(circle at bottom right,#b3ff0030,transparent 30%),
+    linear-gradient(135deg,#07140f,#0f241a,#07140f);
 
-  <!-- Контейнер -->
-  <main class="app">
+  z-index:-5;
+}
 
-    <!-- LOGIN -->
-    <section class="glass login-screen" id="loginScreen">
+.blur-circle{
+  position:absolute;
+  border-radius:50%;
+  filter:blur(100px);
+  opacity:0.6;
+}
 
-      <div class="logo-box">
+.circle-1{
+  width:320px;
+  height:320px;
 
-        <div class="logo-icon">
-          B
-        </div>
+  background:#00ffbf;
 
-        <h1>
-          <span class="green">Bilim</span>
-          <span class="dark">Class</span>
-        </h1>
+  top:-100px;
+  left:-100px;
+}
 
-        <p>
-          Современная образовательная платформа
-        </p>
+.circle-2{
+  width:400px;
+  height:400px;
 
-      </div>
+  background:#bbff00;
 
-      <!-- Поля -->
-      <div class="form">
+  bottom:-140px;
+  right:-100px;
+}
 
-        <div class="input-box">
-          <label>Логин</label>
+.circle-3{
+  width:250px;
+  height:250px;
 
-          <input
-            type="text"
-            id="loginInput"
-            placeholder="Введите логин"
-          >
-        </div>
+  background:#00ffd5;
 
-        <div class="input-box">
-          <label>Пароль</label>
+  top:50%;
+  left:50%;
 
-          <input
-            type="password"
-            id="passwordInput"
-            placeholder="Введите пароль"
-          >
-        </div>
+  transform:translate(-50%,-50%);
+}
 
-        <!-- Кнопка -->
-        <button id="loginBtn" class="login-btn">
-          Войти →
-        </button>
+/* =========================
+   APP
+========================= */
 
-      </div>
+.app{
+  width:100%;
+  max-width:1500px;
+  padding:40px;
+}
 
-    </section>
+/* =========================
+   GLASS
+========================= */
 
-    <!-- DASHBOARD -->
-    <section class="dashboard hidden" id="dashboard">
+.glass{
+  background:rgba(255,255,255,0.08);
 
-      <!-- Верх -->
-      <header class="topbar glass">
+  border:1px solid rgba(255,255,255,0.12);
 
-        <div>
-          <h2>
-            Добро пожаловать 👋
-          </h2>
+  backdrop-filter:blur(25px);
+  -webkit-backdrop-filter:blur(25px);
 
-          <p id="usernameText">
-            Пользователь
-          </p>
-        </div>
+  border-radius:30px;
 
-        <button id="logoutBtn" class="logout-btn">
-          Выйти
-        </button>
+  box-shadow:
+    0 10px 40px rgba(0,0,0,0.35),
+    inset 0 1px 1px rgba(255,255,255,0.15);
+}
 
-      </header>
+/* =========================
+   LOGIN
+========================= */
 
-      <!-- Карточки -->
-      <div class="cards">
+.login-screen{
+  width:100%;
+  max-width:520px;
 
-        <div class="card glass">
-          <div class="card-icon">
-            📚
-          </div>
+  margin:auto;
 
-          <h3>Предметы</h3>
+  padding:50px;
+}
 
-          <p>
-            Математика, История, Физика
-          </p>
-        </div>
+.logo-box{
+  text-align:center;
+  margin-bottom:40px;
+}
 
-        <div class="card glass">
-          <div class="card-icon">
-            📝
-          </div>
+.logo-icon{
+  width:90px;
+  height:90px;
 
-          <h3>Домашнее задание</h3>
+  margin:auto;
+  margin-bottom:25px;
 
-          <p>
-            3 активных задания
-          </p>
-        </div>
+  border-radius:28px;
 
-        <div class="card glass">
-          <div class="card-icon">
-            ⭐
-          </div>
+  display:flex;
+  align-items:center;
+  justify-content:center;
 
-          <h3>Успеваемость</h3>
+  font-size:40px;
+  font-weight:700;
 
-          <p>
-            Средний балл: 4.9
-          </p>
-        </div>
+  background:
+    linear-gradient(
+      135deg,
+      #b7ff00,
+      #00ffbf
+    );
 
-        <div class="card glass">
-          <div class="card-icon">
-            ⏰
-          </div>
+  color:#111;
 
-          <h3>Расписание</h3>
+  box-shadow:
+    0 10px 30px rgba(0,255,191,0.4);
+}
 
-          <p>
-            Сегодня 5 уроков
-          </p>
-        </div>
+.logo-box h1{
+  font-size:52px;
+  margin-bottom:15px;
+}
 
-      </div>
+.green{
+  color:#d2ff5d;
+}
 
-    </section>
+.dark{
+  color:white;
+}
 
-  </main>
+.logo-box p{
+  color:rgba(255,255,255,0.7);
+}
 
-  <!-- JS -->
-  <script src="Bilim.js"></script>
+/* =========================
+   FORM
+========================= */
 
-</body>
-</html>
+.form{
+  display:flex;
+  flex-direction:column;
+  gap:25px;
+}
+
+.input-box{
+  display:flex;
+  flex-direction:column;
+}
+
+.input-box label{
+  margin-bottom:12px;
+  color:rgba(255,255,255,0.85);
+}
+
+.input-box input{
+  height:65px;
+
+  border:none;
+  outline:none;
+
+  border-radius:22px;
+
+  padding:0 22px;
+
+  font-size:16px;
+
+  color:white;
+
+  background:rgba(255,255,255,0.07);
+
+  border:1px solid rgba(255,255,255,0.08);
+
+  transition:0.3s;
+}
+
+.input-box input::placeholder{
+  color:rgba(255,255,255,0.4);
+}
+
+.input-box input:focus{
+  border-color:#9dff00;
+
+  box-shadow:
+    0 0 20px rgba(157,255,0,0.25);
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.login-btn{
+  height:65px;
+
+  border:none;
+  cursor:pointer;
+
+  border-radius:22px;
+
+  font-size:18px;
+  font-family:inherit;
+  font-weight:700;
+
+  color:#111;
+
+  background:
+    linear-gradient(
+      135deg,
+      #d6ff54,
+      #00ffbf
+    );
+
+  transition:0.35s;
+
+  margin-top:10px;
+}
+
+.login-btn:hover{
+  transform:
+    translateY(-4px)
+    scale(1.01);
+
+  box-shadow:
+    0 15px 35px rgba(0,255,191,0.35);
+}
+
+.logout-btn{
+  border:none;
+  cursor:pointer;
+
+  padding:16px 28px;
+
+  border-radius:18px;
+
+  background:rgba(255,255,255,0.08);
+
+  color:white;
+
+  font-family:inherit;
+  font-weight:600;
+
+  transition:0.3s;
+}
+
+.logout-btn:hover{
+  background:rgba(255,255,255,0.15);
+}
+
+/* =========================
+   DASHBOARD
+========================= */
+
+.dashboard{
+  display:flex;
+  flex-direction:column;
+  gap:30px;
+}
+
+.topbar{
+  padding:30px;
+
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.topbar h2{
+  font-size:40px;
+  margin-bottom:10px;
+}
+
+.topbar p{
+  color:rgba(255,255,255,0.65);
+}
+
+/* =========================
+   CARDS
+========================= */
+
+.cards{
+  display:grid;
+
+  grid-template-columns:
+    repeat(auto-fit,minmax(280px,1fr));
+
+  gap:25px;
+}
+
+.card{
+  padding:30px;
+
+  transition:0.35s;
+}
+
+.card:hover{
+  transform:
+    translateY(-6px)
+    scale(1.01);
+}
+
+.card-icon{
+  width:70px;
+  height:70px;
+
+  border-radius:22px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:30px;
+
+  margin-bottom:25px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,0.18),
+      rgba(255,255,255,0.08)
+    );
+}
+
+.card h3{
+  margin-bottom:14px;
+  font-size:24px;
+}
+
+.card p{
+  color:rgba(255,255,255,0.7);
+  line-height:1.5;
+}
+
+/* =========================
+   HIDDEN
+========================= */
+
+.hidden{
+  display:none;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:900px){
+
+  .topbar{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:20px;
+  }
+
+  .topbar h2{
+    font-size:32px;
+  }
+
+}
+
+@media(max-width:600px){
+
+  .app{
+    padding:20px;
+  }
+
+  .login-screen{
+    padding:30px;
+  }
+
+  .logo-box h1{
+    font-size:38px;
+  }
+
+}
