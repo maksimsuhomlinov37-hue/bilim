@@ -1,108 +1,127 @@
-/* =========================================
-   ПОЛУЧЕНИЕ ЭЛЕМЕНТОВ СО СТРАНИЦЫ
-========================================= */
+/* =========================
+   ЭЛЕМЕНТЫ
+========================= */
 
-const loginScreen = document.getElementById("loginScreen");
-const dashboard = document.getElementById("dashboard");
+const loginScreen =
+document.getElementById("loginScreen");
 
-const loginInput = document.getElementById("loginInput");
-const passwordInput = document.getElementById("passwordInput");
+const dashboard =
+document.getElementById("dashboard");
 
-const loginBtn = document.getElementById("loginBtn");
-const logoutBtn = document.getElementById("logoutBtn");
+const loginInput =
+document.getElementById("loginInput");
 
-const userInfo = document.getElementById("userInfo");
+const passwordInput =
+document.getElementById("passwordInput");
+
+const loginBtn =
+document.getElementById("loginBtn");
+
+const logoutBtn =
+document.getElementById("logoutBtn");
+
+const usernameText =
+document.getElementById("usernameText");
 
 
-/* =========================================
-   ПРОВЕРКА LOCALSTORAGE ПРИ ЗАГРУЗКЕ
-========================================= */
+/* =========================
+   ПРОВЕРКА LOCALSTORAGE
+========================= */
 
 window.addEventListener("load", () => {
 
-  // Получаем данные пользователя
-  const savedUser = localStorage.getItem("bilimUser");
+  // Проверяем есть ли сохраненный пользователь
+  const savedUser =
+  localStorage.getItem("bilimUser");
 
   // Если пользователь найден
-  if (savedUser) {
+  if(savedUser){
 
-    // Переводим строку обратно в объект
-    const userData = JSON.parse(savedUser);
+    // Получаем объект
+    const user =
+    JSON.parse(savedUser);
 
-    // Показываем dashboard
-    showDashboard(userData.login);
+    // Открываем dashboard
+    openDashboard(user.login);
 
   }
 
 });
 
 
-/* =========================================
-   ОБРАБОТКА КНОПКИ ВХОДА
-========================================= */
+/* =========================
+   ВХОД
+========================= */
 
 loginBtn.addEventListener("click", () => {
 
-  // Получаем значения полей
-  const login = loginInput.value.trim();
-  const password = passwordInput.value.trim();
+  // Значения input
+  const login =
+  loginInput.value.trim();
 
-  // Простая проверка
-  if (login === "" || password === "") {
+  const password =
+  passwordInput.value.trim();
 
-    alert("Пожалуйста заполните все поля");
+  // Проверка
+  if(login === "" || password === ""){
+
+    alert("Заполните все поля");
     return;
 
   }
 
-  // Создаем объект пользователя
+  // Объект пользователя
   const userData = {
+
     login: login,
     password: password
+
   };
 
-  // Сохраняем в localStorage
+  // Сохраняем
   localStorage.setItem(
     "bilimUser",
     JSON.stringify(userData)
   );
 
-  // Показываем главный экран
-  showDashboard(login);
+  // Открываем dashboard
+  openDashboard(login);
 
 });
 
 
-/* =========================================
-   ФУНКЦИЯ ПОКАЗА DASHBOARD
-========================================= */
+/* =========================
+   DASHBOARD
+========================= */
 
-function showDashboard(login) {
+function openDashboard(login){
 
-  // Скрываем вход
+  // Скрываем login
   loginScreen.classList.add("hidden");
 
   // Показываем dashboard
   dashboard.classList.remove("hidden");
 
-  // Отображаем логин
-  userInfo.textContent =
-    `Вы вошли как: ${login}`;
+  // Имя пользователя
+  usernameText.textContent =
+  `Вы вошли как: ${login}`;
 
 }
 
 
-/* =========================================
-   ВЫХОД ИЗ АККАУНТА
-========================================= */
+/* =========================
+   ВЫХОД
+========================= */
 
 logoutBtn.addEventListener("click", () => {
 
-  // Удаляем данные
+  // Удаляем localStorage
   localStorage.removeItem("bilimUser");
 
-  // Показываем форму входа
+  // Скрываем dashboard
   dashboard.classList.add("hidden");
+
+  // Показываем login
   loginScreen.classList.remove("hidden");
 
   // Очищаем поля
