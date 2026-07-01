@@ -5,13 +5,13 @@
 <meta name="viewport"
 content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 
-<title>GEOMETRIDESH ULTRA</title>
+<title>GEOMETRIDESH X</title>
 
 <style>
-/* =======================================================
-GEOMETRIDESH ULTRA
-Большая улучшенная версия 😎
-======================================================= */
+/* =========================================================
+GEOMETRIDESH X
+SUPER ULTRA EDITION 😎
+========================================================= */
 
 *{
 margin:0;
@@ -20,12 +20,89 @@ box-sizing:border-box;
 -webkit-tap-highlight-color:transparent;
 }
 
-body{
+html,body{
 overflow:hidden;
-font-family:Arial,sans-serif;
 background:#050816;
+font-family:Arial,sans-serif;
 touch-action:none;
+height:100%;
 }
+
+/* ================= LOADER ================= */
+
+.loader{
+position:fixed;
+inset:0;
+z-index:999;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+
+background:
+radial-gradient(circle at top,
+#294bb1 0%,
+#0a1230 45%,
+#04070f 100%);
+
+animation:fadeOut 1s ease forwards;
+animation-delay:2.5s;
+}
+
+.loaderLogo{
+font-size:64px;
+font-weight:900;
+letter-spacing:5px;
+color:white;
+
+text-shadow:
+0 0 25px #62d3ff,
+0 0 60px #5468ff;
+
+animation:pulse 2s infinite;
+}
+
+.loadingBar{
+width:300px;
+height:18px;
+margin-top:30px;
+border-radius:999px;
+overflow:hidden;
+background:rgba(255,255,255,.08);
+}
+
+.loadingFill{
+height:100%;
+width:0%;
+
+background:
+linear-gradient(90deg,
+#58d8ff,
+#7168ff);
+
+animation:loading 2.2s forwards;
+}
+
+@keyframes loading{
+100%{
+width:100%;
+}
+}
+
+@keyframes pulse{
+50%{
+transform:scale(1.05);
+}
+}
+
+@keyframes fadeOut{
+100%{
+opacity:0;
+visibility:hidden;
+}
+}
+
+/* ================= GAME ================= */
 
 canvas{
 position:fixed;
@@ -34,25 +111,41 @@ width:100%;
 height:100%;
 }
 
-/* ================= MENU ================= */
+/* ================= MENUS ================= */
 
 .screen{
 position:fixed;
 inset:0;
+
 display:flex;
 justify-content:center;
 align-items:center;
 flex-direction:column;
+
 background:
 radial-gradient(circle at top,
 #2748aa 0%,
 #0a1231 45%,
 #050814 100%);
+
 z-index:20;
+
+animation:menuShow 1s ease;
+}
+
+@keyframes menuShow{
+from{
+opacity:0;
+transform:scale(1.1);
+}
+to{
+opacity:1;
+transform:scale(1);
+}
 }
 
 .logo{
-font-size:62px;
+font-size:68px;
 font-weight:900;
 letter-spacing:4px;
 color:white;
@@ -67,7 +160,7 @@ animation:float 3s ease-in-out infinite;
 
 @keyframes float{
 50%{
-transform:translateY(-10px);
+transform:translateY(-12px);
 }
 }
 
@@ -75,7 +168,7 @@ transform:translateY(-10px);
 display:flex;
 flex-direction:column;
 gap:18px;
-width:min(340px,90%);
+width:min(360px,90%);
 }
 
 .btn{
@@ -89,7 +182,7 @@ cursor:pointer;
 
 background:
 linear-gradient(135deg,
-rgba(255,255,255,.14),
+rgba(255,255,255,.16),
 rgba(255,255,255,.05));
 
 backdrop-filter:blur(12px);
@@ -100,7 +193,11 @@ box-shadow:
 0 0 30px rgba(80,140,255,.25),
 inset 0 0 20px rgba(255,255,255,.05);
 
-transition:.2s;
+transition:.25s;
+}
+
+.btn:hover{
+transform:translateY(-4px);
 }
 
 .btn:active{
@@ -115,20 +212,22 @@ display:none;
 
 .levelGrid{
 display:grid;
-grid-template-columns:1fr 1fr;
+grid-template-columns:1fr 1fr 1fr;
 gap:18px;
-width:min(500px,92%);
+width:min(760px,92%);
 }
 
 .level{
-height:120px;
-border-radius:24px;
+height:130px;
+border-radius:26px;
+
 display:flex;
 justify-content:center;
 align-items:center;
 flex-direction:column;
+
 font-weight:900;
-font-size:22px;
+font-size:24px;
 color:white;
 
 background:
@@ -142,7 +241,39 @@ box-shadow:
 0 0 25px rgba(90,130,255,.2);
 
 cursor:pointer;
-transition:.2s;
+transition:.25s;
+
+position:relative;
+overflow:hidden;
+}
+
+.level:hover{
+transform:translateY(-6px);
+}
+
+.level::before{
+content:"";
+position:absolute;
+inset:-50%;
+
+background:
+linear-gradient(
+45deg,
+transparent,
+rgba(255,255,255,.15),
+transparent);
+
+transform:rotate(25deg);
+
+animation:shine 5s linear infinite;
+}
+
+@keyframes shine{
+100%{
+transform:
+translateX(500px)
+rotate(25deg);
+}
 }
 
 .level span{
@@ -151,11 +282,13 @@ opacity:.7;
 margin-top:8px;
 }
 
-.level:active{
-transform:scale(.96);
+.completed{
+outline:3px solid #6bff95;
+box-shadow:
+0 0 35px rgba(80,255,120,.5);
 }
 
-/* ================= UI ================= */
+/* ================= HUD ================= */
 
 .topUI{
 position:fixed;
@@ -170,8 +303,8 @@ z-index:10;
 }
 
 .progressBox{
-width:210px;
-height:18px;
+width:220px;
+height:20px;
 border-radius:999px;
 overflow:hidden;
 background:rgba(255,255,255,.1);
@@ -180,12 +313,15 @@ background:rgba(255,255,255,.1);
 .progress{
 height:100%;
 width:0%;
+
 background:
 linear-gradient(90deg,
 #57d8ff,
 #7166ff);
 
 box-shadow:0 0 20px #53c1ff;
+
+transition:.1s;
 }
 
 .pauseBtn{
@@ -208,10 +344,13 @@ linear-gradient(135deg,
 position:fixed;
 right:20px;
 bottom:20px;
+
 width:96px;
 height:96px;
+
 border:none;
 border-radius:50%;
+
 display:none;
 
 font-size:24px;
@@ -239,7 +378,10 @@ transform:scale(.92);
 position:fixed;
 top:50%;
 left:50%;
-transform:translate(-50%,-50%) scale(.7);
+
+transform:
+translate(-50%,-50%)
+scale(.7);
 
 padding:30px 45px;
 border-radius:30px;
@@ -272,19 +414,22 @@ text-shadow:
 
 .popup.show{
 opacity:1;
-transform:translate(-50%,-50%) scale(1);
+
+transform:
+translate(-50%,-50%)
+scale(1);
 }
 
 /* ================= MOBILE ================= */
 
-@media(max-width:700px){
-
-.logo{
-font-size:38px;
-}
+@media(max-width:850px){
 
 .levelGrid{
 grid-template-columns:1fr;
+}
+
+.logo{
+font-size:40px;
 }
 
 .jumpBtn{
@@ -292,22 +437,32 @@ width:84px;
 height:84px;
 font-size:20px;
 }
-
-.popup{
-font-size:26px;
-width:90%;
-}
 }
 </style>
 </head>
 
 <body>
 
+<!-- ================= LOADER ================= -->
+
+<div class="loader">
+
+<div class="loaderLogo">
+GEOMETRIDESH X
+</div>
+
+<div class="loadingBar">
+<div class="loadingFill"></div>
+</div>
+
+</div>
+
 <canvas id="game"></canvas>
 
 <!-- ================= MENU ================= -->
 
-<div class="screen" id="mainMenu">
+<div class="screen"
+id="mainMenu">
 
 <div class="logo">
 GEOMETRIDESH
@@ -323,6 +478,11 @@ onclick="openLevels()">
 <button class="btn"
 onclick="openHowTo()">
 ❓ КАК ИГРАТЬ
+</button>
+
+<button class="btn"
+onclick="resetProgress()">
+🗑 СБРОС ПРОГРЕССА
 </button>
 
 </div>
@@ -349,18 +509,13 @@ font-size:20px;
 opacity:.9;
 ">
 
-SPACE / КЛИК / КНОПКА ▲ = ПРЫЖОК<br><br>
+SPACE / КЛИК / ▲ = ПРЫЖОК<br><br>
 
-Избегай шипов 🔺<br><br>
+Esc = выйти ⌨<br><br>
 
-Esc = выйти в меню ⌨<br><br>
-
-Пройди все уровни и получи достижение
-🏆 НАСТОЯЩИЙ ДЕМОН 🏆
+Проходи уровни и получай достижения 🏆
 
 </div>
-
-<br>
 
 <button class="btn"
 style="width:min(300px,90%);"
@@ -379,44 +534,15 @@ id="levels">
 УРОВНИ
 </div>
 
-<div class="levelGrid">
-
-<div class="level"
-onclick="startGame(1)">
-LEVEL 1
-<span>EASY</span>
-</div>
-
-<div class="level"
-onclick="startGame(2)">
-LEVEL 2
-<span>NORMAL</span>
-</div>
-
-<div class="level"
-onclick="startGame(3)">
-LEVEL 3
-<span>HARD</span>
-</div>
-
-<div class="level"
-onclick="startGame(4)">
-LEVEL 4
-<span>INSANE</span>
-</div>
-
-<div class="level"
-onclick="startGame(5)">
-LEVEL 5
-<span>DEMON</span>
-</div>
+<div class="levelGrid"
+id="levelGrid">
 
 </div>
 
 <br>
 
 <button class="btn"
-style="width:min(300px,90%);"
+style="width:min(320px,90%);"
 onclick="backMenu()">
 ⬅ НАЗАД
 </button>
@@ -451,9 +577,9 @@ id="popup">
 </div>
 
 <script>
-/* =======================================================
-GAME ENGINE
-======================================================= */
+/* =========================================================
+GEOMETRIDESH X ENGINE
+========================================================= */
 
 const canvas =
 document.getElementById("game");
@@ -477,7 +603,7 @@ const audioCtx =
 new(window.AudioContext||
 window.webkitAudioContext)();
 
-function beep(freq,time){
+function sound(freq,time,type="square"){
 
 const osc =
 audioCtx.createOscillator();
@@ -488,8 +614,8 @@ audioCtx.createGain();
 osc.connect(gain);
 gain.connect(audioCtx.destination);
 
+osc.type = type;
 osc.frequency.value = freq;
-osc.type = "square";
 
 gain.gain.value = .03;
 
@@ -498,13 +624,21 @@ osc.start();
 osc.stop(audioCtx.currentTime + time);
 }
 
-/* ================= GAME DATA ================= */
+/* ================= DATA ================= */
+
+const TOTAL_LEVELS = 9;
 
 let currentLevel = 1;
 let cameraX = 0;
 let gameStarted = false;
+let levelLength = 5000;
 
-const completedLevels = new Set();
+const completedLevels =
+JSON.parse(
+localStorage.getItem(
+"geomCompleted"
+) || "[]"
+);
 
 const player = {
 
@@ -533,23 +667,92 @@ const spikes = [];
 const blocks = [];
 const particles = [];
 
-let levelLength = 5000;
+/* ================= LOCAL STORAGE ================= */
+
+function saveProgress(){
+
+localStorage.setItem(
+"geomCompleted",
+JSON.stringify(completedLevels)
+);
+}
+
+function resetProgress(){
+
+localStorage.removeItem(
+"geomCompleted"
+);
+
+location.reload();
+}
+
+/* ================= LEVEL UI ================= */
+
+function buildLevels(){
+
+const grid =
+document.getElementById("levelGrid");
+
+grid.innerHTML = "";
+
+for(let i=1;i<=TOTAL_LEVELS;i++){
+
+const div =
+document.createElement("div");
+
+div.className =
+"level";
+
+if(completedLevels.includes(i)){
+
+div.classList.add(
+"completed"
+);
+}
+
+div.innerHTML = `
+LEVEL ${i}
+<span>
+${[
+"EASY",
+"NORMAL",
+"HARD",
+"INSANE",
+"DEMON",
+"NEON",
+"HELL",
+"MASTER",
+"FINAL"
+][i-1]}
+</span>
+`;
+
+div.onclick = ()=>{
+
+startGame(i);
+};
+
+grid.appendChild(div);
+}
+}
+
+buildLevels();
 
 /* ================= PARTICLES ================= */
 
 function createParticles(x,y,color){
 
-for(let i=0;i<14;i++){
+for(let i=0;i<18;i++){
 
 particles.push({
 
 x,
 y,
 
-vx:(Math.random()-.5)*6,
-vy:(Math.random()-.5)*6,
+vx:(Math.random()-.5)*7,
+vy:(Math.random()-.5)*7,
 
-life:50,
+life:60,
 
 color
 });
@@ -567,9 +770,11 @@ p.y += p.vy;
 
 p.life--;
 
-ctx.globalAlpha = p.life/50;
+ctx.globalAlpha =
+p.life/60;
 
-ctx.fillStyle = p.color;
+ctx.fillStyle =
+p.color;
 
 ctx.fillRect(
 p.x,
@@ -594,147 +799,14 @@ function generateLevel(level){
 spikes.length = 0;
 blocks.length = 0;
 
-if(level === 1){
+let x = 100;
 
-blocks.push({
-x:100,
-y:groundY()-80,
-w:400,
-h:40
-});
+for(let i=0;i<18+level*2;i++){
 
-blocks.push({
-x:700,
-y:groundY()-120,
-w:160,
-h:40
-});
-
-blocks.push({
-x:930,
-y:groundY()-160,
-w:160,
-h:40
-});
-
-spikes.push({
-x:1280,
-y:groundY()-45,
-size:45
-});
-
-blocks.push({
-x:1480,
-y:groundY()-120,
-w:260,
-h:40
-});
-
-blocks.push({
-x:1920,
-y:groundY()-80,
-w:300,
-h:40
-});
-
-blocks.push({
-x:2420,
-y:groundY()-140,
-w:220,
-h:40
-});
-
-spikes.push({
-x:2860,
-y:groundY()-45,
-size:45
-});
-
-blocks.push({
-x:3120,
-y:groundY()-120,
-w:420,
-h:40
-});
-
-levelLength = 3900;
-}
-
-/* ================= LEVEL 2 ================= */
-
-if(level === 2){
-
-blocks.push({
-x:100,
-y:groundY()-80,
-w:360,
-h:40
-});
-
-blocks.push({
-x:640,
-y:groundY()-140,
-w:180,
-h:40
-});
-
-spikes.push({
-x:980,
-y:groundY()-45,
-size:45
-});
-
-blocks.push({
-x:1180,
-y:groundY()-200,
-w:200,
-h:40
-});
-
-blocks.push({
-x:1520,
-y:groundY()-120,
-w:200,
-h:40
-});
-
-spikes.push({
-x:1860,
-y:groundY()-45,
-size:45
-});
-
-spikes.push({
-x:1920,
-y:groundY()-45,
-size:45
-});
-
-blocks.push({
-x:2200,
-y:groundY()-220,
-w:240,
-h:40
-});
-
-blocks.push({
-x:2600,
-y:groundY()-120,
-w:260,
-h:40
-});
-
-levelLength = 3400;
-}
-
-/* ================= LEVEL 3+ ================= */
-
-if(level >= 3){
-
-let x = 200;
-let h = groundY()-80;
-
-for(let i=0;i<20;i++){
+const h =
+groundY() -
+80 -
+Math.sin(i*.8)*120;
 
 blocks.push({
 
@@ -744,37 +816,25 @@ w:180,
 h:40
 });
 
-if(i % 2 === 0){
+if(i > 2){
 
 spikes.push({
 
-x:x+240,
+x:x+230,
 y:groundY()-45,
 size:45
 });
 }
 
-h +=
-Math.random() > .5
-? -60
-: 60;
-
-h =
-Math.max(
-groundY()-260,
-Math.min(
-groundY()-80,
-h
-));
-
-x += 360;
+x +=
+320 -
+(level*8);
 }
 
 levelLength = x + 600;
 }
-}
 
-/* ================= START GAME ================= */
+/* ================= START ================= */
 
 function startGame(level){
 
@@ -802,14 +862,14 @@ gameStarted = true;
 
 generateLevel(level);
 
-beep(450,.08);
+sound(420,.08);
 }
 
 /* ================= MENUS ================= */
 
 function openLevels(){
 
-beep(550,.05);
+sound(550,.05);
 
 document.getElementById("mainMenu")
 .style.display="none";
@@ -870,7 +930,7 @@ player.y,
 "#6ddcff"
 );
 
-beep(700,.05);
+sound(700,.05,"triangle");
 }
 }
 
@@ -922,7 +982,7 @@ const grad =
 ctx.createLinearGradient(
 0,0,0,canvas.height);
 
-grad.addColorStop(0,"#1b357a");
+grad.addColorStop(0,"#18306d");
 grad.addColorStop(.5,"#0b1638");
 grad.addColorStop(1,"#050814");
 
@@ -935,7 +995,24 @@ canvas.width,
 canvas.height
 );
 
-for(let i=0;i<45;i++){
+/* stars */
+
+for(let i=0;i<80;i++){
+
+ctx.fillStyle =
+"rgba(255,255,255,.25)";
+
+ctx.fillRect(
+(i*180-cameraX*.1)%16000,
+100+(i%12)*50,
+2,
+2
+);
+}
+
+/* glow towers */
+
+for(let i=0;i<40;i++){
 
 let x =
 ((i*350)-cameraX*.2)%16000;
@@ -1078,15 +1155,17 @@ function update(){
 if(!gameStarted) return;
 
 cameraX +=
-3.4 + currentLevel*.55;
+3.2 + currentLevel*.45;
 
-player.velY += player.gravity;
+player.velY +=
+player.gravity;
 
-player.y += player.velY;
+player.y +=
+player.velY;
 
 player.grounded = false;
 
-/* ===== GROUND ===== */
+/* ground */
 
 if(
 player.y >=
@@ -1103,7 +1182,7 @@ player.rotation = 0;
 player.grounded = true;
 }
 
-/* ===== BLOCK COLLISION ===== */
+/* blocks */
 
 blocks.forEach(b=>{
 
@@ -1128,14 +1207,14 @@ player.grounded = true;
 }
 });
 
-/* ===== ROTATION ===== */
+/* rotate */
 
 if(!player.grounded){
 
 player.rotation += .08;
 }
 
-/* ===== SPIKES ===== */
+/* spikes */
 
 spikes.forEach(s=>{
 
@@ -1153,19 +1232,32 @@ player.y,
 "#ff4f7f"
 );
 
-beep(120,.15);
+sound(120,.15,"sawtooth");
 
 startGame(currentLevel);
 }
 });
 
-/* ===== WIN ===== */
+/* win */
 
 if(cameraX >= levelLength){
 
 gameStarted = false;
 
-completedLevels.add(currentLevel);
+if(
+!completedLevels.includes(
+currentLevel
+)
+){
+
+completedLevels.push(
+currentLevel
+);
+
+saveProgress();
+
+buildLevels();
+}
 
 document.getElementById("topUI")
 .style.display="none";
@@ -1176,41 +1268,36 @@ document.getElementById("jumpBtn")
 document.getElementById("levels")
 .style.display="flex";
 
-if(currentLevel === 1){
-showPopup("МОЛОДЕЦ 😎");
-}
+showPopup(
+[
+"МОЛОДЕЦ 😎",
+"ХОРОШ 🔥",
+"МАШИНА ⚡",
+"БЕЗУМИЕ 👹",
+"ДЕМОН 😈",
+"НЕОН 🌌",
+"HELL MODE 🔥",
+"MASTER 👑",
+"ФИНАЛ 🏆"
+][currentLevel-1]
+);
 
-if(currentLevel === 2){
-showPopup("ХОРОШ 🔥");
-}
-
-if(currentLevel === 3){
-showPopup("МАШИНА ⚡");
-}
-
-if(currentLevel === 4){
-showPopup("БЕЗУМИЕ 👹");
-}
-
-if(currentLevel === 5){
-showPopup("🏆 ДЕМОН 🏆");
-}
-
-if(completedLevels.size === 5){
+if(completedLevels.length
+=== TOTAL_LEVELS){
 
 setTimeout(()=>{
 
 showPopup(
-"👑 НАСТОЯЩИЙ ДЕМОН 👑"
+"🏆 НАСТОЯЩИЙ ДЕМОН 🏆"
 );
 
 },1200);
 }
 
-beep(900,.2);
+sound(950,.2,"triangle");
 }
 
-/* ===== PROGRESS ===== */
+/* progress */
 
 const progress =
 Math.min(
