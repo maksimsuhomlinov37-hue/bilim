@@ -2,28 +2,32 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-<title>GEOMETRIDESH NIGHTMARE</title>
+<title>GEOMETRIDESH HORROR</title>
 
 <style>
 
 /* =========================================================
-GEOMETRIDESH NIGHTMARE
+GEOMETRIDESH HORROR
+FULL MOBILE + PC + TABLET
 ========================================================= */
 
 *{
 margin:0;
 padding:0;
 box-sizing:border-box;
+-webkit-tap-highlight-color:transparent;
 }
 
 body{
 overflow:hidden;
 background:black;
 font-family:Arial,sans-serif;
+touch-action:none;
 }
+
+/* ================= CANVAS ================= */
 
 canvas{
 position:fixed;
@@ -45,43 +49,44 @@ flex-direction:column;
 
 background:
 radial-gradient(circle at top,
-#320000 0%,
-#120000 45%,
+#330000 0%,
+#110000 40%,
 #000 100%);
 
 z-index:50;
 }
 
 .logo{
+
 font-size:72px;
 font-weight:900;
 
+letter-spacing:8px;
+
 color:white;
 
-letter-spacing:6px;
-
 text-shadow:
-0 0 25px red,
-0 0 80px crimson;
+0 0 20px red,
+0 0 60px crimson;
 
-animation:pulse 2s infinite;
+animation:logoPulse 2s infinite;
 }
 
-@keyframes pulse{
+@keyframes logoPulse{
 
 50%{
-transform:scale(1.04);
+transform:scale(1.03);
 }
 }
 
-.menuButtons{
+.buttons{
 
 margin-top:40px;
 
 display:flex;
 flex-direction:column;
 
-gap:18px;
+gap:20px;
 
 width:min(360px,90%);
 }
@@ -98,19 +103,19 @@ font-weight:900;
 
 color:white;
 
-cursor:pointer;
-
 background:
 linear-gradient(135deg,
-rgba(255,0,0,.24),
+rgba(255,0,0,.25),
 rgba(255,255,255,.05));
 
 border:1px solid rgba(255,255,255,.1);
 
+box-shadow:
+0 0 40px rgba(255,0,0,.25);
+
 backdrop-filter:blur(12px);
 
-box-shadow:
-0 0 35px rgba(255,0,0,.25);
+cursor:pointer;
 
 transition:.2s;
 }
@@ -119,73 +124,10 @@ transition:.2s;
 transform:translateY(-5px);
 }
 
-/* ================= LEVELS ================= */
-
-.levels{
-display:none;
-}
-
-.levelGrid{
-
-display:grid;
-
-grid-template-columns:
-1fr 1fr;
-
-gap:18px;
-
-width:min(900px,92%);
-
-margin-top:35px;
-}
-
-.level{
-
-height:150px;
-
-border-radius:28px;
-
-display:flex;
-justify-content:center;
-align-items:center;
-flex-direction:column;
-
-font-size:28px;
-font-weight:900;
-
-color:white;
-
-cursor:pointer;
-
-background:
-linear-gradient(135deg,
-rgba(255,0,0,.22),
-rgba(255,255,255,.04));
-
-border:1px solid rgba(255,255,255,.1);
-
-box-shadow:
-0 0 30px rgba(255,0,0,.22);
-
-transition:.25s;
-}
-
-.level:hover{
-transform:translateY(-7px);
-}
-
-.level span{
-
-margin-top:8px;
-
-font-size:14px;
-
-opacity:.7;
-}
-
 /* ================= HUD ================= */
 
 .topUI{
+
 position:fixed;
 top:0;
 left:0;
@@ -203,14 +145,15 @@ z-index:20;
 
 .progressBox{
 
-width:280px;
-height:22px;
+width:320px;
+height:24px;
+
+background:
+rgba(255,255,255,.08);
 
 border-radius:999px;
 
 overflow:hidden;
-
-background:rgba(255,255,255,.08);
 }
 
 .progress{
@@ -241,11 +184,11 @@ color:white;
 
 background:
 linear-gradient(135deg,
-#900000,
+#8a0000,
 #ff2222);
 }
 
-/* ================= MOBILE ================= */
+/* ================= MOBILE BUTTON ================= */
 
 .jumpBtn{
 
@@ -262,7 +205,7 @@ display:none;
 border:none;
 border-radius:50%;
 
-font-size:26px;
+font-size:32px;
 font-weight:900;
 
 color:white;
@@ -270,10 +213,10 @@ color:white;
 background:
 radial-gradient(circle at top left,
 #ff6666,
-#700000);
+#650000);
 
 box-shadow:
-0 0 40px red;
+0 0 50px red;
 
 z-index:25;
 }
@@ -284,15 +227,15 @@ z-index:25;
 
 position:fixed;
 
-width:150px;
-height:150px;
+width:170px;
+height:170px;
 
 border-radius:50%;
 
 background:
 radial-gradient(circle,
 #ff0000 0%,
-#4d0000 40%,
+#5c0000 45%,
 transparent 70%);
 
 box-shadow:
@@ -300,15 +243,15 @@ box-shadow:
 
 pointer-events:none;
 
-z-index:4;
+z-index:5;
 }
 
 .pupil{
 
 position:absolute;
 
-width:40px;
-height:40px;
+width:42px;
+height:42px;
 
 border-radius:50%;
 
@@ -319,60 +262,8 @@ left:50%;
 
 transform:
 translate(-50%,-50%);
-}
 
-/* ================= SCREAMER ================= */
-
-.screamer{
-
-position:fixed;
-inset:0;
-
-display:none;
-
-justify-content:center;
-align-items:center;
-
-background:
-rgba(0,0,0,.95);
-
-z-index:999;
-}
-
-.screamer img{
-
-width:min(700px,92vw);
-
-border-radius:20px;
-
-box-shadow:
-0 0 70px red;
-
-animation:
-shake .07s infinite,
-zoom .35s ease-out;
-}
-
-@keyframes shake{
-
-50%{
-transform:
-translate(10px,-10px)
-rotate(2deg);
-}
-}
-
-@keyframes zoom{
-
-from{
-transform:scale(.3);
-opacity:0;
-}
-
-to{
-transform:scale(1);
-opacity:1;
-}
+transition:.08s linear;
 }
 
 /* ================= FLASH ================= */
@@ -388,9 +279,9 @@ opacity:0;
 
 pointer-events:none;
 
-z-index:200;
+z-index:999;
 
-transition:.2s;
+transition:.1s;
 }
 
 /* ================= WARNING ================= */
@@ -412,12 +303,68 @@ color:red;
 
 opacity:0;
 
-z-index:120;
+z-index:100;
 
 text-shadow:
-0 0 40px red;
+0 0 35px red;
 
 transition:.2s;
+}
+
+/* ================= GLITCH ================= */
+
+.glitch{
+
+position:fixed;
+inset:0;
+
+pointer-events:none;
+
+background:
+repeating-linear-gradient(
+0deg,
+rgba(255,255,255,.03),
+rgba(255,255,255,.03) 2px,
+transparent 2px,
+transparent 4px
+);
+
+mix-blend-mode:overlay;
+
+opacity:.25;
+
+z-index:3;
+
+animation:glitch .15s infinite;
+}
+
+@keyframes glitch{
+
+50%{
+transform:translateX(2px);
+}
+}
+
+/* ================= SHAKE ================= */
+
+.shake{
+
+animation:shake .15s;
+}
+
+@keyframes shake{
+
+25%{
+transform:translate(-8px,4px);
+}
+
+50%{
+transform:translate(8px,-4px);
+}
+
+75%{
+transform:translate(-4px,-6px);
+}
 }
 
 /* ================= MOBILE ================= */
@@ -428,23 +375,23 @@ transition:.2s;
 font-size:42px;
 }
 
-.levelGrid{
-grid-template-columns:1fr;
+.jumpBtn{
+width:84px;
+height:84px;
+font-size:24px;
 }
 
 .eye{
-width:90px;
-height:90px;
-}
-
-.jumpBtn{
-width:82px;
-height:82px;
-font-size:22px;
+width:100px;
+height:100px;
 }
 
 .warning{
 font-size:42px;
+}
+
+.progressBox{
+width:180px;
 }
 }
 
@@ -455,6 +402,8 @@ font-size:42px;
 
 <canvas id="game"></canvas>
 
+<div class="glitch"></div>
+
 <!-- ================= MENU ================= -->
 
 <div class="menu"
@@ -464,68 +413,17 @@ id="menu">
 GEOMETRIDESH
 </div>
 
-<div class="menuButtons">
+<div class="buttons">
 
 <button class="btn"
-onclick="openLevels()">
+onclick="startGame()">
 ▶ ИГРАТЬ
 </button>
 
 <button class="btn"
-onclick="alert('SPACE / КЛИК = ПРЫЖОК')">
+onclick="alert('SPACE / TAP / CLICK = ПРЫЖОК')">
 ❓ КАК ИГРАТЬ
 </button>
-
-</div>
-
-</div>
-
-<!-- ================= LEVELS ================= -->
-
-<div class="menu levels"
-id="levels">
-
-<div class="logo">
-NIGHTMARE LEVELS
-</div>
-
-<div class="levelGrid">
-
-<div class="level"
-onclick="startGame(1)">
-LEVEL 1
-<span>BEGINNER</span>
-</div>
-
-<div class="level"
-onclick="startGame(2)">
-LEVEL 2
-<span>STAIRS</span>
-</div>
-
-<div class="level"
-onclick="startGame(3)">
-LEVEL 3
-<span>SPEED</span>
-</div>
-
-<div class="level"
-onclick="startGame(4)">
-LEVEL 4
-<span>SHIP</span>
-</div>
-
-<div class="level"
-onclick="startGame(5)">
-LEVEL 5
-<span>HELL</span>
-</div>
-
-<div class="level"
-onclick="startGame(6)">
-LEVEL 6
-<span>NIGHTMARE</span>
-</div>
 
 </div>
 
@@ -557,7 +455,7 @@ id="jumpBtn">
 
 <div class="eye"
 id="eye1"
-style="top:8%;left:8%;">
+style="top:6%;left:6%;">
 
 <div class="pupil"></div>
 
@@ -565,7 +463,7 @@ style="top:8%;left:8%;">
 
 <div class="eye"
 id="eye2"
-style="top:15%;right:10%;">
+style="top:12%;right:8%;">
 
 <div class="pupil"></div>
 
@@ -573,7 +471,7 @@ style="top:15%;right:10%;">
 
 <div class="eye"
 id="eye3"
-style="bottom:10%;left:12%;">
+style="bottom:12%;left:10%;">
 
 <div class="pupil"></div>
 
@@ -584,18 +482,6 @@ id="eye4"
 style="bottom:8%;right:12%;">
 
 <div class="pupil"></div>
-
-</div>
-
-<!-- ================= SCREAMER ================= -->
-
-<div class="screamer"
-id="screamer">
-
-<img
-id="screamerImg"
-src="https://images.unsplash.com/photo-1507149833265-60c372daea22?q=80&w=1200&auto=format&fit=crop"
-/>
 
 </div>
 
@@ -610,7 +496,7 @@ RUN
 <script>
 
 /* =========================================================
-ENGINE
+CANVAS
 ========================================================= */
 
 const canvas =
@@ -629,7 +515,9 @@ resize();
 
 addEventListener("resize",resize);
 
-/* ================= AUDIO ================= */
+/* =========================================================
+AUDIO
+========================================================= */
 
 const audioCtx =
 new(window.AudioContext||
@@ -656,34 +544,38 @@ osc.start();
 osc.stop(audioCtx.currentTime + time);
 }
 
-let bassLoop;
+let musicLoop;
 
 function startMusic(){
 
-clearInterval(bassLoop);
+clearInterval(musicLoop);
 
-bassLoop = setInterval(()=>{
+musicLoop = setInterval(()=>{
 
 bass(40,.25,"square",.08);
 
 setTimeout(()=>{
-bass(28,.2,"sawtooth",.09);
+bass(30,.2,"sawtooth",.09);
 },120);
 
 setTimeout(()=>{
-bass(85,.15,"triangle",.04);
+bass(80,.15,"triangle",.04);
 },240);
 
 },500);
 }
 
-/* ================= GAME ================= */
+/* =========================================================
+GAME
+========================================================= */
 
 let gameStarted = false;
 
 let cameraX = 0;
-let levelLength = 8000;
-let speed = 5;
+
+let speed = 5.5;
+
+let levelLength = 17000;
 
 const player = {
 
@@ -704,6 +596,8 @@ grounded:false
 };
 
 const spikes = [];
+const fakeSpikes = [];
+const movingSpikes = [];
 const blocks = [];
 
 function groundY(){
@@ -711,166 +605,104 @@ function groundY(){
 return canvas.height - 170;
 }
 
-/* ================= LEVELS ================= */
+/* =========================================================
+LEVEL
+========================================================= */
 
-function generateLevel(level){
+function generateLevel(){
 
 spikes.length = 0;
+fakeSpikes.length = 0;
+movingSpikes.length = 0;
 blocks.length = 0;
 
-if(level===1){
-
-speed = 4;
+/* ===== FLOOR ===== */
 
 blocks.push({
+
 x:0,
 y:groundY()-80,
-w:3000,
+w:2400,
 h:40
 });
 
-for(let i=0;i<8;i++){
+/* ===== EASY ===== */
+
+for(let i=0;i<10;i++){
 
 spikes.push({
 
-x:1200+i*300,
+x:2600+i*320,
 y:groundY()-45,
 size:45
 });
 }
 
-levelLength = 4000;
+/* ===== FAKE ===== */
+
+for(let i=0;i<12;i++){
+
+fakeSpikes.push({
+
+x:6200+i*220,
+y:groundY()-45,
+size:45
+});
 }
 
-if(level===2){
+/* ===== MOVING ===== */
 
-speed = 4.5;
+for(let i=0;i<14;i++){
 
-blocks.push({
-x:0,
-y:groundY()-80,
-w:1000,
-h:40
+movingSpikes.push({
+
+x:8600+i*240,
+baseY:groundY()-45,
+size:55,
+offset:Math.random()*1000
 });
+}
 
-for(let i=0;i<8;i++){
+/* ===== STAIRS ===== */
+
+for(let i=0;i<12;i++){
 
 blocks.push({
 
-x:1400+i*250,
+x:11200+i*240,
 
-y:groundY()-120-(i%2)*100,
+y:groundY()-120-(i%2)*120,
 
 w:180,
 h:40
 });
 }
 
-levelLength = 5000;
-}
+/* ===== DEMON ===== */
 
-if(level===3){
+for(let i=0;i<32;i++){
 
-speed = 6;
-
-blocks.push({
-x:0,
-y:groundY()-80,
-w:1500,
-h:40
-});
-
-for(let i=0;i<16;i++){
-
-spikes.push({
-
-x:1800+i*170,
-y:groundY()-45,
-size:50
-});
-}
-
-levelLength = 5200;
-}
-
-if(level===4){
-
-speed = 7;
-
-for(let i=0;i<16;i++){
-
-blocks.push({
-
-x:800+i*250,
-
-y:groundY()-120-(i%3)*90,
-
-w:160,
-h:40
-});
-}
-
-levelLength = 6200;
-}
-
-if(level===5){
-
-speed = 8;
-
-for(let i=0;i<28;i++){
-
-const up =
+const top =
 i%2===0;
 
 spikes.push({
 
-x:1000+i*140,
+x:13800+i*120,
 
-y:up
-? groundY()-320
+y:top
+? groundY()-330
 : groundY()-45,
 
 size:65
 });
 }
-
-levelLength = 7000;
 }
 
-if(level===6){
+/* =========================================================
+START
+========================================================= */
 
-speed = 9;
-
-for(let i=0;i<40;i++){
-
-spikes.push({
-
-x:1200+i*120,
-y:groundY()-45,
-size:70
-});
-}
-
-for(let i=0;i<15;i++){
-
-blocks.push({
-
-x:2500+i*220,
-
-y:groundY()-160-(i%2)*140,
-
-w:170,
-h:40
-});
-}
-
-levelLength = 9000;
-}
-}
-
-/* ================= START ================= */
-
-function startGame(level){
+function startGame(){
 
 cameraX = 0;
 
@@ -883,7 +715,7 @@ player.rotation = 0;
 
 gameStarted = true;
 
-document.getElementById("levels")
+document.getElementById("menu")
 .style.display="none";
 
 document.getElementById("topUI")
@@ -892,19 +724,14 @@ document.getElementById("topUI")
 document.getElementById("jumpBtn")
 .style.display="block";
 
-generateLevel(level);
+generateLevel();
 
 startMusic();
 }
 
-function openLevels(){
-
-document.getElementById("menu")
-.style.display="none";
-
-document.getElementById("levels")
-.style.display="flex";
-}
+/* =========================================================
+EXIT
+========================================================= */
 
 function exitMenu(){
 
@@ -920,7 +747,9 @@ document.getElementById("jumpBtn")
 .style.display="none";
 }
 
-/* ================= INPUT ================= */
+/* =========================================================
+INPUT
+========================================================= */
 
 function jump(){
 
@@ -949,62 +778,36 @@ exitMenu();
 });
 
 document.addEventListener("mousedown",jump);
+
 document.addEventListener("touchstart",jump);
 
-/* ================= SCREAMERS ================= */
+document.getElementById("jumpBtn")
+.addEventListener("touchstart",(e)=>{
 
-const screamerImages = [
+e.preventDefault();
 
-"https://images.unsplash.com/photo-1517849845537-4d257902454a?q=80&w=1200&auto=format&fit=crop",
+jump();
+});
 
-"https://images.unsplash.com/photo-1519052537078-e6302a4968d4?q=80&w=1200&auto=format&fit=crop",
+/* =========================================================
+EFFECTS
+========================================================= */
 
-"https://images.unsplash.com/photo-1517423440428-a5a00ad493e8?q=80&w=1200&auto=format&fit=crop"
+function flash(){
 
-];
-
-function triggerScreamer(){
-
-const screamer =
+const f =
 document.getElementById(
-"screamer"
+"flash"
 );
 
-document.getElementById(
-"screamerImg"
-).src =
-
-screamerImages[
-Math.floor(
-Math.random()*screamerImages.length
-)];
-
-screamer.style.display =
-"flex";
-
-document.getElementById(
-"flash"
-).style.opacity = .8;
-
-bass(22,.5,"sawtooth",.12);
+f.style.opacity = .7;
 
 setTimeout(()=>{
 
-document.getElementById(
-"flash"
-).style.opacity = 0;
+f.style.opacity = 0;
 
-},100);
-
-setTimeout(()=>{
-
-screamer.style.display =
-"none";
-
-},280);
+},80);
 }
-
-/* ================= WARNING ================= */
 
 function warning(){
 
@@ -1019,30 +822,86 @@ setTimeout(()=>{
 
 w.style.opacity = 0;
 
-},600);
+},700);
 }
 
-/* ================= EYES ================= */
+function shake(){
+
+document.body.classList.add(
+"shake"
+);
+
+setTimeout(()=>{
+
+document.body.classList.remove(
+"shake"
+);
+
+},150);
+}
+
+/* =========================================================
+EYES
+========================================================= */
+
+let mouseX = innerWidth/2;
+let mouseY = innerHeight/2;
+
+document.addEventListener("mousemove",e=>{
+
+mouseX = e.clientX;
+mouseY = e.clientY;
+});
+
+document.addEventListener("touchmove",e=>{
+
+mouseX =
+e.touches[0].clientX;
+
+mouseY =
+e.touches[0].clientY;
+});
 
 function updateEyes(){
 
-const eyes =
-document.querySelectorAll(".eye");
+document.querySelectorAll(".eye")
+.forEach(eye=>{
 
-eyes.forEach((eye,index)=>{
+const pupil =
+eye.querySelector(".pupil");
 
-const offsetX =
-Math.sin(Date.now()*.001+index)*25;
+const rect =
+eye.getBoundingClientRect();
 
-const offsetY =
-Math.cos(Date.now()*.0014+index)*20;
+const cx =
+rect.left + rect.width/2;
 
-eye.style.transform =
-`translate(${offsetX}px,${offsetY}px)`;
+const cy =
+rect.top + rect.height/2;
+
+const angle =
+Math.atan2(
+mouseY-cy,
+mouseX-cx
+);
+
+const distance = 22;
+
+const px =
+Math.cos(angle)*distance;
+
+const py =
+Math.sin(angle)*distance;
+
+pupil.style.transform =
+`translate(calc(-50% + ${px}px), calc(-50% + ${py}px))`;
+
 });
 }
 
-/* ================= DRAW ================= */
+/* =========================================================
+DRAW
+========================================================= */
 
 function drawBackground(){
 
@@ -1051,8 +910,8 @@ ctx.createLinearGradient(
 0,0,0,canvas.height
 );
 
-grad.addColorStop(0,"#280000");
-grad.addColorStop(.5,"#100000");
+grad.addColorStop(0,"#2d0000");
+grad.addColorStop(.5,"#120000");
 grad.addColorStop(1,"#000");
 
 ctx.fillStyle = grad;
@@ -1064,14 +923,14 @@ canvas.width,
 canvas.height
 );
 
-for(let i=0;i<100;i++){
+for(let i=0;i<120;i++){
 
 ctx.fillStyle =
 "rgba(255,0,0,.22)";
 
 ctx.fillRect(
-(i*180-cameraX*.2)%18000,
-80+(i%10)*60,
+(i*180-cameraX*.25)%20000,
+80+(i%12)*55,
 2,
 2
 );
@@ -1136,47 +995,90 @@ b.h
 });
 }
 
-function drawSpikes(){
-
-spikes.forEach(s=>{
-
-const x = s.x - cameraX;
+function drawSpike(x,y,size,color="#ff2222"){
 
 ctx.beginPath();
 
 ctx.moveTo(
 x,
-s.y+s.size
+y+size
 );
 
 ctx.lineTo(
-x+s.size/2,
-s.y
+x+size/2,
+y
 );
 
 ctx.lineTo(
-x+s.size,
-s.y+s.size
+x+size,
+y+size
 );
 
 ctx.closePath();
 
-ctx.fillStyle = "#ff2222";
+ctx.fillStyle = color;
 
 ctx.shadowBlur = 25;
-ctx.shadowColor = "red";
+ctx.shadowColor = color;
 
 ctx.fill();
+}
+
+function drawSpikes(){
+
+spikes.forEach(s=>{
+
+drawSpike(
+s.x-cameraX,
+s.y,
+s.size
+);
+});
+
+fakeSpikes.forEach(s=>{
+
+drawSpike(
+s.x-cameraX,
+s.y,
+s.size,
+"rgba(255,80,80,.35)"
+);
+});
+
+movingSpikes.forEach(s=>{
+
+const moveY =
+Math.sin(
+(Date.now()+s.offset)
+*.005
+)*120;
+
+drawSpike(
+s.x-cameraX,
+s.baseY+moveY,
+s.size
+);
 });
 }
 
-/* ================= UPDATE ================= */
+/* =========================================================
+UPDATE
+========================================================= */
 
 function update(){
 
 if(!gameStarted) return;
 
 cameraX += speed;
+
+/* ===== SPEED ===== */
+
+if(cameraX > 10000){
+
+speed = 7;
+}
+
+/* ===== PHYSICS ===== */
 
 player.velY +=
 player.gravity;
@@ -1246,17 +1148,55 @@ player.y + player.size/2 > s.y+10 &&
 player.y - player.size/2 < s.y+s.size
 ){
 
-triggerScreamer();
+flash();
 
-startGame(1);
+shake();
+
+warning();
+
+bass(22,.4,"sawtooth",.12);
+
+startGame();
 }
 });
 
-/* ===== RANDOM EVENTS ===== */
+/* ===== MOVING ===== */
+
+movingSpikes.forEach(s=>{
+
+const x = s.x - cameraX;
+
+const moveY =
+Math.sin(
+(Date.now()+s.offset)
+*.005
+)*120;
+
+const sy =
+s.baseY+moveY;
+
+if(
+player.x + player.size/2 > x+5 &&
+player.x - player.size/2 < x+s.size-5 &&
+player.y + player.size/2 > sy+10 &&
+player.y - player.size/2 < sy+s.size
+){
+
+flash();
+
+shake();
+
+warning();
+
+startGame();
+}
+});
+
+/* ===== RANDOM ===== */
 
 if(Math.random()<.002){
 
-triggerScreamer();
+flash();
 }
 
 if(Math.random()<.0015){
@@ -1272,9 +1212,20 @@ document.getElementById(
 
 (cameraX/levelLength)*100
 + "%";
+
+/* ===== WIN ===== */
+
+if(cameraX >= levelLength){
+
+warning();
+
+exitMenu();
+}
 }
 
-/* ================= LOOP ================= */
+/* =========================================================
+LOOP
+========================================================= */
 
 function loop(){
 
