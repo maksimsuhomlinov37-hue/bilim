@@ -1,166 +1,925 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 
-  <title>BilimClass</title>
+<title>GEOMETRIDESH ULTRA</title>
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="Bilim.css"/>
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+-webkit-tap-highlight-color:transparent;
+}
 
-  <!-- Шрифт -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+body{
+overflow:hidden;
+font-family:Arial,sans-serif;
+background:#050816;
+touch-action:none;
+}
 
-  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+canvas{
+position:fixed;
+inset:0;
+width:100%;
+height:100%;
+}
+
+/* ===== MENUS ===== */
+
+.screen{
+position:fixed;
+inset:0;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+background:
+radial-gradient(circle at top,
+#24449b 0%,
+#0a122b 45%,
+#050814 100%);
+z-index:20;
+}
+
+.logo{
+font-size:56px;
+font-weight:900;
+letter-spacing:4px;
+color:white;
+margin-bottom:40px;
+text-shadow:
+0 0 25px #5ec8ff,
+0 0 60px #5368ff;
+animation:float 3s ease-in-out infinite;
+}
+
+@keyframes float{
+50%{
+transform:translateY(-10px);
+}
+}
+
+.menuButtons{
+display:flex;
+flex-direction:column;
+gap:18px;
+width:min(340px,90%);
+}
+
+.btn{
+padding:20px;
+border:none;
+border-radius:24px;
+font-size:22px;
+font-weight:900;
+color:white;
+cursor:pointer;
+
+background:
+linear-gradient(135deg,
+rgba(255,255,255,.14),
+rgba(255,255,255,.05));
+
+backdrop-filter:blur(12px);
+
+border:1px solid rgba(255,255,255,.14);
+
+box-shadow:
+0 0 30px rgba(80,140,255,.25),
+inset 0 0 20px rgba(255,255,255,.05);
+
+transition:.2s;
+}
+
+.btn:active{
+transform:scale(.95);
+}
+
+/* ===== LEVELS ===== */
+
+.levels{
+display:none;
+}
+
+.levelGrid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:18px;
+width:min(460px,92%);
+}
+
+.level{
+height:120px;
+border-radius:24px;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+font-weight:900;
+color:white;
+
+background:
+linear-gradient(135deg,
+rgba(255,255,255,.14),
+rgba(255,255,255,.06));
+
+border:1px solid rgba(255,255,255,.14);
+
+box-shadow:
+0 0 25px rgba(90,130,255,.2);
+
+cursor:pointer;
+transition:.2s;
+}
+
+.level:active{
+transform:scale(.96);
+}
+
+.level span{
+margin-top:8px;
+font-size:14px;
+opacity:.7;
+}
+
+/* ===== GAME UI ===== */
+
+.topUI{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+padding:14px;
+display:none;
+justify-content:space-between;
+align-items:center;
+z-index:10;
+}
+
+.progressBox{
+width:190px;
+height:18px;
+border-radius:999px;
+overflow:hidden;
+background:rgba(255,255,255,.1);
+}
+
+.progress{
+height:100%;
+width:0%;
+background:
+linear-gradient(90deg,
+#4dd2ff,
+#6a65ff);
+
+box-shadow:0 0 20px #4cb2ff;
+}
+
+.pauseBtn{
+padding:12px 18px;
+border:none;
+border-radius:16px;
+font-size:18px;
+font-weight:900;
+color:white;
+background:
+linear-gradient(135deg,#4468ff,#725eff);
+}
+
+/* ===== MOBILE ===== */
+
+.jumpBtn{
+position:fixed;
+right:22px;
+bottom:22px;
+width:100px;
+height:100px;
+border:none;
+border-radius:50%;
+display:none;
+
+font-size:26px;
+font-weight:900;
+color:white;
+
+background:
+radial-gradient(circle at top left,
+#9be4ff,
+#5464ff);
+
+box-shadow:
+0 0 35px rgba(90,160,255,.7);
+
+z-index:12;
+}
+
+.jumpBtn:active{
+transform:scale(.93);
+}
+
+/* ===== POPUP ===== */
+
+.popup{
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%) scale(.7);
+
+padding:30px 45px;
+border-radius:30px;
+
+background:
+linear-gradient(135deg,
+rgba(255,255,255,.18),
+rgba(255,255,255,.08));
+
+backdrop-filter:blur(16px);
+
+border:1px solid rgba(255,255,255,.14);
+
+font-size:42px;
+font-weight:900;
+color:white;
+
+opacity:0;
+pointer-events:none;
+
+z-index:100;
+
+transition:.4s;
+
+text-align:center;
+
+text-shadow:
+0 0 20px #68c5ff;
+}
+
+.popup.show{
+opacity:1;
+transform:translate(-50%,-50%) scale(1);
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media(max-width:700px){
+
+.logo{
+font-size:38px;
+}
+
+.levelGrid{
+grid-template-columns:1fr;
+}
+
+.jumpBtn{
+width:88px;
+height:88px;
+}
+
+.popup{
+font-size:28px;
+width:90%;
+}
+}
+</style>
 </head>
-
 <body>
 
-  <!-- Фон -->
-  <div class="gradient-bg"></div>
+<canvas id="game"></canvas>
 
-  <div class="blur-circle circle-1"></div>
-  <div class="blur-circle circle-2"></div>
-  <div class="blur-circle circle-3"></div>
+<!-- MAIN MENU -->
 
-  <!-- Контейнер -->
-  <main class="app">
+<div class="screen" id="mainMenu">
 
-    <!-- LOGIN -->
-    <section class="glass login-screen" id="loginScreen">
+<div class="logo">
+GEOMETRIDESH
+</div>
 
-      <div class="logo-box">
+<div class="menuButtons">
 
-        <div class="logo-icon">
-          B
-        </div>
+<button class="btn"
+onclick="openLevels()">
+▶ ИГРАТЬ
+</button>
 
-        <h1>
-          <span class="green">Bilim</span>
-          <span class="dark">Class</span>
-        </h1>
+<button class="btn"
+onclick="alert('SPACE / КЛИК / КНОПКА ▲ = ПРЫЖОК')">
+❓ КАК ИГРАТЬ
+</button>
 
-        <p>
-          Современная образовательная платформа
-        </p>
+</div>
 
-      </div>
+</div>
 
-      <!-- Поля -->
-      <div class="form">
+<!-- LEVELS -->
 
-        <div class="input-box">
-          <label>Логин</label>
+<div class="screen levels" id="levels">
 
-          <input
-            type="text"
-            id="loginInput"
-            placeholder="Введите логин"
-          >
-        </div>
+<div class="logo">
+УРОВНИ
+</div>
 
-        <div class="input-box">
-          <label>Пароль</label>
+<div class="levelGrid">
 
-          <input
-            type="password"
-            id="passwordInput"
-            placeholder="Введите пароль"
-          >
-        </div>
+<div class="level"
+onclick="startGame(1)">
+LEVEL 1
+<span>EASY</span>
+</div>
 
-        <!-- Кнопка -->
-        <button id="loginBtn" class="login-btn">
-          Войти →
-        </button>
+<div class="level"
+onclick="startGame(2)">
+LEVEL 2
+<span>NORMAL</span>
+</div>
 
-      </div>
+<div class="level"
+onclick="startGame(3)">
+LEVEL 3
+<span>HARD</span>
+</div>
 
-    </section>
+<div class="level"
+onclick="startGame(4)">
+LEVEL 4
+<span>INSANE</span>
+</div>
 
-    <!-- DASHBOARD -->
-    <section class="dashboard hidden" id="dashboard">
+<div class="level"
+onclick="startGame(5)">
+LEVEL 5
+<span>DEMON</span>
+</div>
 
-      <!-- Верх -->
-      <header class="topbar glass">
+</div>
 
-        <div>
-          <h2>
-            Добро пожаловать 👋
-          </h2>
+<br>
 
-          <p id="usernameText">
-            Пользователь
-          </p>
-        </div>
+<button class="btn"
+style="width:min(300px,90%);"
+onclick="backMenu()">
+⬅ НАЗАД
+</button>
 
-        <button id="logoutBtn" class="logout-btn">
-          Выйти
-        </button>
+</div>
 
-      </header>
+<!-- HUD -->
 
-      <!-- Карточки -->
-      <div class="cards">
+<div class="topUI" id="topUI">
 
-        <div class="card glass">
-          <div class="card-icon">
-            📚
-          </div>
+<div class="progressBox">
+<div class="progress" id="progress"></div>
+</div>
 
-          <h3>Предметы</h3>
+<button class="pauseBtn"
+onclick="exitToMenu()">
+🏠
+</button>
 
-          <p>
-            Математика, История, Физика
-          </p>
-        </div>
+</div>
 
-        <div class="card glass">
-          <div class="card-icon">
-            📝
-          </div>
+<button class="jumpBtn"
+id="jumpBtn">
+▲
+</button>
 
-          <h3>Домашнее задание</h3>
+<div class="popup"
+id="popup">
+МОЛОДЕЦ 😎
+</div>
 
-          <p>
-            3 активных задания
-          </p>
-        </div>
+<script>
+const canvas =
+document.getElementById("game");
 
-        <div class="card glass">
-          <div class="card-icon">
-            ⭐
-          </div>
+const ctx =
+canvas.getContext("2d");
 
-          <h3>Успеваемость</h3>
+function resize(){
+canvas.width = innerWidth;
+canvas.height = innerHeight;
+}
+resize();
+addEventListener("resize",resize);
 
-          <p>
-            Средний балл: 4.9
-          </p>
-        </div>
+/* ===== AUDIO ===== */
 
-        <div class="card glass">
-          <div class="card-icon">
-            ⏰
-          </div>
+const audioCtx =
+new(window.AudioContext||
+window.webkitAudioContext)();
 
-          <h3>Расписание</h3>
+function beep(freq,time){
 
-          <p>
-            Сегодня 5 уроков
-          </p>
-        </div>
+const osc =
+audioCtx.createOscillator();
 
-      </div>
+const gain =
+audioCtx.createGain();
 
-    </section>
+osc.connect(gain);
+gain.connect(audioCtx.destination);
 
-  </main>
+osc.frequency.value = freq;
+osc.type = "square";
 
-  <!-- JS -->
-  <script src="Bilim.js"></script>
+gain.gain.value = .03;
+
+osc.start();
+
+osc.stop(audioCtx.currentTime + time);
+}
+
+/* ===== GAME ===== */
+
+let currentLevel = 1;
+let cameraX = 0;
+let gameStarted = false;
+
+const completedLevels = new Set();
+
+const player = {
+x:170,
+y:0,
+size:52,
+velY:0,
+rotation:0,
+gravity:.8,
+jump:-15,
+grounded:false
+};
+
+function groundY(){
+return canvas.height - 170;
+}
+
+const spikes = [];
+const blocks = [];
+
+function generateLevel(level){
+
+spikes.length = 0;
+blocks.length = 0;
+
+let x = 600;
+
+for(let i=0;i<35;i++){
+
+/* PLATFORM */
+
+const width =
+120 + Math.random()*90;
+
+const height =
+30 + Math.random()*40;
+
+const up =
+Math.random() > .55;
+
+const y =
+up
+? groundY()-150-(Math.random()*130)
+: groundY()-80;
+
+blocks.push({
+x,
+y,
+w:width,
+h:height
+});
+
+/* SPIKES */
+
+if(Math.random() > .35){
+
+spikes.push({
+x:x+width+60,
+y:groundY()-45,
+size:45
+});
+}
+
+x +=
+260 -
+(level*10) +
+Math.random()*120;
+}
+
+levelLength = x + 600;
+}
+
+let levelLength = 8000;
+
+function startGame(level){
+
+currentLevel = level;
+
+document.getElementById("mainMenu")
+.style.display="none";
+
+document.getElementById("levels")
+.style.display="none";
+
+document.getElementById("topUI")
+.style.display="flex";
+
+document.getElementById("jumpBtn")
+.style.display="block";
+
+cameraX = 0;
+
+player.y = groundY()-50;
+player.velY = 0;
+player.rotation = 0;
+
+gameStarted = true;
+
+generateLevel(level);
+
+beep(400,.08);
+}
+
+function openLevels(){
+
+beep(500,.05);
+
+document.getElementById("mainMenu")
+.style.display="none";
+
+document.getElementById("levels")
+.style.display="flex";
+}
+
+function backMenu(){
+
+document.getElementById("levels")
+.style.display="none";
+
+document.getElementById("mainMenu")
+.style.display="flex";
+}
+
+function exitToMenu(){
+
+gameStarted = false;
+
+document.getElementById("topUI")
+.style.display="none";
+
+document.getElementById("jumpBtn")
+.style.display="none";
+
+document.getElementById("mainMenu")
+.style.display="flex";
+}
+
+/* ===== INPUT ===== */
+
+function jump(){
+
+if(!gameStarted) return;
+
+if(player.grounded){
+
+player.velY = player.jump;
+player.grounded = false;
+
+beep(700,.05);
+}
+}
+
+document.addEventListener("keydown",e=>{
+
+if(e.code==="Space"){
+jump();
+}
+
+if(e.code==="Escape"){
+exitToMenu();
+}
+});
+
+document.addEventListener("mousedown",jump);
+document.addEventListener("touchstart",jump);
+
+document.getElementById("jumpBtn")
+.addEventListener("touchstart",(e)=>{
+e.preventDefault();
+jump();
+});
+
+/* ===== POPUP ===== */
+
+function showPopup(text){
+
+const popup =
+document.getElementById("popup");
+
+popup.innerHTML = text;
+
+popup.classList.add("show");
+
+setTimeout(()=>{
+popup.classList.remove("show");
+},2600);
+}
+
+/* ===== DRAW ===== */
+
+function drawBackground(){
+
+const grad =
+ctx.createLinearGradient(
+0,0,0,canvas.height);
+
+grad.addColorStop(0,"#1b357a");
+grad.addColorStop(.5,"#0b1638");
+grad.addColorStop(1,"#050814");
+
+ctx.fillStyle = grad;
+ctx.fillRect(0,0,
+canvas.width,
+canvas.height);
+
+for(let i=0;i<45;i++){
+
+let x =
+((i*350)-cameraX*.2)%16000;
+
+ctx.fillStyle =
+"rgba(120,170,255,.08)";
+
+ctx.fillRect(
+x,
+100,
+120,
+600
+);
+}
+}
+
+function drawGround(){
+
+ctx.fillStyle="#091126";
+
+ctx.fillRect(
+0,
+groundY(),
+canvas.width,
+400
+);
+}
+
+function drawPlayer(){
+
+ctx.save();
+
+ctx.translate(player.x,player.y);
+
+ctx.rotate(player.rotation);
+
+ctx.shadowBlur = 25;
+ctx.shadowColor = "#62c8ff";
+
+const g =
+ctx.createLinearGradient(
+-40,-40,40,40);
+
+g.addColorStop(0,"#6cf1ff");
+g.addColorStop(1,"#6865ff");
+
+ctx.fillStyle = g;
+
+ctx.fillRect(
+-player.size/2,
+-player.size/2,
+player.size,
+player.size
+);
+
+ctx.restore();
+}
+
+function drawBlocks(){
+
+blocks.forEach(b=>{
+
+const x = b.x - cameraX;
+
+ctx.shadowBlur = 18;
+ctx.shadowColor = "#55a8ff";
+
+const g =
+ctx.createLinearGradient(
+x,b.y,
+x,b.y+b.h);
+
+g.addColorStop(0,"#69d6ff");
+g.addColorStop(1,"#4364ff");
+
+ctx.fillStyle = g;
+
+ctx.fillRect(
+x,
+b.y,
+b.w,
+b.h
+);
+});
+}
+
+function drawSpikes(){
+
+spikes.forEach(s=>{
+
+const x = s.x - cameraX;
+
+ctx.beginPath();
+
+ctx.moveTo(x,s.y+s.size);
+ctx.lineTo(x+s.size/2,s.y);
+ctx.lineTo(x+s.size,s.y+s.size);
+
+ctx.closePath();
+
+ctx.shadowBlur = 20;
+ctx.shadowColor = "#ff4673";
+
+const g =
+ctx.createLinearGradient(
+x,s.y,
+x,s.y+s.size);
+
+g.addColorStop(0,"#ff8eb1");
+g.addColorStop(1,"#ff3d6d");
+
+ctx.fillStyle = g;
+
+ctx.fill();
+});
+}
+
+/* ===== UPDATE ===== */
+
+function update(){
+
+if(!gameStarted) return;
+
+cameraX +=
+4.5 + currentLevel*.9;
+
+player.velY += player.gravity;
+player.y += player.velY;
+
+player.grounded = false;
+
+/* GROUND */
+
+if(player.y >= groundY()-player.size/2){
+
+player.y = groundY()-player.size/2;
+
+player.velY = 0;
+
+player.rotation = 0;
+
+player.grounded = true;
+}
+
+/* BLOCK COLLISION */
+
+blocks.forEach(b=>{
+
+const bx = b.x - cameraX;
+
+if(
+player.x + player.size/2 > bx &&
+player.x - player.size/2 < bx+b.w &&
+player.y + player.size/2 > b.y &&
+player.y + player.size/2 < b.y + 40 &&
+player.velY >= 0
+){
+
+player.y =
+b.y - player.size/2;
+
+player.velY = 0;
+
+player.rotation = 0;
+
+player.grounded = true;
+}
+});
+
+/* ROTATE */
+
+if(!player.grounded){
+player.rotation += .08;
+}
+
+/* SPIKES */
+
+spikes.forEach(s=>{
+
+const x = s.x - cameraX;
+
+if(
+player.x + player.size/2 > x &&
+player.x - player.size/2 < x+s.size &&
+player.y + player.size/2 > s.y
+){
+
+beep(120,.15);
+
+startGame(currentLevel);
+}
+});
+
+/* WIN */
+
+if(cameraX >= levelLength){
+
+gameStarted = false;
+
+completedLevels.add(currentLevel);
+
+document.getElementById("topUI")
+.style.display="none";
+
+document.getElementById("jumpBtn")
+.style.display="none";
+
+document.getElementById("levels")
+.style.display="flex";
+
+if(currentLevel === 1){
+showPopup("МОЛОДЕЦ 😎");
+}
+
+if(currentLevel === 2){
+showPopup("ХОРОШ 🔥");
+}
+
+if(currentLevel === 3){
+showPopup("МАШИНА ⚡");
+}
+
+if(currentLevel === 4){
+showPopup("БЕЗУМИЕ 👹");
+}
+
+if(currentLevel === 5){
+showPopup("ДЕМОН ПОБЕЖДЁН 😈");
+}
+
+if(completedLevels.size === 5){
+
+setTimeout(()=>{
+showPopup("🏆 НАСТОЯЩИЙ ДЕМОН 🏆");
+},1200);
+}
+
+beep(900,.2);
+}
+
+/* PROGRESS */
+
+const progress =
+Math.min(
+(cameraX/levelLength)*100,
+100
+);
+
+document.getElementById("progress")
+.style.width =
+progress + "%";
+}
+
+/* ===== LOOP ===== */
+
+function loop(){
+
+drawBackground();
+
+drawGround();
+
+update();
+
+drawBlocks();
+
+drawSpikes();
+
+drawPlayer();
+
+requestAnimationFrame(loop);
+}
+
+loop();
+</script>
 
 </body>
 </html>
