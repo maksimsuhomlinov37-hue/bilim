@@ -8,6 +8,11 @@ content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no
 <title>GEOMETRIDESH ULTRA</title>
 
 <style>
+/* =======================================================
+GEOMETRIDESH ULTRA
+Большая улучшенная версия 😎
+======================================================= */
+
 *{
 margin:0;
 padding:0;
@@ -29,7 +34,7 @@ width:100%;
 height:100%;
 }
 
-/* ===== MENUS ===== */
+/* ================= MENU ================= */
 
 .screen{
 position:fixed;
@@ -40,21 +45,23 @@ align-items:center;
 flex-direction:column;
 background:
 radial-gradient(circle at top,
-#24449b 0%,
-#0a122b 45%,
+#2748aa 0%,
+#0a1231 45%,
 #050814 100%);
 z-index:20;
 }
 
 .logo{
-font-size:56px;
+font-size:62px;
 font-weight:900;
 letter-spacing:4px;
 color:white;
 margin-bottom:40px;
+
 text-shadow:
-0 0 25px #5ec8ff,
-0 0 60px #5368ff;
+0 0 25px #62d3ff,
+0 0 60px #5468ff;
+
 animation:float 3s ease-in-out infinite;
 }
 
@@ -97,10 +104,10 @@ transition:.2s;
 }
 
 .btn:active{
-transform:scale(.95);
+transform:scale(.96);
 }
 
-/* ===== LEVELS ===== */
+/* ================= LEVELS ================= */
 
 .levels{
 display:none;
@@ -110,7 +117,7 @@ display:none;
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:18px;
-width:min(460px,92%);
+width:min(500px,92%);
 }
 
 .level{
@@ -121,6 +128,7 @@ justify-content:center;
 align-items:center;
 flex-direction:column;
 font-weight:900;
+font-size:22px;
 color:white;
 
 background:
@@ -137,17 +145,17 @@ cursor:pointer;
 transition:.2s;
 }
 
+.level span{
+font-size:14px;
+opacity:.7;
+margin-top:8px;
+}
+
 .level:active{
 transform:scale(.96);
 }
 
-.level span{
-margin-top:8px;
-font-size:14px;
-opacity:.7;
-}
-
-/* ===== GAME UI ===== */
+/* ================= UI ================= */
 
 .topUI{
 position:fixed;
@@ -162,7 +170,7 @@ z-index:10;
 }
 
 .progressBox{
-width:190px;
+width:210px;
 height:18px;
 border-radius:999px;
 overflow:hidden;
@@ -174,10 +182,10 @@ height:100%;
 width:0%;
 background:
 linear-gradient(90deg,
-#4dd2ff,
-#6a65ff);
+#57d8ff,
+#7166ff);
 
-box-shadow:0 0 20px #4cb2ff;
+box-shadow:0 0 20px #53c1ff;
 }
 
 .pauseBtn{
@@ -187,30 +195,33 @@ border-radius:16px;
 font-size:18px;
 font-weight:900;
 color:white;
+
 background:
-linear-gradient(135deg,#4468ff,#725eff);
+linear-gradient(135deg,
+#496bff,
+#7d61ff);
 }
 
-/* ===== MOBILE ===== */
+/* ================= MOBILE ================= */
 
 .jumpBtn{
 position:fixed;
-right:22px;
-bottom:22px;
-width:100px;
-height:100px;
+right:20px;
+bottom:20px;
+width:96px;
+height:96px;
 border:none;
 border-radius:50%;
 display:none;
 
-font-size:26px;
+font-size:24px;
 font-weight:900;
 color:white;
 
 background:
 radial-gradient(circle at top left,
-#9be4ff,
-#5464ff);
+#9be5ff,
+#5466ff);
 
 box-shadow:
 0 0 35px rgba(90,160,255,.7);
@@ -219,10 +230,10 @@ z-index:12;
 }
 
 .jumpBtn:active{
-transform:scale(.93);
+transform:scale(.92);
 }
 
-/* ===== POPUP ===== */
+/* ================= POPUP ================= */
 
 .popup{
 position:fixed;
@@ -264,7 +275,7 @@ opacity:1;
 transform:translate(-50%,-50%) scale(1);
 }
 
-/* ===== RESPONSIVE ===== */
+/* ================= MOBILE ================= */
 
 @media(max-width:700px){
 
@@ -277,22 +288,24 @@ grid-template-columns:1fr;
 }
 
 .jumpBtn{
-width:88px;
-height:88px;
+width:84px;
+height:84px;
+font-size:20px;
 }
 
 .popup{
-font-size:28px;
+font-size:26px;
 width:90%;
 }
 }
 </style>
 </head>
+
 <body>
 
 <canvas id="game"></canvas>
 
-<!-- MAIN MENU -->
+<!-- ================= MENU ================= -->
 
 <div class="screen" id="mainMenu">
 
@@ -308,7 +321,7 @@ onclick="openLevels()">
 </button>
 
 <button class="btn"
-onclick="alert('SPACE / КЛИК / КНОПКА ▲ = ПРЫЖОК')">
+onclick="openHowTo()">
 ❓ КАК ИГРАТЬ
 </button>
 
@@ -316,9 +329,51 @@ onclick="alert('SPACE / КЛИК / КНОПКА ▲ = ПРЫЖОК')">
 
 </div>
 
-<!-- LEVELS -->
+<!-- ================= HOW TO ================= -->
 
-<div class="screen levels" id="levels">
+<div class="screen"
+id="howTo"
+style="display:none;">
+
+<div class="logo">
+КАК ИГРАТЬ
+</div>
+
+<div style="
+max-width:700px;
+padding:20px;
+text-align:center;
+line-height:1.8;
+color:white;
+font-size:20px;
+opacity:.9;
+">
+
+SPACE / КЛИК / КНОПКА ▲ = ПРЫЖОК<br><br>
+
+Избегай шипов 🔺<br><br>
+
+Esc = выйти в меню ⌨<br><br>
+
+Пройди все уровни и получи достижение
+🏆 НАСТОЯЩИЙ ДЕМОН 🏆
+
+</div>
+
+<br>
+
+<button class="btn"
+style="width:min(300px,90%);"
+onclick="backMenu()">
+⬅ НАЗАД
+</button>
+
+</div>
+
+<!-- ================= LEVELS ================= -->
+
+<div class="screen levels"
+id="levels">
 
 <div class="logo">
 УРОВНИ
@@ -368,12 +423,14 @@ onclick="backMenu()">
 
 </div>
 
-<!-- HUD -->
+<!-- ================= HUD ================= -->
 
-<div class="topUI" id="topUI">
+<div class="topUI"
+id="topUI">
 
 <div class="progressBox">
-<div class="progress" id="progress"></div>
+<div class="progress"
+id="progress"></div>
 </div>
 
 <button class="pauseBtn"
@@ -394,6 +451,10 @@ id="popup">
 </div>
 
 <script>
+/* =======================================================
+GAME ENGINE
+======================================================= */
+
 const canvas =
 document.getElementById("game");
 
@@ -401,13 +462,16 @@ const ctx =
 canvas.getContext("2d");
 
 function resize(){
+
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 }
+
 resize();
+
 addEventListener("resize",resize);
 
-/* ===== AUDIO ===== */
+/* ================= AUDIO ================= */
 
 const audioCtx =
 new(window.AudioContext||
@@ -434,7 +498,7 @@ osc.start();
 osc.stop(audioCtx.currentTime + time);
 }
 
-/* ===== GAME ===== */
+/* ================= GAME DATA ================= */
 
 let currentLevel = 1;
 let cameraX = 0;
@@ -443,76 +507,274 @@ let gameStarted = false;
 const completedLevels = new Set();
 
 const player = {
+
 x:170,
 y:0,
+
 size:52,
+
 velY:0,
+
 rotation:0,
-gravity:.8,
+
+gravity:.82,
+
 jump:-15,
+
 grounded:false
 };
 
 function groundY(){
+
 return canvas.height - 170;
 }
 
 const spikes = [];
 const blocks = [];
+const particles = [];
+
+let levelLength = 5000;
+
+/* ================= PARTICLES ================= */
+
+function createParticles(x,y,color){
+
+for(let i=0;i<14;i++){
+
+particles.push({
+
+x,
+y,
+
+vx:(Math.random()-.5)*6,
+vy:(Math.random()-.5)*6,
+
+life:50,
+
+color
+});
+}
+}
+
+function updateParticles(){
+
+for(let i=particles.length-1;i>=0;i--){
+
+const p = particles[i];
+
+p.x += p.vx;
+p.y += p.vy;
+
+p.life--;
+
+ctx.globalAlpha = p.life/50;
+
+ctx.fillStyle = p.color;
+
+ctx.fillRect(
+p.x,
+p.y,
+6,
+6
+);
+
+ctx.globalAlpha = 1;
+
+if(p.life <= 0){
+
+particles.splice(i,1);
+}
+}
+}
+
+/* ================= LEVEL GENERATOR ================= */
 
 function generateLevel(level){
 
 spikes.length = 0;
 blocks.length = 0;
 
-let x = 600;
-
-for(let i=0;i<35;i++){
-
-/* PLATFORM */
-
-const width =
-120 + Math.random()*90;
-
-const height =
-30 + Math.random()*40;
-
-const up =
-Math.random() > .55;
-
-const y =
-up
-? groundY()-150-(Math.random()*130)
-: groundY()-80;
+if(level === 1){
 
 blocks.push({
-x,
-y,
-w:width,
-h:height
+x:100,
+y:groundY()-80,
+w:400,
+h:40
 });
 
-/* SPIKES */
+blocks.push({
+x:700,
+y:groundY()-120,
+w:160,
+h:40
+});
 
-if(Math.random() > .35){
+blocks.push({
+x:930,
+y:groundY()-160,
+w:160,
+h:40
+});
 
 spikes.push({
-x:x+width+60,
+x:1280,
+y:groundY()-45,
+size:45
+});
+
+blocks.push({
+x:1480,
+y:groundY()-120,
+w:260,
+h:40
+});
+
+blocks.push({
+x:1920,
+y:groundY()-80,
+w:300,
+h:40
+});
+
+blocks.push({
+x:2420,
+y:groundY()-140,
+w:220,
+h:40
+});
+
+spikes.push({
+x:2860,
+y:groundY()-45,
+size:45
+});
+
+blocks.push({
+x:3120,
+y:groundY()-120,
+w:420,
+h:40
+});
+
+levelLength = 3900;
+}
+
+/* ================= LEVEL 2 ================= */
+
+if(level === 2){
+
+blocks.push({
+x:100,
+y:groundY()-80,
+w:360,
+h:40
+});
+
+blocks.push({
+x:640,
+y:groundY()-140,
+w:180,
+h:40
+});
+
+spikes.push({
+x:980,
+y:groundY()-45,
+size:45
+});
+
+blocks.push({
+x:1180,
+y:groundY()-200,
+w:200,
+h:40
+});
+
+blocks.push({
+x:1520,
+y:groundY()-120,
+w:200,
+h:40
+});
+
+spikes.push({
+x:1860,
+y:groundY()-45,
+size:45
+});
+
+spikes.push({
+x:1920,
+y:groundY()-45,
+size:45
+});
+
+blocks.push({
+x:2200,
+y:groundY()-220,
+w:240,
+h:40
+});
+
+blocks.push({
+x:2600,
+y:groundY()-120,
+w:260,
+h:40
+});
+
+levelLength = 3400;
+}
+
+/* ================= LEVEL 3+ ================= */
+
+if(level >= 3){
+
+let x = 200;
+let h = groundY()-80;
+
+for(let i=0;i<20;i++){
+
+blocks.push({
+
+x,
+y:h,
+w:180,
+h:40
+});
+
+if(i % 2 === 0){
+
+spikes.push({
+
+x:x+240,
 y:groundY()-45,
 size:45
 });
 }
 
-x +=
-260 -
-(level*10) +
-Math.random()*120;
+h +=
+Math.random() > .5
+? -60
+: 60;
+
+h =
+Math.max(
+groundY()-260,
+Math.min(
+groundY()-80,
+h
+));
+
+x += 360;
 }
 
 levelLength = x + 600;
 }
+}
 
-let levelLength = 8000;
+/* ================= START GAME ================= */
 
 function startGame(level){
 
@@ -540,12 +802,14 @@ gameStarted = true;
 
 generateLevel(level);
 
-beep(400,.08);
+beep(450,.08);
 }
+
+/* ================= MENUS ================= */
 
 function openLevels(){
 
-beep(500,.05);
+beep(550,.05);
 
 document.getElementById("mainMenu")
 .style.display="none";
@@ -554,9 +818,21 @@ document.getElementById("levels")
 .style.display="flex";
 }
 
+function openHowTo(){
+
+document.getElementById("mainMenu")
+.style.display="none";
+
+document.getElementById("howTo")
+.style.display="flex";
+}
+
 function backMenu(){
 
 document.getElementById("levels")
+.style.display="none";
+
+document.getElementById("howTo")
 .style.display="none";
 
 document.getElementById("mainMenu")
@@ -577,7 +853,7 @@ document.getElementById("mainMenu")
 .style.display="flex";
 }
 
-/* ===== INPUT ===== */
+/* ================= INPUT ================= */
 
 function jump(){
 
@@ -587,6 +863,12 @@ if(player.grounded){
 
 player.velY = player.jump;
 player.grounded = false;
+
+createParticles(
+player.x,
+player.y,
+"#6ddcff"
+);
 
 beep(700,.05);
 }
@@ -608,11 +890,13 @@ document.addEventListener("touchstart",jump);
 
 document.getElementById("jumpBtn")
 .addEventListener("touchstart",(e)=>{
+
 e.preventDefault();
+
 jump();
 });
 
-/* ===== POPUP ===== */
+/* ================= POPUP ================= */
 
 function showPopup(text){
 
@@ -624,11 +908,13 @@ popup.innerHTML = text;
 popup.classList.add("show");
 
 setTimeout(()=>{
+
 popup.classList.remove("show");
+
 },2600);
 }
 
-/* ===== DRAW ===== */
+/* ================= DRAW ================= */
 
 function drawBackground(){
 
@@ -641,9 +927,13 @@ grad.addColorStop(.5,"#0b1638");
 grad.addColorStop(1,"#050814");
 
 ctx.fillStyle = grad;
-ctx.fillRect(0,0,
+
+ctx.fillRect(
+0,
+0,
 canvas.width,
-canvas.height);
+canvas.height
+);
 
 for(let i=0;i<45;i++){
 
@@ -678,7 +968,10 @@ function drawPlayer(){
 
 ctx.save();
 
-ctx.translate(player.x,player.y);
+ctx.translate(
+player.x,
+player.y
+);
 
 ctx.rotate(player.rotation);
 
@@ -687,7 +980,9 @@ ctx.shadowColor = "#62c8ff";
 
 const g =
 ctx.createLinearGradient(
--40,-40,40,40);
+-40,-40,
+40,40
+);
 
 g.addColorStop(0,"#6cf1ff");
 g.addColorStop(1,"#6865ff");
@@ -716,7 +1011,8 @@ ctx.shadowColor = "#55a8ff";
 const g =
 ctx.createLinearGradient(
 x,b.y,
-x,b.y+b.h);
+x,b.y+b.h
+);
 
 g.addColorStop(0,"#69d6ff");
 g.addColorStop(1,"#4364ff");
@@ -740,9 +1036,20 @@ const x = s.x - cameraX;
 
 ctx.beginPath();
 
-ctx.moveTo(x,s.y+s.size);
-ctx.lineTo(x+s.size/2,s.y);
-ctx.lineTo(x+s.size,s.y+s.size);
+ctx.moveTo(
+x,
+s.y+s.size
+);
+
+ctx.lineTo(
+x+s.size/2,
+s.y
+);
+
+ctx.lineTo(
+x+s.size,
+s.y+s.size
+);
 
 ctx.closePath();
 
@@ -752,7 +1059,8 @@ ctx.shadowColor = "#ff4673";
 const g =
 ctx.createLinearGradient(
 x,s.y,
-x,s.y+s.size);
+x,s.y+s.size
+);
 
 g.addColorStop(0,"#ff8eb1");
 g.addColorStop(1,"#ff3d6d");
@@ -763,25 +1071,30 @@ ctx.fill();
 });
 }
 
-/* ===== UPDATE ===== */
+/* ================= UPDATE ================= */
 
 function update(){
 
 if(!gameStarted) return;
 
 cameraX +=
-4.5 + currentLevel*.9;
+3.4 + currentLevel*.55;
 
 player.velY += player.gravity;
+
 player.y += player.velY;
 
 player.grounded = false;
 
-/* GROUND */
+/* ===== GROUND ===== */
 
-if(player.y >= groundY()-player.size/2){
+if(
+player.y >=
+groundY()-player.size/2
+){
 
-player.y = groundY()-player.size/2;
+player.y =
+groundY()-player.size/2;
 
 player.velY = 0;
 
@@ -790,7 +1103,7 @@ player.rotation = 0;
 player.grounded = true;
 }
 
-/* BLOCK COLLISION */
+/* ===== BLOCK COLLISION ===== */
 
 blocks.forEach(b=>{
 
@@ -800,7 +1113,7 @@ if(
 player.x + player.size/2 > bx &&
 player.x - player.size/2 < bx+b.w &&
 player.y + player.size/2 > b.y &&
-player.y + player.size/2 < b.y + 40 &&
+player.y + player.size/2 < b.y+25 &&
 player.velY >= 0
 ){
 
@@ -815,13 +1128,14 @@ player.grounded = true;
 }
 });
 
-/* ROTATE */
+/* ===== ROTATION ===== */
 
 if(!player.grounded){
+
 player.rotation += .08;
 }
 
-/* SPIKES */
+/* ===== SPIKES ===== */
 
 spikes.forEach(s=>{
 
@@ -833,13 +1147,19 @@ player.x - player.size/2 < x+s.size &&
 player.y + player.size/2 > s.y
 ){
 
+createParticles(
+player.x,
+player.y,
+"#ff4f7f"
+);
+
 beep(120,.15);
 
 startGame(currentLevel);
 }
 });
 
-/* WIN */
+/* ===== WIN ===== */
 
 if(cameraX >= levelLength){
 
@@ -873,20 +1193,24 @@ showPopup("БЕЗУМИЕ 👹");
 }
 
 if(currentLevel === 5){
-showPopup("ДЕМОН ПОБЕЖДЁН 😈");
+showPopup("🏆 ДЕМОН 🏆");
 }
 
 if(completedLevels.size === 5){
 
 setTimeout(()=>{
-showPopup("🏆 НАСТОЯЩИЙ ДЕМОН 🏆");
+
+showPopup(
+"👑 НАСТОЯЩИЙ ДЕМОН 👑"
+);
+
 },1200);
 }
 
 beep(900,.2);
 }
 
-/* PROGRESS */
+/* ===== PROGRESS ===== */
 
 const progress =
 Math.min(
@@ -899,7 +1223,7 @@ document.getElementById("progress")
 progress + "%";
 }
 
-/* ===== LOOP ===== */
+/* ================= LOOP ================= */
 
 function loop(){
 
@@ -914,6 +1238,8 @@ drawBlocks();
 drawSpikes();
 
 drawPlayer();
+
+updateParticles();
 
 requestAnimationFrame(loop);
 }
